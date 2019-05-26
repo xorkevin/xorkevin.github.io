@@ -53,7 +53,7 @@
       <span class="tooltip-parent">
         
           <span class="tooltip top">
-            3768 Words
+            3769 Words
           </span>
         
         18 min read
@@ -244,11 +244,12 @@ others. Much to their surprise, the algorithm was independently rediscovered by
 Rivest, Shamir, and Adleman based off the work of Diffie and Hellman<sup class="footnote-ref" id="fnref:rsa"><a href="#fn:rsa">12</a></sup>. Now
 known as RSA, the algorithm works by exploiting Euler&rsquo;s totient function, which
 is easy to calculate for a number if one knows its prime factorization, and
-difficult otherwise. This property of the totient function, makes it a trapdoor
-function, a function that computationally difficult, unless one knows special
-information, in this case the prime factorization. RSA chooses a semiprime
-number for this, because semiprime numbers are the most difficult to factor for
-their size. RSA is presently secure, because factoring is an NP problem.</p>
+difficult otherwise. This property of the totient function makes it a trapdoor
+function, a function that is computationally difficult, unless one knows
+special information, in this case the prime factorization. RSA chooses a
+semiprime number for this, because semiprime numbers are the most difficult to
+factor for their size. RSA is presently secure, because factoring is an NP
+problem.</p>
 
 <p>It seems then that asymmetric encryption should always be used, however it has
 some caveats. RSA itself is computationally expensive compared to a strong
@@ -264,7 +265,7 @@ increased, there is no remedy for this type of attack.</p>
 
 <p>Fortunately, while RSA has been the mainstay of public key cryptography, some
 of these issues are being addressed by other asymmetric encryption algorithms.
-Elliptic curve cryptography has become more popular, in recent years. ECC is
+Elliptic curve cryptography has become more popular in recent years. ECC is
 based on the difficulty of the more general discrete logarithm problem. ECC
 maps an elliptic curve onto a finite (Galois) field, where the operations of
 multiplication and addition are redefined. (<strong>Warning</strong>: It is strongly
@@ -272,7 +273,7 @@ believed that the NSA has backdoored the NIST elliptic curves, thus
 compromising ECDSA. It is recommended to use EdDSA instead on the Ed25519
 elliptic curve.) Because ECC does not rely on prime numbers, it has much
 smaller key sizes. An ECC key of 521 bits is approximately equal in strength to
-AES-256. Unfortunately, again, ECC is vulnerable to quantum attacks via Shor&rsquo;s
+AES-256. Unfortunately, ECC is still vulnerable to quantum attacks via Shor&rsquo;s
 algorithm. As a result, new systems such as lattice-based
 cryptography<sup class="footnote-ref" id="fnref:lattice-crypto"><a href="#fn:lattice-crypto">14</a></sup> are currently being developed, which have not yet
 been found to have a quantum weakness.</p>
@@ -353,16 +354,15 @@ to check whether data has been changed or tampered with. This application of a
 hash, known as a hash-based message authentication code (HMAC) allows one to
 verify the integrity of the data<sup class="footnote-ref" id="fnref:hmac"><a href="#fn:hmac">20</a></sup>. An HMAC works in general by hashing a
 concatenation of the original plaintext and the encryption key, to produce a
-MAC which is sent along with the cipher text to the receiver. If the ciphertext
-were tampered with in any way, then the MAC will not match the hash of the
-decrypted data. The MAC also cannot be easily faked since it depends on the
-secret encryption key itself. Many common libraries are now beginning to
-support an &ldquo;authenticated encryption with associated data&rdquo; (AEAD)<sup class="footnote-ref" id="fnref:aead"><a href="#fn:aead">21</a></sup> mode
-for their encryption, which uses MACs<sup class="footnote-ref" id="fnref:mac"><a href="#fn:mac">22</a></sup> by default and reduces the chance
-that the encryption algorithm will be misused. Common MAC hashes include SHA-2
-and Poly1305<sup class="footnote-ref" id="fnref:poly1305"><a href="#fn:poly1305">23</a></sup>. Similarly, cryptographic hashes are also used in
-signing algorithms (covered later) to represent the contents of the entire
-data.</p>
+MAC<sup class="footnote-ref" id="fnref:mac"><a href="#fn:mac">21</a></sup> which is sent along with the cipher text to the receiver. If the
+ciphertext were tampered with in any way, then the MAC will not match the hash
+of the decrypted data. The MAC also cannot be easily faked since it depends on
+the secret encryption key itself. Many common libraries are now beginning to
+support an &ldquo;authenticated encryption with associated data&rdquo; (AEAD)<sup class="footnote-ref" id="fnref:aead"><a href="#fn:aead">22</a></sup> mode
+for their encryption, which uses MACs by default and reduces the chance that
+the encryption algorithm will be misused. Common MAC hashes include SHA-2 and
+Poly1305<sup class="footnote-ref" id="fnref:poly1305"><a href="#fn:poly1305">23</a></sup>. Similarly, cryptographic hashes are also used in signing
+algorithms (covered later) to represent the contents of the entire data.</p>
 
 <p>More recently, cryptographic hashes have found an application in proof of work
 systems such as blockchain. Proof of work relies on the fact that a
@@ -489,10 +489,10 @@ some spoofed website.</p>
  <a class="footnote-return" href="#fnref:sha1-attack">&larrhk;</a></li>
 <li id="fn:hmac">HMAC <a href="https://en.wikipedia.org/wiki/HMAC">https://en.wikipedia.org/wiki/HMAC</a>
  <a class="footnote-return" href="#fnref:hmac">&larrhk;</a></li>
-<li id="fn:aead">AEAD <a href="https://en.wikipedia.org/wiki/Authenticated_encryption">https://en.wikipedia.org/wiki/Authenticated_encryption</a>
- <a class="footnote-return" href="#fnref:aead">&larrhk;</a></li>
 <li id="fn:mac">MAC <a href="https://en.wikipedia.org/wiki/Message_authentication_code">https://en.wikipedia.org/wiki/Message_authentication_code</a>
  <a class="footnote-return" href="#fnref:mac">&larrhk;</a></li>
+<li id="fn:aead">AEAD <a href="https://en.wikipedia.org/wiki/Authenticated_encryption">https://en.wikipedia.org/wiki/Authenticated_encryption</a>
+ <a class="footnote-return" href="#fnref:aead">&larrhk;</a></li>
 <li id="fn:poly1305">Poly1305 <a href="https://en.wikipedia.org/wiki/Poly1305">https://en.wikipedia.org/wiki/Poly1305</a>
  <a class="footnote-return" href="#fnref:poly1305">&larrhk;</a></li>
 <li id="fn:blake2-hashrate">BLAKE2 hashrate <a href="https://blake2.net/">https://blake2.net/</a>
