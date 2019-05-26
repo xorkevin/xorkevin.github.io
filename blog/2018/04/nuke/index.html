@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>xorkevin  | Nuke</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="xorkevin/core; Hugo v0.55.6">
+    
+    <link rel="stylesheet" href="https://xorkevin.com/scss/main.min.3c4ecd14ed143d9183629f46ba74cdf631d3ded81bc690833fc0b51b3cab8361.css" integrity="sha256-PE7NFO0UPZGDYp9GunTN9jHT3tgbxpCDP8C1Gzyrg2E=" media="screen">
+    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.ico" />
+  </head>
+
+  <body>
+    <nav>
+  <div class="nav-container">
+    <div class="container">
+      <div class="element">
+        <div class="item">
+          <a href='/'>Home</a>
+        </div>
+        <div class="item">
+          <a href='/blog'>Blog</a>
+        </div>
+      </div>
+      <div class="element">
+      </div>
+    </div>
+  </div>
+</nav>
+
+    <main class="main" role="main">
+      
+  <section>
+  </section>
+  <article>
+    <h1 class="title">Nuke</h1>
+    <h3 class="subtitle">frontend for governor</h3>
+    
+      
+      <h5>Kevin Wang</h5>
+    
+    <span class="info">
+      <span class="tooltip-parent">
+        
+          <span class="tooltip top">
+            Last modified 2019-05-22
+          </span>
+        
+        Tue, Apr 10, 2018
+      </span>
+      &middot;
+      <span class="tooltip-parent">
+        
+          <span class="tooltip top">
+            494 Words
+          </span>
+        
+        3 min read
+      </span>
+    </span>
+    <span class="info small">
+      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2018/04/nuke/"><i class="fas fa-fw fa-link"></i> Permalink</a>
+      &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/nuke"><i class="fas fa-fw fa-code-branch"></i> Repo</a>
+    </span>
+    
+
+<p>Nuke was designed as a frontend for the Governor web framework project. I
+wanted to build a UI that could facilitate testing the numerous services that
+compose Governor. However, as the project grew, I wanted to also componentize
+various UI elements for future reuse. Thus, Nuke became its own UI library,
+which I have since used in many other projects, including the LAHacks
+application system, UCLA DevX internal tooling dashboard, and this blog itself.</p>
+
+<p>If you would like to interact with a demo, one exists here:
+<a target="_blank" rel="noopener noreferrer"  href="https://hackform.github.io">
+  https://hackform.github.io/
+</a>
+</p>
+
+<h3 id="typography">Typography</h3>
+
+<p>Typography was an integral part of Nuke from its inception and it still forms
+the bedrock of its design today. First, I wanted to pick a font that was
+boring. I needed a font that would get out of the way quickly and let the focus
+be on the content. I ultimately chose Lato and Source Serif Pro.</p>
+
+<p>I then proceeded to build a responsive visual hierarchy in SCSS based on the
+<code>rem</code> unit. This is to make Nuke easier to maintain. <code>rem</code> allows all text on
+the screen to be based on the <code>body</code> font size, i.e. when the <code>body</code> font size
+changes, the <code>rem</code> unit will change proportionally. As such, for all
+<code>font-size</code>s given in <code>rem</code>, only the the font size for the body must be
+changed in media queries, allowing all text to be responsive at every
+resolution.</p>
+
+<img  src="assets/htmlhtags.png"/>
+
+
+<h3 id="components">Components</h3>
+
+<h4 id="form-inputs">Form Inputs</h4>
+
+<p>Interactivity is a necessity in almost every website, thus one of the first set
+of components that I designed consist of input fields and buttons. I
+particularly like the simplicity that Material design brings, thus I took many
+cues from it.</p>
+
+<img  src="assets/forminputs.png"/>
+
+
+<h4 id="cards">Cards</h4>
+
+<p>They seem to be all the rage these days. It feels as if I was almost obligated
+to create them.</p>
+
+<img  src="assets/cards.png"/>
+
+
+<h4 id="articles">Articles</h4>
+
+<p>Articles were created purely for fun, taking many cues from Medium, which I
+think executes long form content perfectly.</p>
+
+<img  src="assets/articleview.png"/>
+
+
+<h4 id="comments">Comments</h4>
+
+<p>Reddit is one of my favourite online forums because of all the discussion that
+occurs in its various communities. This discussion would not be possible,
+however, without its well renowned comment thread design. Unlike in a
+traditional forum, the Reddit comment system simplifies viewing replies by
+placing them adjacent to their parent, and move the best replies to the top. I
+try and replicate this system myself in Nuke.</p>
+
+<img  src="assets/commentthread.png"/>
+
+
+<h3 id="dark-mode">Dark Mode</h3>
+
+<p>I am a firm believer in giving users options. I, myself, often work late into
+the night and the light from a bright white background can be bothering if not
+for your roommates who are trying to sleep, then for your own eyes. As such a
+dark mode was a feature that I strove to implement. It is made maintainable by
+using SCSS to style elements if they are the children of a <code>body.dark</code>. Thus
+only the class of body needs to be changed to enable dark mode.</p>
+
+<img  src="assets/darkmodearticle.png"/>
+
+
+<p>Nuke has made it easy for me to bootstrap new projects without having to
+reimplement common UI components from scratch.</p>
+
+    <span class="info">
+      
+        <a href='/tags/web' class="no-style">
+          <span class="chip">web</span>
+        </a>
+      
+        <a href='/tags/frontend' class="no-style">
+          <span class="chip">frontend</span>
+        </a>
+      
+        <a href='/tags/react' class="no-style">
+          <span class="chip">react</span>
+        </a>
+      
+        <a href='/tags/js' class="no-style">
+          <span class="chip">js</span>
+        </a>
+      
+    </span>
+    <hr />
+    
+      
+      <div>
+        <div class="author">
+          <div class="image round">
+            <img src='/img/authors/xorkevin.jpg' />
+          </div>
+          <div class="description">
+            <h4 class="name">Kevin Wang</h4>
+            <div class="bio">Web dev and tech evangelist. Experiences decision fatigue daily.</div>
+          </div>
+        </div>
+      </div>
+    
+  </article>
+  <section>
+    <div class="container">
+      <div class="grid horizontal-center">
+        <div class="col xs-22 sm-10 md-7 lg-5">
+          
+        </div>
+        <div class="col xs-22 sm-10 md-7 lg-5">
+          
+            <div>
+              <a href="/blog/2018/06/governor/" class="no-style text-right">
+                <h6>Next <i class="fas fa-fw fa-chevron-right"></i></h6>
+                <h4>
+                  Governor
+                </h4>
+                <p>
+                  microservice framework
+                </p>
+              </a>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+    </main>
+    <footer>
+  <div class="container padded narrow">
+    
+      
+      <div class="grid horizontal-center">
+        <div class="col sm-8">
+          <div class="text-center">
+            <h4 class="title">Kevin Wang</h4>
+            web dev | tech evangelist | powered by coffee <i class="fas fa-fw fa-coffee"></i>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <h5 class="title">contact me</h5>
+            <ul>
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
+                    <i class="fas fa-fw fa-file-alt"></i> Resume
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
+                    <i class="fab fa-fw fa-github"></i> xorkevin@github
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
+                    <i class="fab fa-fw fa-twitter"></i> xorkevin@twitter
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
+                    <i class="fas fa-fw fa-envelope"></i> kevin@xorkevin.com
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <ul>
+              
+                <li>
+                  <span>
+                    <i class="fas fa-fw fa-code"></i> with <i class="far fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fab fa-fw fa-github"></i> xorkevin</a>
+                  </span>
+                </li>
+              
+              <li>
+                <span>
+                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/xorkevin">xorkevin/core</a>
+                </span>
+              </li>
+              
+                <li>
+                  <span>
+                    &copy; Kevin Wang
+                    
+                    
+                      2018-2019
+                    
+                  </span>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</footer>
+
+    
+  </body>
+</html>

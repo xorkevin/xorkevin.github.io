@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on xorkevin</title>
+    <link>https://xorkevin.com/tags/</link>
+    <description>Recent content in Tags on xorkevin</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>2018</copyright>
+    <lastBuildDate>Thu, 23 May 2019 18:03:31 -0700</lastBuildDate>
+    
+	<atom:link href="https://xorkevin.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>auth</title>
+      <link>https://xorkevin.com/tags/auth/</link>
+      <pubDate>Thu, 23 May 2019 18:03:31 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/auth/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>https://xorkevin.com/tags/web/</link>
+      <pubDate>Thu, 23 May 2019 18:03:31 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/web/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cli</title>
+      <link>https://xorkevin.com/tags/cli/</link>
+      <pubDate>Sun, 19 May 2019 16:01:01 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/cli/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>codegen</title>
+      <link>https://xorkevin.com/tags/codegen/</link>
+      <pubDate>Sun, 19 May 2019 16:01:01 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/codegen/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>go</title>
+      <link>https://xorkevin.com/tags/go/</link>
+      <pubDate>Sun, 19 May 2019 16:01:01 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>backend</title>
+      <link>https://xorkevin.com/tags/backend/</link>
+      <pubDate>Mon, 25 Jun 2018 17:08:18 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/backend/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>microservice</title>
+      <link>https://xorkevin.com/tags/microservice/</link>
+      <pubDate>Mon, 25 Jun 2018 17:08:18 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/microservice/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>frontend</title>
+      <link>https://xorkevin.com/tags/frontend/</link>
+      <pubDate>Tue, 10 Apr 2018 23:58:40 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/frontend/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>js</title>
+      <link>https://xorkevin.com/tags/js/</link>
+      <pubDate>Tue, 10 Apr 2018 23:58:40 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/js/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>react</title>
+      <link>https://xorkevin.com/tags/react/</link>
+      <pubDate>Tue, 10 Apr 2018 23:58:40 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/tags/react/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

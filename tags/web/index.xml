@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>web on xorkevin</title>
+    <link>https://xorkevin.com/tags/web/</link>
+    <description>Recent content in web on xorkevin</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>2018</copyright>
+    <lastBuildDate>Thu, 23 May 2019 18:03:31 -0700</lastBuildDate>
+    
+	<atom:link href="https://xorkevin.com/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Auth in a Nutshell: Cryptography</title>
+      <link>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/</link>
+      <pubDate>Thu, 23 May 2019 18:03:31 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/</guid>
+      <description>Authentication is often one of the most complicated portions of an application to design and write, simply due to the breadth of services that depend on it, and the depth of features that it as a service must provide.</description>
+    </item>
+    
+    <item>
+      <title>Governor</title>
+      <link>https://xorkevin.com/blog/2018/06/governor/</link>
+      <pubDate>Mon, 25 Jun 2018 17:08:18 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/blog/2018/06/governor/</guid>
+      <description>As the amount of projects I have worked on grew, I noticed that many requirements were similar if not identical across them.</description>
+    </item>
+    
+    <item>
+      <title>Nuke</title>
+      <link>https://xorkevin.com/blog/2018/04/nuke/</link>
+      <pubDate>Tue, 10 Apr 2018 23:58:40 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/blog/2018/04/nuke/</guid>
+      <description>Nuke was designed as a frontend for the Governor web framework project.</description>
+    </item>
+    
+  </channel>
+</rss>

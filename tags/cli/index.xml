@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cli on xorkevin</title>
+    <link>https://xorkevin.com/tags/cli/</link>
+    <description>Recent content in cli on xorkevin</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>2018</copyright>
+    <lastBuildDate>Sun, 19 May 2019 16:01:01 -0700</lastBuildDate>
+    
+	<atom:link href="https://xorkevin.com/tags/cli/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Forge</title>
+      <link>https://xorkevin.com/blog/2019/05/forge/</link>
+      <pubDate>Sun, 19 May 2019 16:01:01 -0700</pubDate>
+      
+      <guid>https://xorkevin.com/blog/2019/05/forge/</guid>
+      <description>Forge is a CLI utility I originally wrote to manage the complexity of my database models in my Governor project.</description>
+    </item>
+    
+  </channel>
+</rss>

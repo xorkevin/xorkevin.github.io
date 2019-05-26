@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>xorkevin  | Forge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="xorkevin/core; Hugo v0.55.6">
+    
+    <link rel="stylesheet" href="https://xorkevin.com/scss/main.min.3c4ecd14ed143d9183629f46ba74cdf631d3ded81bc690833fc0b51b3cab8361.css" integrity="sha256-PE7NFO0UPZGDYp9GunTN9jHT3tgbxpCDP8C1Gzyrg2E=" media="screen">
+    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.ico" />
+  </head>
+
+  <body>
+    <nav>
+  <div class="nav-container">
+    <div class="container">
+      <div class="element">
+        <div class="item">
+          <a href='/'>Home</a>
+        </div>
+        <div class="item">
+          <a href='/blog'>Blog</a>
+        </div>
+      </div>
+      <div class="element">
+      </div>
+    </div>
+  </div>
+</nav>
+
+    <main class="main" role="main">
+      
+  <section>
+  </section>
+  <article>
+    <h1 class="title">Forge</h1>
+    <h3 class="subtitle">code generation utility for governor</h3>
+    
+      
+      <h5>Kevin Wang</h5>
+    
+    <span class="info">
+      <span class="tooltip-parent">
+        
+          <span class="tooltip top">
+            Last modified 2019-05-22
+          </span>
+        
+        Sun, May 19, 2019
+      </span>
+      &middot;
+      <span class="tooltip-parent">
+        
+          <span class="tooltip top">
+            998 Words
+          </span>
+        
+        5 min read
+      </span>
+    </span>
+    <span class="info small">
+      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2019/05/forge/"><i class="fas fa-fw fa-link"></i> Permalink</a>
+      &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/forge"><i class="fas fa-fw fa-code-branch"></i> Repo</a>
+    </span>
+    
+
+<p>Forge is a CLI utility I originally wrote to manage the complexity of my
+database models in my Governor project. I dislike using ORM&rsquo;s, since they place
+many constraints on the types of queries that can be written, or they make
+those queries unnecessarily difficult to write with a complex API due to
+language limitations. SQL itself, however, is a clear and purpose built
+language for querying relational data. Thus, I chose to write all my database
+queries with templated SQL strings (with sanitized input, of course).
+Unfortunately, SQL strings themselves are not type checked, and adding a field
+to the database model can result in having to make many parallel changes across
+multiple SQL queries. Furthermore, many models share common query patterns,
+such as creating the table, selecting all columns, or selecting rows of a table
+where a certain column equals a value. I created Forge in order to solve making
+these repetitive changes, and having to rewrite the same common SQL patterns.
+It takes in a Go <code>struct</code> and code generates typed Go functions with the
+required SQL strings.</p>
+
+<h3 id="code-generation">Code generation</h3>
+
+<p>Code generation, though a term that is gaining buzzword status once again, is a
+relatively old concept. It fell out of favor with the web platform of the past
+decade because web development was primarily dominated by dynamically typed
+interpreted languages such as Ruby, Python, and JS. Though now, as the web
+platform matures, so has the tooling, and code generation is beginning to make
+a resurgence once more.</p>
+
+<p>The interpreted languages normally make a trade-off of static type safety, for
+type &ldquo;freedom&rdquo;. As in the case of JS, one can create an object out of thin air,
+and assign an arbitrary amount of fields to it. Furthermore, these fields are
+then reflectively made available to other Javascript code, allowing one to
+iterate over all fields of an object. As a result, libraries that take in
+arbitrary data are easy to write in these languages. For example, a Join can be
+written in the JS ORM library, Sequelize, with the following code:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">User</span>.<span style="color:#a6e22e">hasMany</span>(<span style="color:#a6e22e">Post</span>, {<span style="color:#a6e22e">foreignKey</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;user_id&#39;</span>});
+<span style="color:#a6e22e">Post</span>.<span style="color:#a6e22e">belongsTo</span>(<span style="color:#a6e22e">User</span>, {<span style="color:#a6e22e">foreignKey</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;user_id&#39;</span>});
+<span style="color:#a6e22e">Post</span>.<span style="color:#a6e22e">findAll</span>({ <span style="color:#a6e22e">where</span><span style="color:#f92672">:</span> { ...}, <span style="color:#a6e22e">include</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">User</span>]});
+</code></pre></div>
+<p>These types of API&rsquo;s become harder to write when using compiled and statically
+typed languages. While generics can solve some issues, they cannot solve all of
+them, such as serialization of a struct. The typical way to solve these
+problems is to use a form of code generation known as macros. A macro adds an
+additional preprocessing step to the compiler pipeline prior to the actual
+parsing of the source code. The macro system itself can be as simple as the one
+in C/C++, or fully type safe macro system like the one in Rust. For example,
+Rust&rsquo;s serde package uses a <code>derive</code> macro to generate a serialization function
+for a struct:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rs" data-lang="rs"><span style="color:#75715e">//main.rs
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">use</span> serde::{Serialize, Deserialize};
+
+<span style="color:#75715e">#[derive(Serialize, Deserialize, Debug)]</span>
+<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Point</span> {
+    x: <span style="color:#66d9ef">i32</span>,
+    y: <span style="color:#66d9ef">i32</span>,
+}
+</code></pre></div>
+<h3 id="go-generate">Go generate</h3>
+
+<p>For languages like Go (which Governor is written in) with less powerful
+metaprogramming, code generation becomes the next best solution. While Go does
+have <code>reflect</code>, an extremely powerful tool which makes these API&rsquo;s possible to
+write, it still is not ergonomic to use since the functions often take
+<code>interface{}</code> arguments. One does know until runtime whether there is a
+potential type error. Thus one loses out on the benefits of having the Go
+compiler statically check whether you have called these functions with the
+correct types, placing the burden of type checking on the programmer.
+Fortunately, Go&rsquo;s code generation is easily invoked. It uses a special comment
+directive <code>go:generate</code> to specify a command to call when <code>$ go generate ./...</code>
+is run from the terminal. For example, in the following code, &ldquo;Hello, World&rdquo;
+will be printed to the shell on running <code>go generate</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//main.go
+</span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
+<span style="color:#f92672">//</span><span style="color:#66d9ef">go</span>:<span style="color:#a6e22e">generate</span> <span style="color:#a6e22e">echo</span> <span style="color:#e6db74">&#34;Hello, World&#34;</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#bash</span>
+$ go generate ./...
+Hello, World</code></pre></div>
+<p>Go uses its <code>go generate</code> system to provide a method to generate code. It
+provides the command to be run with the <code>$GOPACKAGE</code> and <code>$GOFILE</code> environment
+variables set to the file&rsquo;s package name and filename respectively, in addition
+to some other information. Forge uses this information along with the struct
+definition in the file itself to generate database model functions. Take the
+following code from Governor&rsquo;s user model:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model.go
+</span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">usermodel</span>
+
+<span style="color:#f92672">import</span> (
+  <span style="color:#75715e">//imports
+</span><span style="color:#75715e"></span>)
+
+<span style="color:#75715e">//go:generate forge model -m Model -t users -p user -o model_gen.go Model Info
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">type</span> (
+  <span style="color:#a6e22e">Model</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">Userid</span>       <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;userid,VARCHAR(31) PRIMARY KEY&#34; query:&#34;userid&#34;`</span>
+    <span style="color:#a6e22e">Username</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;username,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;username,get&#34;`</span>
+    <span style="color:#a6e22e">AuthTags</span>     <span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">PassHash</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;pass_hash,VARCHAR(255) NOT NULL&#34; query:&#34;pass_hash&#34;`</span>
+    <span style="color:#a6e22e">Email</span>        <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;email,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;email,get&#34;`</span>
+    <span style="color:#a6e22e">FirstName</span>    <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;first_name,VARCHAR(255) NOT NULL&#34; query:&#34;first_name&#34;`</span>
+    <span style="color:#a6e22e">LastName</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;last_name,VARCHAR(255) NOT NULL&#34; query:&#34;last_name&#34;`</span>
+    <span style="color:#a6e22e">CreationTime</span> <span style="color:#66d9ef">int64</span>  <span style="color:#e6db74">`model:&#34;creation_time,BIGINT NOT NULL&#34; query:&#34;creation_time&#34;`</span>
+  }
+)</code></pre></div>
+<p>Forge uses the <code>go/ast</code> package to parse the file <code>$GOFILE</code> and look for the
+<code>-m &lt;Model&gt;</code> struct. It then uses the struct tags to generate the appropriate
+model functions as seen below:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model_gen.go
+</span><span style="color:#75715e">// Code generated by go generate. DO NOT EDIT.
+</span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">usermodel</span>
+
+<span style="color:#f92672">import</span> (
+  <span style="color:#e6db74">&#34;database/sql&#34;</span>
+  <span style="color:#e6db74">&#34;github.com/lib/pq&#34;</span>
+  <span style="color:#e6db74">&#34;strconv&#34;</span>
+  <span style="color:#e6db74">&#34;strings&#34;</span>
+)
+
+<span style="color:#66d9ef">const</span> (
+  <span style="color:#a6e22e">userModelTableName</span> = <span style="color:#e6db74">&#34;users&#34;</span>
+)
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">userModelSetup</span>(<span style="color:#a6e22e">db</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">sql</span>.<span style="color:#a6e22e">DB</span>) <span style="color:#66d9ef">error</span> {
+  <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">Exec</span>(<span style="color:#e6db74">&#34;CREATE TABLE IF NOT EXISTS users (userid VARCHAR(31) PRIMARY KEY, username VARCHAR(255) NOT NULL UNIQUE, pass_hash VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, creation_time BIGINT NOT NULL);&#34;</span>)
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">userModelGet</span>(<span style="color:#a6e22e">db</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">sql</span>.<span style="color:#a6e22e">DB</span>, <span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">Model</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
+  <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Model</span>{}
+  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">QueryRow</span>(<span style="color:#e6db74">&#34;SELECT userid, username, pass_hash, email, first_name, last_name, creation_time FROM users WHERE userid = $1;&#34;</span>, <span style="color:#a6e22e">key</span>).<span style="color:#a6e22e">Scan</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Userid</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Username</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">PassHash</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Email</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">FirstName</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">LastName</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">CreationTime</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">sql</span>.<span style="color:#a6e22e">ErrNoRows</span> {
+      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#ae81ff">2</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">err</span>
+  }
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">nil</span>
+}
+<span style="color:#f92672">...</span></code></pre></div>
+<p>Forge has been immensely beneficial in making maintaining Governor&rsquo;s models
+more bug free. Having Forge allows the model <code>struct</code> to be the single source
+of truth. I plan to add to Forge the ability to code generate route JSON body
+validation, in addition to other repetitive code, in the future.</p>
+
+    <span class="info">
+      
+        <a href='/tags/codegen' class="no-style">
+          <span class="chip">codegen</span>
+        </a>
+      
+        <a href='/tags/cli' class="no-style">
+          <span class="chip">cli</span>
+        </a>
+      
+        <a href='/tags/go' class="no-style">
+          <span class="chip">go</span>
+        </a>
+      
+    </span>
+    <hr />
+    
+      
+      <div>
+        <div class="author">
+          <div class="image round">
+            <img src='/img/authors/xorkevin.jpg' />
+          </div>
+          <div class="description">
+            <h4 class="name">Kevin Wang</h4>
+            <div class="bio">Web dev and tech evangelist. Experiences decision fatigue daily.</div>
+          </div>
+        </div>
+      </div>
+    
+  </article>
+  <section>
+    <div class="container">
+      <div class="grid horizontal-center">
+        <div class="col xs-22 sm-10 md-7 lg-5">
+          
+            <div>
+              <a href="/blog/2018/06/governor/" class="no-style">
+                <h6><i class="fas fa-fw fa-chevron-left"></i> Prev</h6>
+                <h4>
+                  Governor
+                </h4>
+                <p>
+                  microservice framework
+                </p>
+              </a>
+            </div>
+          
+        </div>
+        <div class="col xs-22 sm-10 md-7 lg-5">
+          
+            <div>
+              <a href="/blog/2019/05/auth-in-a-nutshell-cryptography/" class="no-style text-right">
+                <h6>Next <i class="fas fa-fw fa-chevron-right"></i></h6>
+                <h4>
+                  Auth in a Nutshell: Cryptography
+                </h4>
+                <p>
+                  a brief look at cryptographic algorithms
+                </p>
+              </a>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+    </main>
+    <footer>
+  <div class="container padded narrow">
+    
+      
+      <div class="grid horizontal-center">
+        <div class="col sm-8">
+          <div class="text-center">
+            <h4 class="title">Kevin Wang</h4>
+            web dev | tech evangelist | powered by coffee <i class="fas fa-fw fa-coffee"></i>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <h5 class="title">contact me</h5>
+            <ul>
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
+                    <i class="fas fa-fw fa-file-alt"></i> Resume
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
+                    <i class="fab fa-fw fa-github"></i> xorkevin@github
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
+                    <i class="fab fa-fw fa-twitter"></i> xorkevin@twitter
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
+                    <i class="fas fa-fw fa-envelope"></i> kevin@xorkevin.com
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <ul>
+              
+                <li>
+                  <span>
+                    <i class="fas fa-fw fa-code"></i> with <i class="far fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fab fa-fw fa-github"></i> xorkevin</a>
+                  </span>
+                </li>
+              
+              <li>
+                <span>
+                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/xorkevin">xorkevin/core</a>
+                </span>
+              </li>
+              
+                <li>
+                  <span>
+                    &copy; Kevin Wang
+                    
+                    
+                      2018-2019
+                    
+                  </span>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</footer>
+
+    
+  </body>
+</html>
