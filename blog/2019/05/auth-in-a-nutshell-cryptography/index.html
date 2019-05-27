@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="xorkevin/core; Hugo v0.55.6">
     
-    <link rel="stylesheet" href="https://xorkevin.com/scss/main.min.3c4ecd14ed143d9183629f46ba74cdf631d3ded81bc690833fc0b51b3cab8361.css" integrity="sha256-PE7NFO0UPZGDYp9GunTN9jHT3tgbxpCDP8C1Gzyrg2E=" media="screen">
+    <link rel="stylesheet" href="https://xorkevin.com/scss/main.min.d9b6eb3f33d2d82690b9c1807e9217eb9154c2c9bfdd92c2c230cdafc6cf8e6b.css" integrity="sha256-2bbrPzPS2CaQucGAfpIX65FUwsm/3ZLCwjDNr8bPjms=" media="screen">
     <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="/favicon.ico" />
   </head>
@@ -93,13 +93,13 @@ my Governor microservice project<sup class="footnote-ref" id="fnref:xorkevin-gov
 <p>This topic will cover a short series of blog posts, of which this post is Part
 1.</p>
 
-<h3 id="cryptography-a-primer">Cryptography: a primer</h3>
+<h2 id="cryptography-a-primer">Cryptography: a primer</h2>
 
 <p>First, it is important to understand the differences among cryptographic
 algorithms and the wide array of terminology used, so that it is clear what to
 use in certain situations.</p>
 
-<h3 id="encryption">Encryption</h3>
+<h2 id="encryption">Encryption</h2>
 
 <p>Encryption algorithms take a key and some plaintext data, to produce ciphertext
 data. The plaintext data is encoded in the ciphertext, but only those with
@@ -289,7 +289,7 @@ without having to physically meet and share a secret key.</p>
 content with the private key that can be verified with the public key, and this
 is discussed in the later section of signing algorithms.</p>
 
-<h3 id="key-exchange-algorithms">Key Exchange Algorithms</h3>
+<h2 id="key-exchange-algorithms">Key Exchange Algorithms</h2>
 
 <p>Key exchange algorithms are a mechanism by which two parties can communicate
 over an untrusted communication channel to arrive at a single shared secret
@@ -328,7 +328,7 @@ Diffie-Hellman, known as Double Ratchet Diffie-Hellman has been used by
 Whatsapp, Signal, and others to create protocols that enable perfect forward
 secrecy within the same session of communication<sup class="footnote-ref" id="fnref:double-ratchet"><a href="#fn:double-ratchet">16</a></sup>.</p>
 
-<h3 id="hash-functions">Hash Functions</h3>
+<h2 id="hash-functions">Hash Functions</h2>
 
 <p>A hash is a function that maps an input string to a fixed length output. Hash
 functions are used whenever an arbitrary amount of data needs to be represented
@@ -406,7 +406,7 @@ password hashes have better defenses against other attacks. Scrypt<sup class="fo
 Argon2<sup class="footnote-ref" id="fnref:argon2"><a href="#fn:argon2">28</a></sup> have configurable memory work factors, to make their hashes
 difficult to execute on GPUs.</p>
 
-<h3 id="signing-algorithms">Signing Algorithms</h3>
+<h2 id="signing-algorithms">Signing Algorithms</h2>
 
 <p>Encryption algorithms, key exchanges, and hashes allow their users to safely
 and securely transmit data and verify their integrity. However, they alone do

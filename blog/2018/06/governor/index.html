@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="xorkevin/core; Hugo v0.55.6">
     
-    <link rel="stylesheet" href="https://xorkevin.com/scss/main.min.3c4ecd14ed143d9183629f46ba74cdf631d3ded81bc690833fc0b51b3cab8361.css" integrity="sha256-PE7NFO0UPZGDYp9GunTN9jHT3tgbxpCDP8C1Gzyrg2E=" media="screen">
+    <link rel="stylesheet" href="https://xorkevin.com/scss/main.min.d9b6eb3f33d2d82690b9c1807e9217eb9154c2c9bfdd92c2c230cdafc6cf8e6b.css" integrity="sha256-2bbrPzPS2CaQucGAfpIX65FUwsm/3ZLCwjDNr8bPjms=" media="screen">
     <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="/favicon.ico" />
   </head>
@@ -81,7 +81,7 @@ Governor. Governor is a framework in Go for quickly building microservices
 needed for running a website with many common requirements such as user
 management already implemented as services out of the box.</p>
 
-<h3 id="design">Design</h3>
+<h2 id="design">Design</h2>
 
 <p>I knew that the code that I would write would always be destined to change as I
 learned and grew as a developer, as I painfully learned from experience. To
@@ -96,12 +96,12 @@ generation. Most importantly, the upfront cost has already helped me locate and
 fix many inter-service bugs as I know clearly where one service ends and
 another begins.</p>
 
-<h3 id="features">Features</h3>
+<h2 id="features">Features</h2>
 
 <p>Here is a brief summary of the most important features (in no particular order
 of importance):</p>
 
-<h4 id="message-queue">Message queue</h4>
+<h3 id="message-queue">Message queue</h3>
 
 <p>Services can communicate with one another using a NATS message queue set up
 with the project. The message queue is durable, backed by Postgres, to ensure
@@ -111,7 +111,7 @@ the case of a work queue. The message queue enables Governor to scale to
 multiple nodes in order to address load and availability concerns. Furthermore,
 any load spike can be easily handled through placing more jobs on the queue.</p>
 
-<h4 id="storage">Storage</h4>
+<h3 id="storage">Storage</h3>
 
 <p>There are in-built wrappers around Postgres, Redis, and Minio (based on the S3
 protocol) services that can be launched along with Governor. They handle
@@ -128,7 +128,7 @@ generation utility that generates SQL and functions from structs with tagged
 fields. Code generating frequently changing SQL helps reduce errors due to the
 lack of types.</p>
 
-<h4 id="mail">Mail</h4>
+<h3 id="mail">Mail</h3>
 
 <p>An SMTP client and mail workers allow mail to be sent to any SMTP server. The
 interface accepts simple strings, which allow anything to be sent. The mail
@@ -138,7 +138,7 @@ caller does not have to wait for the mail to finish sending before continuing.
 This also gives the mail service the benefit of having the same load handling
 characteristics as mentioned before.</p>
 
-<h4 id="user-management-and-authentication">User Management and Authentication</h4>
+<h3 id="user-management-and-authentication">User Management and Authentication</h3>
 
 <p>User Management is the oldest and original service I began working on in
 Governor. It takes inspiration from many of my previous projects for
@@ -147,7 +147,7 @@ grow as I add more common use cases. The user service uses JWT access and
 refresh tokens to manage sessions. It also handles password hashing and reset,
 permissions and roles, and many other user tasks.</p>
 
-<h3 id="refactoring">Refactoring</h3>
+<h2 id="refactoring">Refactoring</h2>
 
 <p>Refactors have occurred many times as demands changed, and better
 implementations arose. Using Go for this project has enabled me to easily
