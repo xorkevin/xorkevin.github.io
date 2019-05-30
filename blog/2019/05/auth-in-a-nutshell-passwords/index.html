@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>xorkevin  | Auth in a Nutshell: Passwords</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="xorkevin/core; Hugo v0.55.6">
+    
+    <link rel="stylesheet" href="/scss/main.min.6f624f7b3cd79c65a8b5201beaa4c857df1357fb494054b58135942f87d08d0e.css" integrity="sha256-b2JPezzXnGWotSAb6qTIV98TV/tJQFS1gTWUL4fQjQ4=" media="screen">
+    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    
+  </head>
+
+  <body>
+    <nav>
+  <div class="nav-container">
+    <div class="container">
+      <div class="element">
+        <div class="item">
+          <a href='/'>Home</a>
+        </div>
+        <div class="item">
+          <a href='/blog'>Blog</a>
+        </div>
+      </div>
+      <div class="element">
+      </div>
+    </div>
+  </div>
+</nav>
+
+    <main class="main" role="main">
+      
+  <section>
+  </section>
+  <article>
+    <h1 class="title">Auth in a Nutshell: Passwords</h1>
+    <h3 class="subtitle">on the subject of passwords</h3>
+    
+      
+      <h5>Kevin Wang</h5>
+    
+    <span class="info">
+      <span class="tooltip-parent">
+        
+          <span class="tooltip top">
+            Last modified 2019-05-29
+          </span>
+        
+        Mon, May 27, 2019
+      </span>
+      &middot;
+      <span class="tooltip-parent">
+        
+          <span class="tooltip top">
+            1963 Words
+          </span>
+        
+        10 min read
+      </span>
+    </span>
+    <span class="info small">
+      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-passwords/"><i class="fas fa-fw fa-link"></i> Permalink</a>
+      &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/hunter2"><i class="fas fa-fw fa-code-branch"></i> Repo</a>
+    </span>
+    
+
+<p>This is Part 2 of my series on how I built the authentication system in
+<a href="https://github.com/hackform/governor" rel="nofollow noreferrer" target="_blank">Governor</a> and what I learned in the process. Here are links
+to all sections:</p>
+
+<ul>
+<li><a href="/blog/2019/05/auth-in-a-nutshell-cryptography/" rel="nofollow noreferrer" target="_blank">Part 1</a> Auth in a Nutshell: Cryptography</li>
+<li>Part 2 Auth in a Nutshell: Passwords</li>
+</ul>
+
+<p>Now that we have covered the cryptographic primitives, it is time to begin
+assembling them into the useful components of an authentication system.</p>
+
+<h2 id="creating-an-account">Creating an account</h2>
+
+<p>Creating a new account is the first time a user interacts with the Governor
+auth engine, and that is most likely the component that you as a developer will
+be creating first as well. While the creation of an account may seem to have no
+impact on authentication, it is a crucial part of the auth security model.
+First, the user enters their information on the frontend, and it is posted to
+the following endpoint:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;POST /api/u/user&#34;</span>
+{
+  <span style="color:#f92672">&#34;username&#34;</span>: <span style="color:#e6db74">&#34;&lt;username&gt;&#34;</span>,
+  <span style="color:#f92672">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;&lt;password&gt;&#34;</span>,
+  <span style="color:#f92672">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;&lt;email&gt;&#34;</span>,
+  <span style="color:#f92672">&#34;first_name&#34;</span>: <span style="color:#e6db74">&#34;&lt;first name&gt;&#34;</span>,
+  <span style="color:#f92672">&#34;last_name&#34;</span>: <span style="color:#e6db74">&#34;&lt;last name&gt;&#34;</span>,
+}</code></pre></div>
+<p>The backend then validates the input to ensure that it conforms to some
+constraints, as it should for all requests. A web request should never be
+trusted by default by the web server. A user may unintentionally enter in bogus
+or incorrect information, or the HTTP request may not even be issued by your
+own web frontend client and instead by some malicious actor via an arbitrary
+http client. One can always assume that given enough time, an attack will
+eventually occur. Validation consists of checking that:</p>
+
+<ol>
+<li>All the required fields are entered. (Username, password, and email
+definitely need to be present. First and last name may vary depending on the
+use case.)</li>
+<li>All the fields do not exceed a certain reasonably long length that covers
+99.9% of sanctioned use cases. A user probably did not intend to enter in a
+256 character long first or last name. (Not to mention this would give your
+web designers a big headache.)</li>
+<li>The password is of an appropriate length. Aside from the most common
+passwords which allow attackers to use dictionary attacks or rainbow tables,
+password strength is almost entirely dependent on its length and the size of
+its alphabet<sup class="footnote-ref" id="fnref:diceware"><a href="#fn:diceware">1</a></sup>. The longer the password the better. (You can try
+generating your own <a href="https://www.rempe.us/diceware/#eff" rel="nofollow noreferrer" target="_blank">here</a>.)</li>
+<li>The username and email are unique. (For obvious reasons.)</li>
+<li>The email is valid.</li>
+</ol>
+
+<p>In step 5, the validity of the email address is checked by sending an email to
+the address with a unique random key. Assuming that the request passed checks 1
+through 4, the information is put into a cache (Governor currently uses Redis
+by default), with a randomly generated key and a configurable time limit before
+it is erased from memory. At the same time, an email with the key is sent via
+Governor&rsquo;s SMTP email service to the user&rsquo;s email address. If the user has
+entered a valid email address, he or she should receive the email and complete
+their sign up with the key which posts a request to:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;POST /api/u/user/confirm&#34;</span>
+{
+  <span style="color:#f92672">&#34;key&#34;</span>: <span style="color:#e6db74">&#34;&lt;confirmation key&gt;&#34;</span>,
+}</code></pre></div>
+<p>It is necessary to validate the email address because email serves as the de
+facto method to contact the user and handle other authentication concerns, such
+as password reset and login notifications. Tying every account to a unique
+validated email has the added benefit of reducing user creation spam, as any
+emails that fail validation prevent the account from being created.</p>
+
+<p>Once the user has confirmed that their email is valid, the account creation
+process moves into its next phase.</p>
+
+<h2 id="passwords">Passwords</h2>
+
+<p>One might be tempted to just put all the user&rsquo;s information verbatim into the
+<code>users</code> table in the database. Unfortunately, storing passwords in plaintext is
+a security issue that we are all too well aware of by now<sup class="footnote-ref" id="fnref:fb-password"><a href="#fn:fb-password">2</a></sup>. Users
+place their trust in the website to safely store their information, and that
+trust needs to be respected.</p>
+
+<p>Passwords should not even be encrypted and stored in the database. First and
+foremost, it does not solve the underlying problem, it just obfuscates it and
+moves it up one level. The master key to all the passwords must be stored
+somewhere.</p>
+
+<p>Second, even if the key were somehow safely stored, it would have to be
+replaced every once in a while. Assume that we are using the strongest
+encryption available to us, symmetric encryption, and our chosen algorithm is
+the industry standard AES. AES depends on a key and a random initialization
+vector which is at most 16 bytes, but more often 12 bytes for modes such as
+GCM. As mentioned in Part 1, any reuse of an initialization vector with the
+same key on a symmetric cipher immediately breaks the cipher. Thus it is
+guaranteed that every 2<sup>96</sup> password encryptions there will be a
+collision. However, this does not take into account the birthday problem, which
+predicts that there more than likely be a collision in initialization vectors
+after only 2<sup>48</sup> encryptions<sup class="footnote-ref" id="fnref:birthday-problem"><a href="#fn:birthday-problem">3</a></sup>. Thus it is
+recommended not to use a key for more than 2<sup>32</sup>
+encryptions<sup class="footnote-ref" id="fnref:nist-aes-rec"><a href="#fn:nist-aes-rec">4</a></sup>. This is enough to give everyone on the planet just
+1 password reset.</p>
+
+<p>Finally, any attacker who manages to guess the master key, or more likely
+<a href="https://www.youtube.com/watch?v=PWVN3Rq4gzw" rel="nofollow noreferrer" target="_blank">phish it from vulnerable sources</a>, now has access to all the
+passwords.</p>
+
+<p>Currently, the safest method of storing passwords is with cryptographic
+password hashes, of which the details and motivations behind each step are
+important to understand.</p>
+
+<h3 id="hashing-a-password">Hashing a password</h3>
+
+<p>Again, a password hash is a one-way (irreversible) function. Critically, it is
+also extremely slow to execute (targeting several hundred milliseconds on the
+target machine). This prevents anyone&mdash;hackers, the admins, even the
+user&mdash;from ever recovering the password from the hash itself in any
+reasonable amount of time. If the hash is cryptographically secure, the output
+will be highly random and the only way to find the original password is to try
+every possible password. Assume that some attackers would like to break a 256
+bit hash before the sun explodes<sup class="footnote-ref" id="fnref:sun-age"><a href="#fn:sun-age">5</a></sup>, they would need a hash rate of
+2*10<sup>59</sup> Hashes/second. A hash requires at least 100ms to compute,
+thus the attackers would need 2*10<sup>52</sup> Summit
+supercomputers<sup class="footnote-ref" id="fnref:summit-specs"><a href="#fn:summit-specs">6</a></sup> working around the clock to meet the deadline.</p>
+
+<p>Checking whether a password is correct is simple: hash the password, and
+compare the hash to the corresponding stored password hash in the database. If
+they match, the password matches, otherwise they do not. This process takes at
+most several hundred milliseconds.</p>
+
+<p>Unfortunately, humans are lazy users, and not all of them use
+<a href="https://www.rempe.us/diceware/#eff" rel="nofollow noreferrer" target="_blank">diceware</a> to generate passwords like &ldquo;correct horse battery
+staple&rdquo;<sup class="footnote-ref" id="fnref:xkcd-936"><a href="#fn:xkcd-936">7</a></sup>. It is likely that 10% of your users will have one of <a href="https://en.wikipedia.org/wiki/List_of_the_most_common_passwords" rel="nofollow noreferrer" target="_blank">these
+passwords</a>. This means that naively hashing passwords will
+lead to the same 25 password hashes in your database, which if ever obtained by
+an attacker, would be extremely easy to identify. Attackers will also use
+<a href="https://en.wikipedia.org/wiki/Rainbow_table" rel="nofollow noreferrer" target="_blank">rainbow tables</a> full of passwords and their precomputed hashes.
+This reduces the problem of breaking a simple password&rsquo;s hash into a lookup in
+the table. If a rainbow table is not available, <a href="https://en.wikipedia.org/wiki/Dictionary_attack" rel="nofollow noreferrer" target="_blank">dictionary
+attacks</a> are also common. Naively storing hashes means that
+any users with the same password have their passwords all broken at the same
+time. In order to address these issues, one should salt passwords before
+storage.</p>
+
+<h3 id="salting-a-password">Salting a password</h3>
+
+<p>Naively storing password hashes looks like <code>H(x) -&gt; hash_x</code>, where <code>H</code> is the
+hash function. Salting a password involves concatenating some randomly
+generated bytes, known as the salt, to the password prior to hashing it.
+Salting looks like <code>H(x+salt) -&gt; (hash_xs, salt)</code>, and both the hash and the
+salt are stored in the database. When checking whether the user entered the
+same password in the future, the salt is retrieved from the database,
+concatenated in the same exact manner to the password, and the resulting hash
+is compared to the stored hash. This process has the benefit of generating
+different hashes for the same password input, thus resolving the previously
+mentioned issues. For example, <code>H(&quot;hunter2&quot;+&quot;31415&quot;) != H(&quot;hunter2&quot;+&quot;27182&quot;)</code>.
+Even though the passwords are the same, the random salts are different.</p>
+
+<p>There are several rules for using salts effectively:</p>
+
+<ul>
+<li>Every time the user changes the password, a new salt should be generated in
+the event that the user uses the same password again.</li>
+<li>Salts should be <em>truly</em> random and unique. The more predictable the salt, the
+more likely it will exist in a rainbow table.</li>
+<li>Salts should be as long as necessary to guarantee that every single user is
+assigned a unique salt. Uuid&rsquo;s are typically 128 bits in size, thus it makes
+sense to make salts at least the same length.</li>
+</ul>
+
+<h3 id="storing-a-password">Storing a password</h3>
+
+<p>The actual format of storing a password, while not as important to security, is
+important to the authentication system as a whole because it affects how easy
+it is to maintain its implementation. Password hashes normally have varying
+amounts of configuration as seen in:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">scrypt</span>
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Key</span>(<span style="color:#a6e22e">password</span>, <span style="color:#a6e22e">salt</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">N</span>, <span style="color:#a6e22e">r</span>, <span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">keyLen</span> <span style="color:#66d9ef">int</span>) ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>)</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">bcrypt</span>
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">GenerateFromPassword</span>(<span style="color:#a6e22e">password</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">cost</span> <span style="color:#66d9ef">int</span>) ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>)</code></pre></div>
+<p>It may be tempting to store this configuration in some configuration file,
+which can be read whenever a new user is created or authenticating a user&rsquo;s
+password. However, this becomes increasingly more difficult to maintain over
+the course of an auth system&rsquo;s lifetime. Computing hardware will improve,
+forcing you to increase the computation cost of the password hash for newly
+created passwords. A password hash may, itself, be compromised because a new
+ASIC has been developed, forcing you to use an entirely different password
+hashing function altogether. In these scenarios, one needs to still maintain
+all past configurations in order to ensure that current user passwords and
+their hashes are still valid. This would require storing, perhaps, some
+password configuration version as a column in the database, which corresponds
+to the correct configuration of the password hash. I think this adds too much
+complexity, however.</p>
+
+<p>To solve this configuration issue, I developed a library for Governor,
+<a href="https://github.com/hackform/hunter2" rel="nofollow noreferrer" target="_blank">hunter2</a>, but its actual implementation is quite simple. Hunter2
+exports a <code>Hasher</code> interface as follows:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hunter2</span>
+
+<span style="color:#66d9ef">type</span> (
+  <span style="color:#a6e22e">Hasher</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">ID</span>() <span style="color:#66d9ef">string</span>
+    <span style="color:#a6e22e">Hash</span>(<span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>)
+    <span style="color:#a6e22e">Verify</span>(<span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">hash</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">bool</span>, <span style="color:#66d9ef">error</span>)
+  }
+)</code></pre></div>
+<p>Any hash may fulfill this simplified interface, which just takes in simple
+strings as input and outputs hashes as strings. One of these implemented hashes is scrypt:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">h</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ScryptHasher</span>) <span style="color:#a6e22e">exec</span>(<span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">salt</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">hashLength</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">c</span> <span style="color:#a6e22e">ScryptConfig</span>) ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>) {
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">scrypt</span>.<span style="color:#a6e22e">Key</span>([]byte(<span style="color:#a6e22e">key</span>), <span style="color:#a6e22e">salt</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">workFactor</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">memBlocksize</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">parallelFactor</span>, <span style="color:#a6e22e">hashLength</span>)
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">h</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ScryptHasher</span>) <span style="color:#a6e22e">Hash</span>(<span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
+  <span style="color:#a6e22e">salt</span> <span style="color:#f92672">:=</span> make([]<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">saltlen</span>)
+  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">rand</span>.<span style="color:#a6e22e">Read</span>(<span style="color:#a6e22e">salt</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">err</span>
+  }
+  <span style="color:#a6e22e">hash</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">exec</span>(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">salt</span>, <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">hashlen</span>, <span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">config</span>)
+  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">err</span>
+  }
+
+  <span style="color:#a6e22e">b</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Builder</span>{}
+  <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">WriteString</span>(<span style="color:#e6db74">&#34;$&#34;</span>)
+  <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">WriteString</span>(<span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">hashid</span>)
+  <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">WriteString</span>(<span style="color:#e6db74">&#34;$&#34;</span>)
+  <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">WriteString</span>(<span style="color:#a6e22e">h</span>.<span style="color:#a6e22e">config</span>.<span style="color:#a6e22e">String</span>())
+  <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">WriteString</span>(<span style="color:#e6db74">&#34;$&#34;</span>)
+  <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">WriteString</span>(<span style="color:#a6e22e">base64</span>.<span style="color:#a6e22e">RawURLEncoding</span>.<span style="color:#a6e22e">EncodeToString</span>(<span style="color:#a6e22e">salt</span>))
+  <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">WriteString</span>(<span style="color:#e6db74">&#34;$&#34;</span>)
+  <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">WriteString</span>(<span style="color:#a6e22e">base64</span>.<span style="color:#a6e22e">RawURLEncoding</span>.<span style="color:#a6e22e">EncodeToString</span>(<span style="color:#a6e22e">hash</span>))
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">String</span>(), <span style="color:#66d9ef">nil</span>
+}</code></pre></div>
+<p>As one can see, <code>ScryptHasher.Hash</code> will first generate a random salt of the
+configured length. Then, it uses scrypt to generate a hash with the combined
+key and salt using the specified configuration. Finally, it writes its own
+hashid, configuration options, salt, and hash to a string, delimited by <code>$</code> and
+returns it. This allows verifying a password to be as simple as examining the
+hash output itself, reading which hasher produced the hash, using its
+configuration options and salt, and checking to see if the hashes are
+equivalent. No external configuration is necessary.</p>
+
+<p>This strategy of storing password hash configuration in the output of the hash
+came from the well written bcrypt paper<sup class="footnote-ref" id="fnref:bcrypt-paper"><a href="#fn:bcrypt-paper">8</a></sup>. This greatly reduces
+complexity in updating configuration as password hash standards increase, and
+has helped me simplify much of Governor&rsquo;s auth code.</p>
+
+<p>And thus ends Part 2.</p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:diceware">password length and diceware <a href="http://world.std.com/%7Ereinhold/dicewarefaq.html" rel="nofollow noreferrer" target="_blank">http://world.std.com/%7Ereinhold/dicewarefaq.html</a>
+ <a class="footnote-return" href="#fnref:diceware">&larrhk;</a></li>
+<li id="fn:fb-password">Facebook plaintext passwords <a href="https://www.wired.com/story/facebook-passwords-plaintext-change-yours/" rel="nofollow noreferrer" target="_blank">https://www.wired.com/story/facebook-passwords-plaintext-change-yours/</a>
+ <a class="footnote-return" href="#fnref:fb-password">&larrhk;</a></li>
+<li id="fn:birthday-problem">Birthday problem <a href="https://en.wikipedia.org/wiki/Birthday_problem" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Birthday_problem</a>
+ <a class="footnote-return" href="#fnref:birthday-problem">&larrhk;</a></li>
+<li id="fn:nist-aes-rec">NIST AES recommendations <a href="https://csrc.nist.gov/publications/detail/sp/800-38d/final" rel="nofollow noreferrer" target="_blank">https://csrc.nist.gov/publications/detail/sp/800-38d/final</a>
+ <a class="footnote-return" href="#fnref:nist-aes-rec">&larrhk;</a></li>
+<li id="fn:sun-age">Sun lifetime <a href="https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system" rel="nofollow noreferrer" target="_blank">https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system</a>
+ <a class="footnote-return" href="#fnref:sun-age">&larrhk;</a></li>
+<li id="fn:summit-specs">Summit press release <a href="https://www.olcf.ornl.gov/summit/" rel="nofollow noreferrer" target="_blank">https://www.olcf.ornl.gov/summit/</a>
+ <a class="footnote-return" href="#fnref:summit-specs">&larrhk;</a></li>
+<li id="fn:xkcd-936">XKCD: password strength <a href="https://xkcd.com/936/" rel="nofollow noreferrer" target="_blank">https://xkcd.com/936/</a>
+ <a class="footnote-return" href="#fnref:xkcd-936">&larrhk;</a></li>
+<li id="fn:bcrypt-paper">Bcrypt paper <a href="https://www.openbsd.org/papers/bcrypt-paper.pdf" rel="nofollow noreferrer" target="_blank">https://www.openbsd.org/papers/bcrypt-paper.pdf</a>
+ <a class="footnote-return" href="#fnref:bcrypt-paper">&larrhk;</a></li>
+</ol>
+</div>
+
+    <span class="info">
+      
+        <a href='/tags/auth' class="no-style">
+          <span class="chip">auth</span>
+        </a>
+      
+        <a href='/tags/web' class="no-style">
+          <span class="chip">web</span>
+        </a>
+      
+    </span>
+    <hr />
+    
+      
+      <div>
+        <div class="author">
+          <div class="image round">
+            <img src='/img/authors/xorkevin.jpg' />
+          </div>
+          <div class="description">
+            <h4 class="name">Kevin Wang</h4>
+            <div class="bio">Web dev and tech evangelist. Experiences decision fatigue daily.</div>
+          </div>
+        </div>
+      </div>
+    
+  </article>
+  <section>
+    <div class="container">
+      <div class="grid horizontal-center">
+        <div class="col xs-22 sm-10 md-7 lg-5">
+          
+            <div>
+              <a href="/blog/2019/05/auth-in-a-nutshell-cryptography/" class="no-style">
+                <h6><i class="fas fa-fw fa-chevron-left"></i> Prev</h6>
+                <h4>
+                  Auth in a Nutshell: Cryptography
+                </h4>
+                <p>
+                  a brief look at cryptographic algorithms
+                </p>
+              </a>
+            </div>
+          
+        </div>
+        <div class="col xs-22 sm-10 md-7 lg-5">
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+    </main>
+    <footer>
+  <div class="container padded narrow">
+    
+      
+      <div class="grid horizontal-center">
+        <div class="col sm-8">
+          <div class="text-center">
+            <h4 class="title">Kevin Wang</h4>
+            web dev | tech evangelist | powered by coffee <i class="fas fa-fw fa-coffee"></i>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <h5 class="title">contact me</h5>
+            <ul>
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
+                    <i class="fas fa-fw fa-file-alt"></i> Resume
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
+                    <i class="fab fa-fw fa-github"></i> xorkevin@github
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
+                    <i class="fab fa-fw fa-twitter"></i> xorkevin@twitter
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
+                    <i class="fas fa-fw fa-envelope"></i> kevin@xorkevin.com
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <ul>
+              
+                <li>
+                  <span>
+                    <i class="fas fa-fw fa-code"></i> with <i class="far fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fab fa-fw fa-github"></i> xorkevin</a>
+                  </span>
+                </li>
+              
+              <li>
+                <span>
+                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/xorkevin">xorkevin/core</a>
+                </span>
+              </li>
+              
+                <li>
+                  <span>
+                    &copy; Kevin Wang
+                    
+                    
+                      2018-2019
+                    
+                  </span>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</footer>
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-140853026-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-140853026-1');
+</script>
+
+  </body>
+</html>
