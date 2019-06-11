@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="xorkevin/core; Hugo v0.55.6">
     
-    <link rel="stylesheet" href="/scss/main.min.6f624f7b3cd79c65a8b5201beaa4c857df1357fb494054b58135942f87d08d0e.css" integrity="sha256-b2JPezzXnGWotSAb6qTIV98TV/tJQFS1gTWUL4fQjQ4=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.3007598518434e174b5bee1ed005dcba246a95124651b3c2117f1c2b921c5132.css" integrity="sha256-MAdZhRhDThdLW&#43;4e0AXcuiRqlRJGUbPCEX8cK5IcUTI=" media="screen">
     <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="/favicon.ico" />
     
@@ -25,6 +25,9 @@
         </div>
       </div>
       <div class="element">
+        <div class="item">
+          <i id="dark-mode-button" class="fas fa-moon"></i>
+        </div>
       </div>
     </div>
   </div>
@@ -626,6 +629,44 @@ has helped me simplify much of Governor&rsquo;s auth code.</p>
     
   </div>
 </footer>
+
+    <script>
+(() => {
+  const darkModeClassname = 'dark';
+  const darkModeButtonId = 'dark-mode-button';
+  const darkModeStorageId = 'dark-mode';
+  const darkModeStorageEnable = 'enabled';
+  const darkModeStorageDisable = 'disabled';
+
+  const setDarkMode = (dark) => {
+    if (dark) {
+      document.body.classList.add(darkModeClassname);
+    } else {
+      document.body.classList.remove(darkModeClassname);
+    }
+    window.localStorage.setItem(darkModeStorageId, dark ? darkModeStorageEnable : darkModeStorageDisable);
+  };
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    let darkModeState = false;
+    if (window.localStorage.getItem(darkModeStorageId) === darkModeStorageEnable) {
+      darkModeState = true;
+    }
+    setDarkMode(darkModeState);
+
+    const darkModeButton = document.getElementById(darkModeButtonId);
+    if (!darkModeButton) {
+      return;
+    }
+
+    const darkModeToggle = (event) => {
+      darkModeState = !darkModeState;
+      setDarkMode(darkModeState);
+    };
+    darkModeButton.addEventListener('click', darkModeToggle);
+  });
+})();
+</script>
 
     
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140853026-1"></script>
