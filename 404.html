@@ -1,1 +1,176 @@
-<h1>404 not found</h1>
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>xorkevin  | 404 Page not found</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="xorkevin/core; Hugo v0.55.6">
+    
+    <link rel="stylesheet" href="/scss/main.min.3007598518434e174b5bee1ed005dcba246a95124651b3c2117f1c2b921c5132.css" integrity="sha256-MAdZhRhDThdLW&#43;4e0AXcuiRqlRJGUbPCEX8cK5IcUTI=" media="screen">
+    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    
+  </head>
+
+  <body>
+    <nav>
+  <div class="nav-container">
+    <div class="container">
+      <div class="element">
+        <div class="item">
+          <a href='/'>Home</a>
+        </div>
+        <div class="item">
+          <a href='/blog'>Blog</a>
+        </div>
+      </div>
+      <div class="element">
+        <div class="item">
+          <i id="dark-mode-button" class="fas fa-moon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+    <main class="main" role="main">
+      
+  <section>
+    <div class="container narrow padded">
+      <div class="section-header">
+        <h1>404 not found</h1>
+      </div>
+    </div>
+  </section>
+
+    </main>
+    <footer>
+  <div class="container padded narrow">
+    
+      
+      <div class="grid horizontal-center">
+        <div class="col sm-8">
+          <div class="text-center">
+            <h4 class="title">Kevin Wang</h4>
+            web dev | tech evangelist | powered by coffee <i class="fas fa-fw fa-coffee"></i>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <h5 class="title">contact me</h5>
+            <ul>
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
+                    <i class="fas fa-fw fa-file-alt"></i> Resume
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
+                    <i class="fab fa-fw fa-github"></i> xorkevin@github
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
+                    <i class="fab fa-fw fa-twitter"></i> xorkevin@twitter
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
+                    <i class="fas fa-fw fa-envelope"></i> kevin@xorkevin.com
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <ul>
+              
+                <li>
+                  <span>
+                    <i class="fas fa-fw fa-code"></i> with <i class="far fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fab fa-fw fa-github"></i> xorkevin</a>
+                  </span>
+                </li>
+              
+              <li>
+                <span>
+                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/xorkevin">xorkevin/core</a>
+                </span>
+              </li>
+              
+                <li>
+                  <span>
+                    &copy; Kevin Wang
+                    
+                    
+                      2018-2019
+                    
+                  </span>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</footer>
+
+    <script>
+(() => {
+  const darkModeClassname = 'dark';
+  const darkModeButtonId = 'dark-mode-button';
+  const darkModeStorageId = 'dark-mode';
+  const darkModeStorageEnable = 'enabled';
+  const darkModeStorageDisable = 'disabled';
+
+  const setDarkMode = (dark) => {
+    if (dark) {
+      document.body.classList.add(darkModeClassname);
+    } else {
+      document.body.classList.remove(darkModeClassname);
+    }
+    window.localStorage.setItem(darkModeStorageId, dark ? darkModeStorageEnable : darkModeStorageDisable);
+  };
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    let darkModeState = false;
+    if (window.localStorage.getItem(darkModeStorageId) === darkModeStorageEnable) {
+      darkModeState = true;
+    }
+    setDarkMode(darkModeState);
+
+    const darkModeButton = document.getElementById(darkModeButtonId);
+    if (!darkModeButton) {
+      return;
+    }
+
+    const darkModeToggle = (event) => {
+      darkModeState = !darkModeState;
+      setDarkMode(darkModeState);
+    };
+    darkModeButton.addEventListener('click', darkModeToggle);
+  });
+})();
+</script>
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-140853026-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-140853026-1');
+</script>
+
+  </body>
+</html>
