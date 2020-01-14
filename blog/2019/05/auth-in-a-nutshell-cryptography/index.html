@@ -4,10 +4,12 @@
     <meta charset="utf-8">
     <title>xorkevin  | Auth in a Nutshell: Cryptography</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.57.2">
+    <meta name="generator" content="xorkevin/core; Hugo v0.62.2">
     
-    <link rel="stylesheet" href="/scss/main.min.3007598518434e174b5bee1ed005dcba246a95124651b3c2117f1c2b921c5132.css" integrity="sha256-MAdZhRhDThdLW&#43;4e0AXcuiRqlRJGUbPCEX8cK5IcUTI=" media="screen">
-    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/scss/main.min.17b2d2be6b6bf1d046cd5bffb4b340c0af06fbf595c4b307cf5c6b608a1b10fa.css" integrity="sha256-F7LSvmtr8dBGzVv/tLNAwK8G&#43;/WVxLMHz1xrYIobEPo=" media="screen">
+    <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
+    <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
+    <link href="/vendor/merriweather/index.css" rel="stylesheet">
     <link rel="shortcut icon" href="/favicon.ico" />
     
   </head>
@@ -26,7 +28,7 @@
       </div>
       <div class="element">
         <div class="item">
-          <i id="dark-mode-button" class="fas fa-moon"></i>
+          <i id="dark-mode-button" class="fa fa-lg fa-moon"></i>
         </div>
       </div>
     </div>
@@ -57,31 +59,28 @@
       <span class="tooltip-parent">
         
           <span class="tooltip top">
-            3776 Words
+            3778 Words
           </span>
         
         18 min read
       </span>
     </span>
     <span class="info small">
-      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/"><i class="fas fa-fw fa-link"></i> Permalink</a>
+      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/"><i class="fa fa-fw fa-link"></i> Permalink</a>
       
     </span>
-    
-
-<p>Authentication is often one of the most complicated portions of an application
+    <p>Authentication is often one of the most complicated portions of an application
 to design and write, simply due to the breadth of services that depend on it,
 and the depth of features that it as a service must provide. Dependent services
 often have unique requirements from the authentication service such as resource
 ownership, permissions, and access control. It is important to note, that
 despite this perceived importance, authentication is not inherently more
 important compared to the other services that compose an application. As Linus
-Torvalds famously said, &ldquo;security problems are just bugs&rdquo;<sup class="footnote-ref" id="fnref:torvalds-bugs"><a href="#fn:torvalds-bugs">1</a></sup>.
+Torvalds famously said, &ldquo;security problems are just bugs&rdquo;<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.
 Nevertheless, just as correctness of the OS kernel is more important than user
 level applications, correctness of the authentication service is usually one of
 the most important parts of an application due to its large number of
 dependants.</p>
-
 <p>It is no surprise, then, to find that many projects choose to use an OAuth
 provider for application sign-in, instead of rolling their own. This makes the
 sign-in process harder to implement incorrectly, but with the added cost of a
@@ -92,24 +91,18 @@ on external web services, improving application reliability. Unfortunately,
 authentication has a large amount of moving parts, and they can be overwhelming
 to understand and design and use correctly. While I am by no means a security
 expert, I want to share my experiences designing the authentication system for
-my <a href="https://github.com/hackform/governor" rel="nofollow noreferrer" target="_blank">Governor microservice project</a>, and how it all works.</p>
-
+my <a href="https://github.com/hackform/governor">Governor microservice project</a>, and how it all works.</p>
 <p>This topic will cover a short series of blog posts, of which this post is Part
 1. Here are links to all sections:</p>
-
 <ul>
 <li>Part 1 Auth in a Nutshell: Cryptography</li>
-<li><a href="/blog/2019/05/auth-in-a-nutshell-passwords/" rel="nofollow noreferrer" target="_blank">Part 2</a> Auth in a Nutshell: Passwords</li>
+<li><a href="/blog/2019/05/auth-in-a-nutshell-passwords/">Part 2</a> Auth in a Nutshell: Passwords</li>
 </ul>
-
 <h2 id="cryptography-a-primer">Cryptography: a primer</h2>
-
 <p>First, it is important to understand the differences among cryptographic
 algorithms and the wide array of terminology used, so that it is clear what to
 use in certain situations.</p>
-
 <h2 id="encryption">Encryption</h2>
-
 <p>Encryption algorithms take a key and some plaintext data, to produce ciphertext
 data. The plaintext data is encoded in the ciphertext, but only those with
 knowledge of the key are able to decrypt the ciphertext and reproduce the
@@ -122,14 +115,11 @@ immense size of their key space. With most keys at about 256 bits in size
 (known as 256 bit security), breaking a secure encryption algorithm would, on
 average, require attempting 2<sup>255</sup> key guesses, which would take most
 state level actors years, even with optimizations, to brute force.</p>
-
 <h3 id="symmetric-encryption">Symmetric Encryption</h3>
-
 <p>Symmetric encryption, as its name implies, uses the same key for encryption as
 it does for decryption. The most secure encryption algorithm, symmetric or
-otherwise, is a one-time pad cipher<sup class="footnote-ref" id="fnref:cipher-otp"><a href="#fn:cipher-otp">2</a></sup>. It is also extremely simple
+otherwise, is a one-time pad cipher<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. It is also extremely simple
 to implement:</p>
-
 <ol>
 <li>generate a list of <em>truly</em> random bits longer than the plaintext input
 string, called the &ldquo;key&rdquo;</li>
@@ -138,121 +128,106 @@ string, called the &ldquo;key&rdquo;</li>
 <li>discard the key after it has been used, and do not reuse it for any future
 communication</li>
 </ol>
-
 <p>One-time pads are symmetric encryption (since they share the same key to
 encrypt and decrypt), and they are invulnerable to all cryptanalysis due to the
-equal distribution between 1&rsquo;s and 0&rsquo;s of the XOR function and the key, i.e.
-from a potential attacker&rsquo;s perspective, literally any string with a length
+equal distribution between 1's and 0's of the XOR function and the key, i.e.
+from a potential attacker's perspective, literally any string with a length
 less than or equal to the ciphertext could have been the plaintext. It is
 important to remember step 4, however. Key reuse can lead to a situation where
-an attacker can XOR two ciphertexts to remove the key, since <code>(plaintext1 XOR
-key) XOR (plaintext2 XOR key) = (plaintext1 XOR plaintext2)</code>. This would allow
+an attacker can XOR two ciphertexts to remove the key, since <code>(plaintext1 XOR key) XOR (plaintext2 XOR key) = (plaintext1 XOR plaintext2)</code>. This would allow
 the resulting string to be decrypted via frequency analysis and similar tools,
 without the attacker needing to know the key.</p>
-
 <p>One-time pads have a downside however: the key must be at least as long as the
 plaintext. This makes encrypting files that are on the order of megabytes in
 size impractical, since the key must be millions of bits long. There are other
 symmetric encryption algorithms, however, which can be broadly categorized into
 stream and block ciphers. Their names suggest, correctly, that stream ciphers
 encrypt plaintext on a character by character level (e.g. the Lorenz
-cipher<sup class="footnote-ref" id="fnref:cipher-lorenz"><a href="#fn:cipher-lorenz">3</a></sup> used in WWII), while block ciphers encrypt entire
+cipher<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup> used in WWII), while block ciphers encrypt entire
 &ldquo;blocks&rdquo; of data (which may vary in size) independently (e.g.
-AES<sup class="footnote-ref" id="fnref:cipher-aes"><a href="#fn:cipher-aes">4</a></sup>).</p>
-
+AES<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>).</p>
 <p>Unfortunately, both of these types of algorithms, in their earliest forms, had
 their own glaring weaknesses. Simple stream ciphers, operating at a character
 level, were often weak to cryptanalysis. Provided enough ciphertext, an
 attacker may be able to guess what the key and the state of the encryption
 machine is, which British cryptographers at Bletchley Park were able to do to
-the Lorenz cipher with the aid of Colossus<sup class="footnote-ref" id="fnref:colossus"><a href="#fn:colossus">5</a></sup>. Simple block ciphers,
+the Lorenz cipher with the aid of Colossus<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>. Simple block ciphers,
 while they strongly encrypt messages that are under a block in size, suffer
 from potentially outputting the same ciphertext block for the same plaintext
 block within the same message, since they encrypt blocks of data independently.
 Using the following images as an example, one can see that regions of the image
 with the same color encrypt to the same ciphertext in a naively applied block
 cipher. This is, by definition, weak to frequency analysis.</p>
-
 <div class="contentrow inset">
 <img  src="assets/tux.jpg"/>
 
 <img  src="assets/tuxecb.jpg"/>
 
 </div>
-
-<div class="caption">Left: <a href="https://upload.wikimedia.org/wikipedia/commons/5/56/Tux.jpg" rel="nofollow noreferrer" target="_blank">Original Tux Image</a>, Right: <a href="https://upload.wikimedia.org/wikipedia/commons/f/f0/Tux_ecb.jpg" rel="nofollow noreferrer" target="_blank">Encrypted Tux Image</a></div>
-
+<div class="caption">Left: <a href="https://upload.wikimedia.org/wikipedia/commons/5/56/Tux.jpg">Original Tux Image</a>, Right: <a href="https://upload.wikimedia.org/wikipedia/commons/f/f0/Tux_ecb.jpg">Encrypted Tux Image</a></div>
 
 <p>Modern symmetric encryption algorithms circumvent these issues by mimicking a
 one-time pad cipher with a stream cipher. Take, for example, AES-GCM, which
 itself is based on the secure AES block cipher to mimick a stream
-cipher<sup class="footnote-ref" id="fnref:cipher-aesgcm"><a href="#fn:cipher-aesgcm">6</a></sup>. Some initial value, key, and counter are run through
+cipher<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup>. Some initial value, key, and counter are run through
 AES repeatedly while incrementing the counter, therefore producing a
 pseudorandom stream of bits similar to a one-time pad. These bits are then
-XOR&rsquo;d with each plaintext block to produce the cipher text. The ciphertext then
+XOR'd with each plaintext block to produce the cipher text. The ciphertext then
 goes through a system to allow the receiver to verify the integrity of the
-message, which is covered in more detail in the MAC section of <a href="#hash-functions" rel="nofollow noreferrer" target="_blank">hash
-functions</a>, later.</p>
-
+message, which is covered in more detail in the MAC section of [hash
+functions][hash-functions], later.</p>
 <img class="inset" src="assets/gcm.png"/>
 
-
-<div class="caption"><a href="https://en.wikipedia.org/wiki/File:GCM-Galois_Counter_Mode_with_IV.svg" rel="nofollow noreferrer" target="_blank">Advanced Encryption Standard - Galois Counter Mode</a></div>
-
+<div class="caption"><a href="https://en.wikipedia.org/wiki/File:GCM-Galois_Counter_Mode_with_IV.svg">Advanced Encryption Standard - Galois Counter Mode</a></div>
 
 <p>AES-GCM is now the de facto symmetric key algorithm. With a key size of 256
 bits, it currently is not known to be cryptographically vulnerable for the
 foreseeable future. Unfortunately, despite its security, its implementation in
 machine code is slow without a specialized instruction set, such as
-AES-NI<sup class="footnote-ref" id="fnref:aes-ni"><a href="#fn:aes-ni">7</a></sup>. This also makes it potentially vulnerable to side-channel
-attacks while encrypting data, such as a timing attack<sup class="footnote-ref" id="fnref:timing-attack"><a href="#fn:timing-attack">8</a></sup>, on
+AES-NI<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. This also makes it potentially vulnerable to side-channel
+attacks while encrypting data, such as a timing attack<sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup>, on
 machines without a specialized instruction set. As a result, ChaCha20-Poly1305
 is also gaining traction, having recently been standardized by the IETF with
-Google&rsquo;s support<sup class="footnote-ref" id="fnref:chacha20"><a href="#fn:chacha20">9</a></sup>. ChaCha20 and her original sister cipher Salsa20
+Google's support<sup id="fnref:9"><a href="#fn:9" class="footnote-ref" role="doc-noteref">9</a></sup>. ChaCha20 and her original sister cipher Salsa20
 are stream ciphers, unlike the AES block cipher, and their implementations are
 <em>consistently</em> fast on hardware even without specialized
-instructions<sup class="footnote-ref" id="fnref:chacha20-speed"><a href="#fn:chacha20-speed">10</a></sup>.</p>
-
+instructions<sup id="fnref:10"><a href="#fn:10" class="footnote-ref" role="doc-noteref">10</a></sup>.</p>
 <p>Nevertheless, symmetric encryption algorithms offer many benefits. They are,
 compared to other encryption algorithms, relatively fast to execute due to
 their design; an indefinitely long pseudorandom string of bits may be
 efficiently generated to encrypt arbitrarily large files. Symmetric encryption
-algorithms are also quantum resistant. Using Grover&rsquo;s algorithm, the security
+algorithms are also quantum resistant. Using Grover's algorithm, the security
 of a symmetric cipher such as AES or ChaCha20 only quadratically decreases with
 a quantum computer, i.e. AES-256 would only have 128 bits of security instead
-of 256<sup class="footnote-ref" id="fnref:grover-alg"><a href="#fn:grover-alg">11</a></sup>. These issues can be easily resolved by doubling the key
+of 256<sup id="fnref:11"><a href="#fn:11" class="footnote-ref" role="doc-noteref">11</a></sup>. These issues can be easily resolved by doubling the key
 size.</p>
-
 <p>The only major downside to symmetric encryption is that both communicating
 parties must know the key. When it is impossible for these parties to
 physically meet, this can lead to a chicken and egg problem, i.e. there is no
 secure means to send the secret key to the other party since no shared secret
-key has been shared. The two main approaches to deal with this issue are <a href="#key-exchange-algorithms" rel="nofollow noreferrer" target="_blank">key
+key has been shared. The two main approaches to deal with this issue are <a href="#key-exchange-algorithms">key
 exchange</a>, discussed in its own later section, and asymmetric
 encryption.</p>
-
 <h3 id="asymmetric-encryption">Asymmetric Encryption</h3>
-
 <p>Also known as public key cryptography, asymmetric encryption relies on two
 separate keys in order to send and receive data. One of these is called the
 &ldquo;public&rdquo; key, and the other, the &ldquo;private&rdquo; key. These two keys form what is
 known as a &ldquo;key pair&rdquo;. A sender may securely send information to a designated
-receiver by using an asymmetric encryption algorithm along with the receiver&rsquo;s
+receiver by using an asymmetric encryption algorithm along with the receiver's
 public key to generate the ciphertext. It is important to note that the public
 key is, in fact, public knowledge. Only the receiver, who knows what the secret
 key is, may decrypt the ciphertext to obtain the original plaintext. Asymmetric
 encryption has the added benefit over symmetric encryption that one does not
 need to generate a new key for every new party one wants to communicate with.
 With symmetric encryption, sharing the same key could lead to every party with
-the shared key decrypting each other&rsquo;s messages. In asymmetric encryption,
+the shared key decrypting each other's messages. In asymmetric encryption,
 different keys are used for encrypting and decrypting messages, thus the
 encrypting &ldquo;public&rdquo; key can be shared amongst everyone.</p>
-
 <p>The first asymmetric cryptographic encryption algorithm was discovered by the
 British GCHQ, who classified it as top-secret to prevent it from being used by
 others. Much to their surprise, the algorithm was independently rediscovered by
-Rivest, Shamir, and Adleman based off the work of Diffie and Hellman<sup class="footnote-ref" id="fnref:rsa"><a href="#fn:rsa">12</a></sup>. Now
-known as RSA, the algorithm works by exploiting Euler&rsquo;s totient function, which
+Rivest, Shamir, and Adleman based off the work of Diffie and Hellman<sup id="fnref:12"><a href="#fn:12" class="footnote-ref" role="doc-noteref">12</a></sup>. Now
+known as RSA, the algorithm works by exploiting Euler's totient function, which
 is easy to calculate for a number if one knows its prime factorization, and
 difficult otherwise. This property of the totient function makes it a trapdoor
 function, a function that is computationally difficult, unless one knows
@@ -260,7 +235,6 @@ special information, in this case the prime factorization. RSA chooses a
 semiprime number for this, because semiprime numbers are the most difficult to
 factor for their size. RSA is presently secure, because factoring is an NP
 problem.</p>
-
 <p>It seems then that asymmetric encryption should always be used, however it has
 some caveats. RSA itself is computationally expensive compared to a strong
 symmetric encryption algorithm such as AES. Encrypting a file on the order of
@@ -269,10 +243,9 @@ prime numbers, the frequency of prime numbers affect the number of bits of
 entropy within an RSA key, i.e. unlike in AES, not all 2<sup>N</sup> possible
 keys are valid, because not all are semiprime. As a result, RSA needs a 15360
 bit key to have approximately the same strength as AES-256. RSA itself is also
-completely vulnerable to quantum attacks using Shor&rsquo;s algorithm to factor
-numbers in polynomial time<sup class="footnote-ref" id="fnref:shor-alg"><a href="#fn:shor-alg">13</a></sup>. Unlike with AES, where the key size can
+completely vulnerable to quantum attacks using Shor's algorithm to factor
+numbers in polynomial time<sup id="fnref:13"><a href="#fn:13" class="footnote-ref" role="doc-noteref">13</a></sup>. Unlike with AES, where the key size can
 be increased, there is no remedy for this type of attack.</p>
-
 <p>Fortunately, while RSA has been the mainstay of public key cryptography, some
 of these issues are being addressed by other asymmetric encryption algorithms.
 Elliptic curve cryptography has become more popular in recent years. ECC is
@@ -283,24 +256,20 @@ believed that the NSA has backdoored the NIST elliptic curves, thus
 compromising ECDSA. It is recommended to use EdDSA instead on the Ed25519
 elliptic curve.) Because ECC does not rely on prime numbers, it has much
 smaller key sizes. An ECC key of 521 bits is approximately equal in strength to
-AES-256. Unfortunately, ECC is still vulnerable to quantum attacks via Shor&rsquo;s
+AES-256. Unfortunately, ECC is still vulnerable to quantum attacks via Shor's
 algorithm. As a result, new systems such as lattice-based cryptography are
-currently being developed<sup class="footnote-ref" id="fnref:lattice-crypto"><a href="#fn:lattice-crypto">14</a></sup>, which have not yet been found to
+currently being developed<sup id="fnref:14"><a href="#fn:14" class="footnote-ref" role="doc-noteref">14</a></sup>, which have not yet been found to
 have a quantum weakness.</p>
-
 <p>Asymmetric and symmetric cryptography also do not have to be used mutually
 exclusively. Software such as GPG can symmetrically encrypt a large file, e.g.
 with AES, then encrypt the symmetric key with an asymmetric algorithm, e.g.
 with RSA. While the strength of the encryption will only be as strong as the
 weaker of the two keys (most likely RSA), this allows the sending of data
 without having to physically meet and share a secret key.</p>
-
 <p>Public key cryptography has other interesting applications such as signing
 content with the private key that can be verified with the public key, and this
-is discussed in the later section of <a href="#signing-algorithms" rel="nofollow noreferrer" target="_blank">signing algorithms</a>.</p>
-
+is discussed in the later section of <a href="#signing-algorithms">signing algorithms</a>.</p>
 <h2 id="key-exchange-algorithms">Key Exchange Algorithms</h2>
-
 <p>Key exchange algorithms are a mechanism by which two parties can communicate
 over an untrusted communication channel to arrive at a single shared secret
 key, while any potential listeners to that conversation will be unable to
@@ -313,8 +282,7 @@ which we will denote as <code>f(x, i) -&gt; c</code>. Alice and Bob first establ
 common base <code>x</code>, which can be sent unencrypted over the channel. Alice chooses
 some secret number <code>a</code>, and computes <code>f(x, a) -&gt; c_a</code>. Likewise, Bob chooses
 some secret number <code>b</code>, and computes <code>f(x, b) -&gt; c_b</code>. <code>c_a</code> and <code>c_b</code> are
-exchanged by Alice and Bob over the public channel. Alice now computes <code>f(c_b,
-a) -&gt; c_ba</code>, and Bob computes <code>f(c_a, b) -&gt; c_ab</code>. If the function <code>f</code> is
+exchanged by Alice and Bob over the public channel. Alice now computes <code>f(c_b, a) -&gt; c_ba</code>, and Bob computes <code>f(c_a, b) -&gt; c_ab</code>. If the function <code>f</code> is
 chosen carefully, <code>c_ba = c_ab</code>, and if <code>f</code> is irreversible, any listener to
 this conversation will be unable to produce <code>c_ab</code> since that would require the
 knowledge of <code>a</code> or <code>b</code> which have been kept secret. In the original
@@ -323,8 +291,7 @@ can be verified to work since <code>((g^a)^b) = ((g^b)^a) (mod p)</code>. <code>
 is also easy to compute, but given <code>g</code>, <code>p</code>, and <code>A</code>, it is difficult to
 compute <code>i</code>, making the function irreversible or &ldquo;one-way&rdquo;. Diffie-Hellman can
 use other functions, such as elliptic curves mapped onto finite fields to
-create the Elliptic Curve Diffie-Hellman algorithm<sup class="footnote-ref" id="fnref:diffie-hellman"><a href="#fn:diffie-hellman">15</a></sup>.</p>
-
+create the Elliptic Curve Diffie-Hellman algorithm<sup id="fnref:15"><a href="#fn:15" class="footnote-ref" role="doc-noteref">15</a></sup>.</p>
 <p>One may ask why key exchange algorithms are needed when a combination of
 asymmetric and symmetric algorithms can be used, as in the case of GPG to
 exchange data. Key exchange algorithms are needed due to the ideal of perfect
@@ -336,10 +303,8 @@ a single session. This is how Diffie-Hellman is used to secure communication in
 TLS for the HTTPS protocol for websites. Furthermore, a variant of
 Diffie-Hellman, known as Double Ratchet Diffie-Hellman has been used by
 Whatsapp, Signal, and others to create protocols that enable perfect forward
-secrecy within the same session of communication<sup class="footnote-ref" id="fnref:double-ratchet"><a href="#fn:double-ratchet">16</a></sup>.</p>
-
+secrecy within the same session of communication<sup id="fnref:16"><a href="#fn:16" class="footnote-ref" role="doc-noteref">16</a></sup>.</p>
 <h2 id="hash-functions">Hash Functions</h2>
-
 <p>A hash is a function that maps an input string to a fixed length output. Hash
 functions are used whenever an arbitrary amount of data needs to be represented
 by a relatively small, fixed amount of bytes. Cryptographic hash functions,
@@ -350,44 +315,38 @@ input. Second, hash collisions should be rare, and computationally too
 expensive to find. The idea behind a cryptographic hash function is to have a
 function that can, for all intents and purposes, uniquely represent an
 arbitrary amount of data with a few fixed number of bytes.</p>
-
-<p>Common cryptographic hashes include: <a href="https://en.wikipedia.org/wiki/SHA-2" rel="nofollow noreferrer" target="_blank">SHA-2</a>, SHA-3, and
-<a href="https://en.wikipedia.org/wiki/BLAKE_(hash_function)&gt;" rel="nofollow noreferrer" target="_blank">BLAKE2</a>.  SHA-1 has had a hash collision, and should not be used going
-forward<sup class="footnote-ref" id="fnref:sha1-attack"><a href="#fn:sha1-attack">17</a></sup>. The SHA-3 algorithm, Keccak, was chosen in a competition
+<p>Common cryptographic hashes include: <a href="https://en.wikipedia.org/wiki/SHA-2">SHA-2</a>, SHA-3, and
+<a href="https://en.wikipedia.org/wiki/BLAKE_(hash_function)">BLAKE2</a>.  SHA-1 has had a hash collision, and should not be used going
+forward<sup id="fnref:17"><a href="#fn:17" class="footnote-ref" role="doc-noteref">17</a></sup>. The SHA-3 algorithm, Keccak, was chosen in a competition
 by NIST, over BLAKE, for its differences from SHA-2 in the event SHA-2 were
 ever broken. But SHA-2 has not been broken yet, and thus the recommendation is
 to use BLAKE2 for cryptographic hashes. If an implementation of BLAKE2 is not
 available, SHA2-512, or SHA2-256 should be used.</p>
-
 <p>Because collisions are rare for a good cryptographic hash, they are often used
 to check whether data has been changed or tampered with. This application of a
 hash, known as a hash-based message authentication code (HMAC) allows one to
-verify the integrity of the data<sup class="footnote-ref" id="fnref:hmac"><a href="#fn:hmac">18</a></sup>. An HMAC works in general by hashing a
+verify the integrity of the data<sup id="fnref:18"><a href="#fn:18" class="footnote-ref" role="doc-noteref">18</a></sup>. An HMAC works in general by hashing a
 concatenation of the original plaintext and the encryption key, to produce a
-<a href="https://en.wikipedia.org/wiki/Message_authentication_code" rel="nofollow noreferrer" target="_blank">MAC</a> which is sent along with the cipher text to the receiver. If the
+<a href="https://en.wikipedia.org/wiki/Message_authentication_code">MAC</a> which is sent along with the cipher text to the receiver. If the
 ciphertext were tampered with in any way, then the MAC will not match the hash
 of the decrypted data. The MAC also cannot be easily faked since it depends on
 the secret encryption key itself. Many common libraries are now beginning to
 support an &ldquo;authenticated encryption with associated data&rdquo; (AEAD) mode for
 their encryption, which uses MACs by default and reduces the chance that the
-encryption algorithm will be misused<sup class="footnote-ref" id="fnref:aead"><a href="#fn:aead">19</a></sup>. Common MAC hashes include SHA-2
-and <a href="https://en.wikipedia.org/wiki/Poly1305" rel="nofollow noreferrer" target="_blank">Poly1305</a>. Similarly, cryptographic hashes are also used in
-<a href="#signing-algorithms" rel="nofollow noreferrer" target="_blank">signing algorithms</a> (covered later) to
+encryption algorithm will be misused<sup id="fnref:19"><a href="#fn:19" class="footnote-ref" role="doc-noteref">19</a></sup>. Common MAC hashes include SHA-2
+and <a href="https://en.wikipedia.org/wiki/Poly1305">Poly1305</a>. Similarly, cryptographic hashes are also used in
+<a href="#signing-algorithms">signing algorithms</a> (covered later) to
 represent the contents of the entire data.</p>
-
 <p>More recently, cryptographic hashes have found an application in proof of work
 systems such as blockchain. Proof of work relies on the fact that a
 cryptographic hash is difficult to reverse, thus the entire security of the
 system is dependent on the fact that a single entity does not have more than
 50% of the computational power.</p>
-
 <h3 id="password-hash-functions">Password Hash Functions</h3>
-
 <p>Normal cryptographic hash functions are designed to be fast to compute. BLAKE2b
-hashes at a rate of 947 MBps<sup class="footnote-ref" id="fnref:blake2-hashrate"><a href="#fn:blake2-hashrate">20</a></sup>. A password hashing function on
+hashes at a rate of 947 MBps<sup id="fnref:20"><a href="#fn:20" class="footnote-ref" role="doc-noteref">20</a></sup>. A password hashing function on
 the other hand is designed to be slow to compute, and difficult to parallelize
 and pipeline. This is due to the unique nature of how passwords are stored.</p>
-
 <p>Passwords should not be stored in plaintext, or even stored in an encrypted
 format. Plaintext passwords should be irrecoverable from their stored forms.
 Passwords should be salted and hashed, and those hashes should be stored in
@@ -395,19 +354,17 @@ some datastore. In order to check if an entered password is correct, the
 entered password should be hashed again and compared against the stored hash.
 Because a hash is a function, the same input should result in the same output
 hash.</p>
-
 <p>An attacker of a password hash would effectively have to try every possible
 input, assuming the actual password is random enough, and not the obvious
-<code>hunter2</code><sup class="footnote-ref" id="fnref:hunter2"><a href="#fn:hunter2">21</a></sup>. The easier the hash is to compute, the faster an attacker
+<code>hunter2</code><sup id="fnref:21"><a href="#fn:21" class="footnote-ref" role="doc-noteref">21</a></sup>. The easier the hash is to compute, the faster an attacker
 is able to guess different values. For normal data, the content is long enough
 so that finding a hash collision is still impractical due to the large size of
 the input. Passwords, however, are unique in that they are relatively small in
 size. Thus the hash itself needs to be designed to be slow.</p>
-
 <p>Bcrypt is the de facto password hashing algorithm, and has been in use for a
 decade. It works by recursively hashing the input for a configurable
-2<sup>N</sup> iterations, or &ldquo;rounds&rdquo;, where N is the work factor<sup class="footnote-ref" id="fnref:bcrypt"><a href="#fn:bcrypt">22</a></sup>.
-Thus as computers grow more powerful, bcrypt&rsquo;s number of rounds can be
+2<sup>N</sup> iterations, or &ldquo;rounds&rdquo;, where N is the work factor<sup id="fnref:22"><a href="#fn:22" class="footnote-ref" role="doc-noteref">22</a></sup>.
+Thus as computers grow more powerful, bcrypt's number of rounds can be
 increased proportionally. For the year of 2019, a workfactor of 13 is
 recommended, though benchmarks on your own hardware will give more accurate
 results. The highest work factor where the average hash takes no longer than
@@ -415,34 +372,31 @@ several hundred milliseconds should be preferred. Other password hashing
 algorithms have similar designs. While bcrypt is still recommended, more modern
 password hashes have better defenses against other attacks. Scrypt and Argon2
 have configurable memory work factors, to make their hashes difficult to
-execute on GPUs<sup class="footnote-ref" id="fnref:scrypt"><a href="#fn:scrypt">23</a></sup><sup class="footnote-ref" id="fnref:argon2"><a href="#fn:argon2">24</a></sup>.</p>
-
+execute on GPUs<sup id="fnref:23"><a href="#fn:23" class="footnote-ref" role="doc-noteref">23</a></sup><sup id="fnref:24"><a href="#fn:24" class="footnote-ref" role="doc-noteref">24</a></sup>.</p>
 <h2 id="signing-algorithms">Signing Algorithms</h2>
-
 <p>Encryption algorithms, key exchanges, and hashes allow their users to safely
 and securely transmit data and verify their integrity. However, they alone do
 not verify who the sender or receiver are. Without some other mechanism, they
-are prone to <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack" rel="nofollow noreferrer" target="_blank">man-in-the-middle (MITM) attacks</a>. For example, say Alice
+are prone to <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">man-in-the-middle (MITM) attacks</a>. For example, say Alice
 and Bob are attempting to communicate over a network controlled by Eve. Alice
-wants to send an asymmetrically encrypted message to Bob, and thus needs Bob&rsquo;s
+wants to send an asymmetrically encrypted message to Bob, and thus needs Bob's
 public key. Eve, who is in control of the network, could give Alice her own key
-instead of Bob&rsquo;s. Alice, who has no way to verify who owns what key, uses Eve&rsquo;s
-key thinking that it is Bob&rsquo;s, allowing Eve to decrypt Alice&rsquo;s message.
-Furthermore, Eve can then reencrypt the plaintext message with Bob&rsquo;s actual
+instead of Bob's. Alice, who has no way to verify who owns what key, uses Eve's
+key thinking that it is Bob's, allowing Eve to decrypt Alice's message.
+Furthermore, Eve can then reencrypt the plaintext message with Bob's actual
 public key, and send it to Bob, with Alice and Bob being none the wiser that
 Eve is eavesdropping on the conversation. Similarly, one can imagine a similar
 scenario with Diffie-Hellman key exchange, where Eve negotiates two secret keys
 with both Alice and Bob who think that they are communicating with one another.
 Thus, signing algorithms are needed to provide an unforgeable way to verify
 data from a sender.</p>
-
 <p>Signing algorithms are based on public key cryptography, of which RSA, ECC,
 lattice-based crypto, etc. versions exist. They use the secret private key of
 the user to produce a digital signature of some data (usually a hash if the
 data is significantly large). This signature is then sent along with the data
-which can be verified by the receiver with the sender&rsquo;s public key. However,
-there is a bootstrapping issue here, where one cannot trust the sender&rsquo;s public
-key, because the sender&rsquo;s public key cannot be verified with the public key.
+which can be verified by the receiver with the sender's public key. However,
+there is a bootstrapping issue here, where one cannot trust the sender's public
+key, because the sender's public key cannot be verified with the public key.
 Thus, certificate authorities exist to solve the bootstrapping issue. A
 certificate authority has a public key that is well known and preloaded on
 communication devices. The certificate authority then offers a service where it
@@ -453,66 +407,88 @@ able to check that the certificate is valid with the preloaded certificate of
 the certificate authority. This is how HTTPS certificates work, and how a
 browser knows that it is in fact communicating with, say, <code>xorkevin.com</code> and
 not some spoofed website.</p>
-
 <p>And here ends Part 1.</p>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:torvalds-bugs">Linus Torvalds&rsquo;s response <a href="https://lkml.org/lkml/2017/11/17/767" rel="nofollow noreferrer" target="_blank">https://lkml.org/lkml/2017/11/17/767</a>
- <a class="footnote-return" href="#fnref:torvalds-bugs">&larrhk;</a></li>
-<li id="fn:cipher-otp">one-time pad <a href="https://en.wikipedia.org/wiki/One-time_pad" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/One-time_pad</a>
- <a class="footnote-return" href="#fnref:cipher-otp">&larrhk;</a></li>
-<li id="fn:cipher-lorenz">Lorenz cipher <a href="https://en.wikipedia.org/wiki/Lorenz_cipher" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Lorenz_cipher</a>
- <a class="footnote-return" href="#fnref:cipher-lorenz">&larrhk;</a></li>
-<li id="fn:cipher-aes">AES <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
- <a class="footnote-return" href="#fnref:cipher-aes">&larrhk;</a></li>
-<li id="fn:colossus">Colossus <a href="https://en.wikipedia.org/wiki/Colossus_computer" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Colossus_computer</a>
- <a class="footnote-return" href="#fnref:colossus">&larrhk;</a></li>
-<li id="fn:cipher-aesgcm">AES-GCM <a href="https://en.wikipedia.org/wiki/Galois/Counter_Mode" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Galois/Counter_Mode</a>
- <a class="footnote-return" href="#fnref:cipher-aesgcm">&larrhk;</a></li>
-<li id="fn:aes-ni">AES-NI <a href="https://en.wikipedia.org/wiki/AES_instruction_set" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/AES_instruction_set</a>
- <a class="footnote-return" href="#fnref:aes-ni">&larrhk;</a></li>
-<li id="fn:timing-attack">timing attack <a href="https://en.wikipedia.org/wiki/Timing_attack" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Timing_attack</a>
- <a class="footnote-return" href="#fnref:timing-attack">&larrhk;</a></li>
-<li id="fn:chacha20">ChaCha20 <a href="https://tools.ietf.org/html/rfc7539" rel="nofollow noreferrer" target="_blank">https://tools.ietf.org/html/rfc7539</a>
- <a class="footnote-return" href="#fnref:chacha20">&larrhk;</a></li>
-<li id="fn:chacha20-speed">ChaCha20 speed <a href="https://en.wikipedia.org/wiki/Salsa20" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Salsa20</a>
- <a class="footnote-return" href="#fnref:chacha20-speed">&larrhk;</a></li>
-<li id="fn:grover-alg">Grover&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Grover%27s_algorithm" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Grover%27s_algorithm</a>
- <a class="footnote-return" href="#fnref:grover-alg">&larrhk;</a></li>
-<li id="fn:rsa">RSA <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/RSA_(cryptosystem)</a>
- <a class="footnote-return" href="#fnref:rsa">&larrhk;</a></li>
-<li id="fn:shor-alg">Shor&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Shor%27s_algorithm</a>
- <a class="footnote-return" href="#fnref:shor-alg">&larrhk;</a></li>
-<li id="fn:lattice-crypto">lattice-based crypto <a href="https://en.wikipedia.org/wiki/Lattice-based_cryptography" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Lattice-based_cryptography</a>
- <a class="footnote-return" href="#fnref:lattice-crypto">&larrhk;</a></li>
-<li id="fn:diffie-hellman">Diffie-Hellman <a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange</a>
- <a class="footnote-return" href="#fnref:diffie-hellman">&larrhk;</a></li>
-<li id="fn:double-ratchet">double ratchet <a href="https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm</a>
- <a class="footnote-return" href="#fnref:double-ratchet">&larrhk;</a></li>
-<li id="fn:sha1-attack">SHA-1 collision <a href="https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/" rel="nofollow noreferrer" target="_blank">https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/</a>
- <a class="footnote-return" href="#fnref:sha1-attack">&larrhk;</a></li>
-<li id="fn:hmac">HMAC <a href="https://en.wikipedia.org/wiki/HMAC" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/HMAC</a>
- <a class="footnote-return" href="#fnref:hmac">&larrhk;</a></li>
-<li id="fn:aead">AEAD <a href="https://en.wikipedia.org/wiki/Authenticated_encryption" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Authenticated_encryption</a>
- <a class="footnote-return" href="#fnref:aead">&larrhk;</a></li>
-<li id="fn:blake2-hashrate">BLAKE2 hashrate <a href="https://blake2.net/" rel="nofollow noreferrer" target="_blank">https://blake2.net/</a>
- <a class="footnote-return" href="#fnref:blake2-hashrate">&larrhk;</a></li>
-<li id="fn:hunter2">hunter2 origins <a href="http://bash.org/?244321" rel="nofollow noreferrer" target="_blank">http://bash.org/?244321</a>
- <a class="footnote-return" href="#fnref:hunter2">&larrhk;</a></li>
-<li id="fn:bcrypt">bcrypt <a href="https://en.wikipedia.org/wiki/Bcrypt" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Bcrypt</a>
- <a class="footnote-return" href="#fnref:bcrypt">&larrhk;</a></li>
-<li id="fn:scrypt">scrypt <a href="https://en.wikipedia.org/wiki/Scrypt" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Scrypt</a>
- <a class="footnote-return" href="#fnref:scrypt">&larrhk;</a></li>
-<li id="fn:argon2">argon2 <a href="https://en.wikipedia.org/wiki/Argon2" rel="nofollow noreferrer" target="_blank">https://en.wikipedia.org/wiki/Argon2</a>
- <a class="footnote-return" href="#fnref:argon2">&larrhk;</a></li>
+<li id="fn:1" role="doc-endnote">
+<p>Linus Torvalds's response <a href="https://lkml.org/lkml/2017/11/17/767">https://lkml.org/lkml/2017/11/17/767</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p>one-time pad <a href="https://en.wikipedia.org/wiki/One-time_pad">https://en.wikipedia.org/wiki/One-time_pad</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p>Lorenz cipher <a href="https://en.wikipedia.org/wiki/Lorenz_cipher">https://en.wikipedia.org/wiki/Lorenz_cipher</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p>AES <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">https://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5" role="doc-endnote">
+<p>Colossus <a href="https://en.wikipedia.org/wiki/Colossus_computer">https://en.wikipedia.org/wiki/Colossus_computer</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:6" role="doc-endnote">
+<p>AES-GCM <a href="https://en.wikipedia.org/wiki/Galois/Counter_Mode">https://en.wikipedia.org/wiki/Galois/Counter_Mode</a>
+[hash-functions]: #hash-functions <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:7" role="doc-endnote">
+<p>AES-NI <a href="https://en.wikipedia.org/wiki/AES_instruction_set">https://en.wikipedia.org/wiki/AES_instruction_set</a> <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:8" role="doc-endnote">
+<p>timing attack <a href="https://en.wikipedia.org/wiki/Timing_attack">https://en.wikipedia.org/wiki/Timing_attack</a> <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:9" role="doc-endnote">
+<p>ChaCha20 <a href="https://tools.ietf.org/html/rfc7539">https://tools.ietf.org/html/rfc7539</a> <a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:10" role="doc-endnote">
+<p>ChaCha20 speed <a href="https://en.wikipedia.org/wiki/Salsa20">https://en.wikipedia.org/wiki/Salsa20</a> <a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:11" role="doc-endnote">
+<p>Grover's algorithm <a href="https://en.wikipedia.org/wiki/Grover%27s_algorithm">https://en.wikipedia.org/wiki/Grover%27s_algorithm</a> <a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:12" role="doc-endnote">
+<p>RSA <a href="https://en.wikipedia.org/wiki/RSA%5C_(cryptosystem)">https://en.wikipedia.org/wiki/RSA\_(cryptosystem)</a> <a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:13" role="doc-endnote">
+<p>Shor's algorithm <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm">https://en.wikipedia.org/wiki/Shor%27s_algorithm</a> <a href="#fnref:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:14" role="doc-endnote">
+<p>lattice-based crypto <a href="https://en.wikipedia.org/wiki/Lattice-based_cryptography">https://en.wikipedia.org/wiki/Lattice-based_cryptography</a> <a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:15" role="doc-endnote">
+<p>Diffie-Hellman <a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange">https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange</a> <a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:16" role="doc-endnote">
+<p>double ratchet <a href="https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm">https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm</a> <a href="#fnref:16" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:17" role="doc-endnote">
+<p>SHA-1 collision <a href="https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/">https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/</a> <a href="#fnref:17" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:18" role="doc-endnote">
+<p>HMAC <a href="https://en.wikipedia.org/wiki/HMAC">https://en.wikipedia.org/wiki/HMAC</a> <a href="#fnref:18" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:19" role="doc-endnote">
+<p>AEAD <a href="https://en.wikipedia.org/wiki/Authenticated_encryption">https://en.wikipedia.org/wiki/Authenticated_encryption</a> <a href="#fnref:19" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:20" role="doc-endnote">
+<p>BLAKE2 hashrate <a href="https://blake2.net/">https://blake2.net/</a> <a href="#fnref:20" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:21" role="doc-endnote">
+<p>hunter2 origins <a href="http://bash.org/?244321">http://bash.org/?244321</a> <a href="#fnref:21" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:22" role="doc-endnote">
+<p>bcrypt <a href="https://en.wikipedia.org/wiki/Bcrypt">https://en.wikipedia.org/wiki/Bcrypt</a> <a href="#fnref:22" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:23" role="doc-endnote">
+<p>scrypt <a href="https://en.wikipedia.org/wiki/Scrypt">https://en.wikipedia.org/wiki/Scrypt</a> <a href="#fnref:23" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:24" role="doc-endnote">
+<p>argon2 <a href="https://en.wikipedia.org/wiki/Argon2">https://en.wikipedia.org/wiki/Argon2</a> <a href="#fnref:24" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
     <span class="info">
-      <i class="fas fa-fw fa-tags"></i>
+      <i class="fa fa-fw fa-tags"></i>
       
         <a href='/tags/auth' class="no-style">
           <span class="chip">auth</span>
@@ -546,7 +522,7 @@ not some spoofed website.</p>
           
             <div>
               <a href="/blog/2019/05/forge/" class="no-style">
-                <h6><i class="fas fa-fw fa-chevron-left"></i> Prev</h6>
+                <h6><i class="fa fa-fw fa-chevron-left"></i> Prev</h6>
                 <h4>
                   Forge
                 </h4>
@@ -561,7 +537,7 @@ not some spoofed website.</p>
           
             <div>
               <a href="/blog/2019/05/auth-in-a-nutshell-passwords/" class="no-style text-right">
-                <h6>Next <i class="fas fa-fw fa-chevron-right"></i></h6>
+                <h6>Next <i class="fa fa-fw fa-chevron-right"></i></h6>
                 <h4>
                   Auth in a Nutshell: Passwords
                 </h4>
@@ -585,7 +561,7 @@ not some spoofed website.</p>
         <div class="col sm-8">
           <div class="text-center">
             <h4 class="title">Kevin Wang</h4>
-            web dev | tech evangelist | powered by coffee <i class="fas fa-fw fa-coffee"></i>
+            web dev | tech evangelist | powered by coffee <i class="fa fa-fw fa-coffee"></i>
           </div>
         </div>
         <div class="col sm-8">
@@ -595,28 +571,28 @@ not some spoofed website.</p>
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
-                    <i class="fas fa-fw fa-file-alt"></i> Resume
+                    <i class="fa fa-fw fa-file-text"></i> Resume
                   </a>
                 </li>
               
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
-                    <i class="fab fa-fw fa-github"></i> xorkevin@github
+                    <i class="fa fa-fw fa-github"></i> xorkevin@github
                   </a>
                 </li>
               
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
-                    <i class="fab fa-fw fa-twitter"></i> xorkevin@twitter
+                    <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
                   </a>
                 </li>
               
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
-                    <i class="fas fa-fw fa-envelope"></i> kevin@xorkevin.com
+                    <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
                   </a>
                 </li>
               
@@ -629,7 +605,7 @@ not some spoofed website.</p>
               
                 <li>
                   <span>
-                    <i class="fas fa-fw fa-code"></i> with <i class="far fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fab fa-fw fa-github"></i> xorkevin</a>
+                    <i class="fa fa-fw fa-code"></i> with <i class="fa fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fa fa-fw fa-github"></i> xorkevin</a>
                   </span>
                 </li>
               
@@ -644,7 +620,7 @@ not some spoofed website.</p>
                     &copy; Kevin Wang
                     
                     
-                      2018-2019
+                      2018-2020
                     
                   </span>
                 </li>

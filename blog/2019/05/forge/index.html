@@ -4,10 +4,12 @@
     <meta charset="utf-8">
     <title>xorkevin  | Forge</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.57.2">
+    <meta name="generator" content="xorkevin/core; Hugo v0.62.2">
     
-    <link rel="stylesheet" href="/scss/main.min.3007598518434e174b5bee1ed005dcba246a95124651b3c2117f1c2b921c5132.css" integrity="sha256-MAdZhRhDThdLW&#43;4e0AXcuiRqlRJGUbPCEX8cK5IcUTI=" media="screen">
-    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/scss/main.min.17b2d2be6b6bf1d046cd5bffb4b340c0af06fbf595c4b307cf5c6b608a1b10fa.css" integrity="sha256-F7LSvmtr8dBGzVv/tLNAwK8G&#43;/WVxLMHz1xrYIobEPo=" media="screen">
+    <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
+    <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
+    <link href="/vendor/merriweather/index.css" rel="stylesheet">
     <link rel="shortcut icon" href="/favicon.ico" />
     
   </head>
@@ -26,7 +28,7 @@
       </div>
       <div class="element">
         <div class="item">
-          <i id="dark-mode-button" class="fas fa-moon"></i>
+          <i id="dark-mode-button" class="fa fa-lg fa-moon"></i>
         </div>
       </div>
     </div>
@@ -57,20 +59,18 @@
       <span class="tooltip-parent">
         
           <span class="tooltip top">
-            998 Words
+            999 Words
           </span>
         
         5 min read
       </span>
     </span>
     <span class="info small">
-      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2019/05/forge/"><i class="fas fa-fw fa-link"></i> Permalink</a>
-      &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/forge"><i class="fas fa-fw fa-code-branch"></i> Repo</a>
+      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2019/05/forge/"><i class="fa fa-fw fa-link"></i> Permalink</a>
+      &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/forge"><i class="fa fa-fw fa-code-fork"></i> Repo</a>
     </span>
-    
-
-<p>Forge is a CLI utility I originally wrote to manage the complexity of my
-database models in my Governor project. I dislike using ORM&rsquo;s, since they place
+    <p>Forge is a CLI utility I originally wrote to manage the complexity of my
+database models in my Governor project. I dislike using ORM's, since they place
 many constraints on the types of queries that can be written, or they make
 those queries unnecessarily difficult to write with a complex API due to
 language limitations. SQL itself, however, is a clear and purpose built
@@ -84,16 +84,13 @@ where a certain column equals a value. I created Forge in order to solve making
 these repetitive changes, and having to rewrite the same common SQL patterns.
 It takes in a Go <code>struct</code> and code generates typed Go functions with the
 required SQL strings.</p>
-
 <h2 id="code-generation">Code generation</h2>
-
 <p>Code generation, though a term that is gaining buzzword status once again, is a
 relatively old concept. It fell out of favor with the web platform of the past
 decade because web development was primarily dominated by dynamically typed
 interpreted languages such as Ruby, Python, and JS. Though now, as the web
 platform matures, so has the tooling, and code generation is beginning to make
 a resurgence once more.</p>
-
 <p>The interpreted languages normally make a trade-off of static type safety, for
 type &ldquo;freedom&rdquo;. As in the case of JS, one can create an object out of thin air,
 and assign an arbitrary amount of fields to it. Furthermore, these fields are
@@ -104,50 +101,48 @@ written in the JS ORM library, Sequelize, with the following code:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">User</span>.<span style="color:#a6e22e">hasMany</span>(<span style="color:#a6e22e">Post</span>, {<span style="color:#a6e22e">foreignKey</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;user_id&#39;</span>});
 <span style="color:#a6e22e">Post</span>.<span style="color:#a6e22e">belongsTo</span>(<span style="color:#a6e22e">User</span>, {<span style="color:#a6e22e">foreignKey</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;user_id&#39;</span>});
 <span style="color:#a6e22e">Post</span>.<span style="color:#a6e22e">findAll</span>({ <span style="color:#a6e22e">where</span><span style="color:#f92672">:</span> { ...}, <span style="color:#a6e22e">include</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">User</span>]});
-</code></pre></div>
-<p>These types of API&rsquo;s become harder to write when using compiled and statically
+</code></pre></div><p>These types of API's become harder to write when using compiled and statically
 typed languages. While generics can solve some issues, they cannot solve all of
 them, such as serialization of a struct. The typical way to solve these
 problems is to use a form of code generation known as macros. A macro adds an
 additional preprocessing step to the compiler pipeline prior to the actual
 parsing of the source code. The macro system itself can be as simple as the one
 in C/C++, or fully type safe macro system like the one in Rust. For example,
-Rust&rsquo;s serde package uses a <code>derive</code> macro to generate a serialization function
+Rust's serde package uses a <code>derive</code> macro to generate a serialization function
 for a struct:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rs" data-lang="rs"><span style="color:#75715e">//main.rs
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">use</span> serde::{Serialize, Deserialize};
 
-<span style="color:#75715e">#[derive(Serialize, Deserialize, Debug)]</span>
+<span style="color:#75715e">#[</span><span style="color:#75715e">derive(Serialize, Deserialize, Debug)</span><span style="color:#75715e">]</span>
 <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Point</span> {
     x: <span style="color:#66d9ef">i32</span>,
     y: <span style="color:#66d9ef">i32</span>,
 }
-</code></pre></div>
-<h2 id="go-generate">Go generate</h2>
-
+</code></pre></div><h2 id="go-generate">Go generate</h2>
 <p>For languages like Go (which Governor is written in) with less powerful
 metaprogramming, code generation becomes the next best solution. While Go does
-have <code>reflect</code>, an extremely powerful tool which makes these API&rsquo;s possible to
+have <code>reflect</code>, an extremely powerful tool which makes these API's possible to
 write, it still is not ergonomic to use since the functions often take
 <code>interface{}</code> arguments. One does know until runtime whether there is a
 potential type error. Thus one loses out on the benefits of having the Go
 compiler statically check whether you have called these functions with the
 correct types, placing the burden of type checking on the programmer.
-Fortunately, Go&rsquo;s code generation is easily invoked. It uses a special comment
+Fortunately, Go's code generation is easily invoked. It uses a special comment
 directive <code>go:generate</code> to specify a command to call when <code>$ go generate ./...</code>
 is run from the terminal. For example, in the following code, &ldquo;Hello, World&rdquo;
 will be printed to the shell on running <code>go generate</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//main.go
 </span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
-<span style="color:#f92672">//</span><span style="color:#66d9ef">go</span>:<span style="color:#a6e22e">generate</span> <span style="color:#a6e22e">echo</span> <span style="color:#e6db74">&#34;Hello, World&#34;</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#bash</span>
+<span style="color:#75715e">//go:generate echo &#34;Hello, World&#34;
+</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#bash</span>
 $ go generate ./...
-Hello, World</code></pre></div>
-<p>Go uses its <code>go generate</code> system to provide a method to generate code. It
+Hello, World
+</code></pre></div><p>Go uses its <code>go generate</code> system to provide a method to generate code. It
 provides the command to be run with the <code>$GOPACKAGE</code> and <code>$GOFILE</code> environment
-variables set to the file&rsquo;s package name and filename respectively, in addition
+variables set to the file's package name and filename respectively, in addition
 to some other information. Forge uses this information along with the struct
 definition in the file itself to generate database model functions. Take the
-following code from Governor&rsquo;s user model:</p>
+following code from Governor's user model:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model.go
 </span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">usermodel</span>
 
@@ -159,21 +154,21 @@ following code from Governor&rsquo;s user model:</p>
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">type</span> (
   <span style="color:#a6e22e">Model</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">Userid</span>       <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;userid,VARCHAR(31) PRIMARY KEY&#34; query:&#34;userid&#34;`</span>
-    <span style="color:#a6e22e">Username</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;username,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;username,get&#34;`</span>
+    <span style="color:#a6e22e">Userid</span>       <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;userid,VARCHAR(31) PRIMARY KEY&#34; query:&#34;userid&#34;</span><span style="color:#e6db74">`</span>
+    <span style="color:#a6e22e">Username</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;username,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;username,get&#34;</span><span style="color:#e6db74">`</span>
     <span style="color:#a6e22e">AuthTags</span>     <span style="color:#66d9ef">string</span>
-    <span style="color:#a6e22e">PassHash</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;pass_hash,VARCHAR(255) NOT NULL&#34; query:&#34;pass_hash&#34;`</span>
-    <span style="color:#a6e22e">Email</span>        <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;email,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;email,get&#34;`</span>
-    <span style="color:#a6e22e">FirstName</span>    <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;first_name,VARCHAR(255) NOT NULL&#34; query:&#34;first_name&#34;`</span>
-    <span style="color:#a6e22e">LastName</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;last_name,VARCHAR(255) NOT NULL&#34; query:&#34;last_name&#34;`</span>
-    <span style="color:#a6e22e">CreationTime</span> <span style="color:#66d9ef">int64</span>  <span style="color:#e6db74">`model:&#34;creation_time,BIGINT NOT NULL&#34; query:&#34;creation_time&#34;`</span>
+    <span style="color:#a6e22e">PassHash</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;pass_hash,VARCHAR(255) NOT NULL&#34; query:&#34;pass_hash&#34;</span><span style="color:#e6db74">`</span>
+    <span style="color:#a6e22e">Email</span>        <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;email,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;email,get&#34;</span><span style="color:#e6db74">`</span>
+    <span style="color:#a6e22e">FirstName</span>    <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;first_name,VARCHAR(255) NOT NULL&#34; query:&#34;first_name&#34;</span><span style="color:#e6db74">`</span>
+    <span style="color:#a6e22e">LastName</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;last_name,VARCHAR(255) NOT NULL&#34; query:&#34;last_name&#34;</span><span style="color:#e6db74">`</span>
+    <span style="color:#a6e22e">CreationTime</span> <span style="color:#66d9ef">int64</span>  <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;creation_time,BIGINT NOT NULL&#34; query:&#34;creation_time&#34;</span><span style="color:#e6db74">`</span>
   }
-)</code></pre></div>
-<p>Forge uses the <code>go/ast</code> package to parse the file <code>$GOFILE</code> and look for the
+)
+</code></pre></div><p>Forge uses the <code>go/ast</code> package to parse the file <code>$GOFILE</code> and look for the
 <code>-m &lt;Model&gt;</code> struct. It then uses the struct tags to generate the appropriate
 model functions as seen below:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model_gen.go
-</span><span style="color:#75715e">// Code generated by go generate. DO NOT EDIT.
+</span><span style="color:#75715e"></span><span style="color:#75715e">// Code generated by go generate. DO NOT EDIT.
 </span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">usermodel</span>
 
 <span style="color:#f92672">import</span> (
@@ -202,14 +197,14 @@ model functions as seen below:</p>
   }
   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">nil</span>
 }
-<span style="color:#f92672">...</span></code></pre></div>
-<p>Forge has been immensely beneficial in making maintaining Governor&rsquo;s models
+<span style="color:#f92672">...</span>
+</code></pre></div><p>Forge has been immensely beneficial in making maintaining Governor's models
 more bug free. Having Forge allows the model <code>struct</code> to be the single source
 of truth. I plan to add to Forge the ability to code generate route JSON body
 validation, in addition to other repetitive code, in the future.</p>
 
     <span class="info">
-      <i class="fas fa-fw fa-tags"></i>
+      <i class="fa fa-fw fa-tags"></i>
       
         <a href='/tags/codegen' class="no-style">
           <span class="chip">codegen</span>
@@ -247,7 +242,7 @@ validation, in addition to other repetitive code, in the future.</p>
           
             <div>
               <a href="/blog/2018/06/governor/" class="no-style">
-                <h6><i class="fas fa-fw fa-chevron-left"></i> Prev</h6>
+                <h6><i class="fa fa-fw fa-chevron-left"></i> Prev</h6>
                 <h4>
                   Governor
                 </h4>
@@ -262,7 +257,7 @@ validation, in addition to other repetitive code, in the future.</p>
           
             <div>
               <a href="/blog/2019/05/auth-in-a-nutshell-cryptography/" class="no-style text-right">
-                <h6>Next <i class="fas fa-fw fa-chevron-right"></i></h6>
+                <h6>Next <i class="fa fa-fw fa-chevron-right"></i></h6>
                 <h4>
                   Auth in a Nutshell: Cryptography
                 </h4>
@@ -286,7 +281,7 @@ validation, in addition to other repetitive code, in the future.</p>
         <div class="col sm-8">
           <div class="text-center">
             <h4 class="title">Kevin Wang</h4>
-            web dev | tech evangelist | powered by coffee <i class="fas fa-fw fa-coffee"></i>
+            web dev | tech evangelist | powered by coffee <i class="fa fa-fw fa-coffee"></i>
           </div>
         </div>
         <div class="col sm-8">
@@ -296,28 +291,28 @@ validation, in addition to other repetitive code, in the future.</p>
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
-                    <i class="fas fa-fw fa-file-alt"></i> Resume
+                    <i class="fa fa-fw fa-file-text"></i> Resume
                   </a>
                 </li>
               
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
-                    <i class="fab fa-fw fa-github"></i> xorkevin@github
+                    <i class="fa fa-fw fa-github"></i> xorkevin@github
                   </a>
                 </li>
               
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
-                    <i class="fab fa-fw fa-twitter"></i> xorkevin@twitter
+                    <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
                   </a>
                 </li>
               
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
-                    <i class="fas fa-fw fa-envelope"></i> kevin@xorkevin.com
+                    <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
                   </a>
                 </li>
               
@@ -330,7 +325,7 @@ validation, in addition to other repetitive code, in the future.</p>
               
                 <li>
                   <span>
-                    <i class="fas fa-fw fa-code"></i> with <i class="far fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fab fa-fw fa-github"></i> xorkevin</a>
+                    <i class="fa fa-fw fa-code"></i> with <i class="fa fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fa fa-fw fa-github"></i> xorkevin</a>
                   </span>
                 </li>
               
@@ -345,7 +340,7 @@ validation, in addition to other repetitive code, in the future.</p>
                     &copy; Kevin Wang
                     
                     
-                      2018-2019
+                      2018-2020
                     
                   </span>
                 </li>

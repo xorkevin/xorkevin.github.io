@@ -4,10 +4,12 @@
     <meta charset="utf-8">
     <title>xorkevin  | Governor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.57.2">
+    <meta name="generator" content="xorkevin/core; Hugo v0.62.2">
     
-    <link rel="stylesheet" href="/scss/main.min.3007598518434e174b5bee1ed005dcba246a95124651b3c2117f1c2b921c5132.css" integrity="sha256-MAdZhRhDThdLW&#43;4e0AXcuiRqlRJGUbPCEX8cK5IcUTI=" media="screen">
-    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/scss/main.min.17b2d2be6b6bf1d046cd5bffb4b340c0af06fbf595c4b307cf5c6b608a1b10fa.css" integrity="sha256-F7LSvmtr8dBGzVv/tLNAwK8G&#43;/WVxLMHz1xrYIobEPo=" media="screen">
+    <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
+    <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
+    <link href="/vendor/merriweather/index.css" rel="stylesheet">
     <link rel="shortcut icon" href="/favicon.ico" />
     
   </head>
@@ -26,7 +28,7 @@
       </div>
       <div class="element">
         <div class="item">
-          <i id="dark-mode-button" class="fas fa-moon"></i>
+          <i id="dark-mode-button" class="fa fa-lg fa-moon"></i>
         </div>
       </div>
     </div>
@@ -64,12 +66,10 @@
       </span>
     </span>
     <span class="info small">
-      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2018/06/governor/"><i class="fas fa-fw fa-link"></i> Permalink</a>
-      &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/governor"><i class="fas fa-fw fa-code-branch"></i> Repo</a>
+      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2018/06/governor/"><i class="fa fa-fw fa-link"></i> Permalink</a>
+      &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/governor"><i class="fa fa-fw fa-code-fork"></i> Repo</a>
     </span>
-    
-
-<p>As the amount of projects I have worked on grew, I noticed that many
+    <p>As the amount of projects I have worked on grew, I noticed that many
 requirements were similar if not identical across them. Not only was rewriting
 code tedious every time I needed a similar feature, but also remembering how to
 back-port new implementations for existing features as I learned more about the
@@ -79,34 +79,27 @@ new feature to determine how the implementation changed. The process is
 bug-inducing and frustrating, as often contained within those diffs are patches
 for project specific quirks and differences. This is far from ideal when the
 feature in question can compromise security, such as user authentication.</p>
-
 <p>As a result, solving these issues became the motivation for this project,
 Governor. Governor is a framework in Go for quickly building microservices
 needed for running a website with many common requirements such as user
 management already implemented as services out of the box.</p>
-
 <h2 id="design">Design</h2>
-
 <p>I knew that the code that I would write would always be destined to change as I
 learned and grew as a developer, as I painfully learned from experience. To
 resolve this issue, if there is one thing my Operating Systems professor taught
 us, it is to make clearly defined interfaces and to isolate services. Thus to
 facilitate these guaranteed future refactors, I adopted the Unix philosophy for
-each of my services. Each is highly isolated&mdash;depending only on the
+each of my services. Each is highly isolated—depending only on the
 interfaces of other services. Furthermore those dependencies are made explicit
 with constructor based dependency injection. While this leads to a nontrivial
 amount of boilerplate, it can always be resolved in the future with code
 generation. Most importantly, the upfront cost has already helped me locate and
 fix many inter-service bugs as I know clearly where one service ends and
 another begins.</p>
-
 <h2 id="features">Features</h2>
-
 <p>Here is a brief summary of the most important features (in no particular order
 of importance):</p>
-
 <h3 id="message-queue">Message queue</h3>
-
 <p>Services can communicate with one another using a NATS message queue set up
 with the project. The message queue is durable, backed by Postgres, to ensure
 guaranteed delivery across unexpected restarts. Every message broadcasted can
@@ -114,9 +107,7 @@ be configured to be delivered to all consumers or to only a single consumer in
 the case of a work queue. The message queue enables Governor to scale to
 multiple nodes in order to address load and availability concerns. Furthermore,
 any load spike can be easily handled through placing more jobs on the queue.</p>
-
 <h3 id="storage">Storage</h3>
-
 <p>There are in-built wrappers around Postgres, Redis, and Minio (based on the S3
 protocol) services that can be launched along with Governor. They handle
 relational data, caching, and object storage respectively. I chose these
@@ -124,16 +115,13 @@ services both for their reliability and the amount of support they receive both
 from their maintainers and the community. These services expose interfaces,
 however, and as a result can be easily swapped out by their dependent services
 with alternative implementations if necessary.</p>
-
 <p>To help write and maintain the SQL for relational models in Postgres, I have
 also started a parallel project, Forge, intended for use with Governor though
 it does not have any dependencies on Governor itself. Forge is a code
 generation utility that generates SQL and functions from structs with tagged
 fields. Code generating frequently changing SQL helps reduce errors due to the
 lack of types.</p>
-
 <h3 id="mail">Mail</h3>
-
 <p>An SMTP client and mail workers allow mail to be sent to any SMTP server. The
 interface accepts simple strings, which allow anything to be sent. The mail
 service is used frequently in the user service in cases such as password reset
@@ -141,18 +129,14 @@ and new login notifications. It leverages the message queue service so that any
 caller does not have to wait for the mail to finish sending before continuing.
 This also gives the mail service the benefit of having the same load handling
 characteristics as mentioned before.</p>
-
 <h3 id="user-management-and-authentication">User Management and Authentication</h3>
-
 <p>User Management is the oldest and original service I began working on in
 Governor. It takes inspiration from many of my previous projects for
 organizations such as LA Hacks, UCLA ACM, and UCLA DevX, and is continuing to
 grow as I add more common use cases. The user service uses JWT access and
 refresh tokens to manage sessions. It also handles password hashing and reset,
 permissions and roles, and many other user tasks.</p>
-
 <h2 id="refactoring">Refactoring</h2>
-
 <p>Refactors have occurred many times as demands changed, and better
 implementations arose. Using Go for this project has enabled me to easily
 adhere to interfaces and write new service implementations. Having a compiler
@@ -162,14 +146,13 @@ the NodeJS platform. Thus far, I have refactored the user role and permissions
 engine multiple times, and all the database models as I introduced Forge into
 the project. These refactors of core components were only made possible with
 the service oriented architecture of Governor.</p>
-
 <p>At over two years old, Governor has been my longest standing project. It
-currently powers the LA Hacks Tech platform, and some of UCLA DevX&rsquo;s internal
+currently powers the LA Hacks Tech platform, and some of UCLA DevX's internal
 tooling. I have many more plans for it as I continue to learn and improve my
 web development skills.</p>
 
     <span class="info">
-      <i class="fas fa-fw fa-tags"></i>
+      <i class="fa fa-fw fa-tags"></i>
       
         <a href='/tags/microservice' class="no-style">
           <span class="chip">microservice</span>
@@ -211,7 +194,7 @@ web development skills.</p>
           
             <div>
               <a href="/blog/2018/04/nuke/" class="no-style">
-                <h6><i class="fas fa-fw fa-chevron-left"></i> Prev</h6>
+                <h6><i class="fa fa-fw fa-chevron-left"></i> Prev</h6>
                 <h4>
                   Nuke
                 </h4>
@@ -226,7 +209,7 @@ web development skills.</p>
           
             <div>
               <a href="/blog/2019/05/forge/" class="no-style text-right">
-                <h6>Next <i class="fas fa-fw fa-chevron-right"></i></h6>
+                <h6>Next <i class="fa fa-fw fa-chevron-right"></i></h6>
                 <h4>
                   Forge
                 </h4>
@@ -250,7 +233,7 @@ web development skills.</p>
         <div class="col sm-8">
           <div class="text-center">
             <h4 class="title">Kevin Wang</h4>
-            web dev | tech evangelist | powered by coffee <i class="fas fa-fw fa-coffee"></i>
+            web dev | tech evangelist | powered by coffee <i class="fa fa-fw fa-coffee"></i>
           </div>
         </div>
         <div class="col sm-8">
@@ -260,28 +243,28 @@ web development skills.</p>
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
-                    <i class="fas fa-fw fa-file-alt"></i> Resume
+                    <i class="fa fa-fw fa-file-text"></i> Resume
                   </a>
                 </li>
               
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
-                    <i class="fab fa-fw fa-github"></i> xorkevin@github
+                    <i class="fa fa-fw fa-github"></i> xorkevin@github
                   </a>
                 </li>
               
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
-                    <i class="fab fa-fw fa-twitter"></i> xorkevin@twitter
+                    <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
                   </a>
                 </li>
               
               
                 <li>
                   <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
-                    <i class="fas fa-fw fa-envelope"></i> kevin@xorkevin.com
+                    <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
                   </a>
                 </li>
               
@@ -294,7 +277,7 @@ web development skills.</p>
               
                 <li>
                   <span>
-                    <i class="fas fa-fw fa-code"></i> with <i class="far fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fab fa-fw fa-github"></i> xorkevin</a>
+                    <i class="fa fa-fw fa-code"></i> with <i class="fa fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fa fa-fw fa-github"></i> xorkevin</a>
                   </span>
                 </li>
               
@@ -309,7 +292,7 @@ web development skills.</p>
                     &copy; Kevin Wang
                     
                     
-                      2018-2019
+                      2018-2020
                     
                   </span>
                 </li>
