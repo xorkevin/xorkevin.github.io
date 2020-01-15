@@ -59,7 +59,7 @@
       <span class="tooltip-parent">
         
           <span class="tooltip top">
-            2997 Words
+            3001 Words
           </span>
         
         15 min read
@@ -70,10 +70,12 @@
       &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/hunter2"><i class="fa fa-fw fa-code-fork"></i> Repo</a>
     </span>
     <p>This is Part 2 of my series on how I built the authentication system in
-<a href="https://github.com/hackform/governor">Governor</a> and what I learned in the process. Here are links
+<a href="https://github.com/hackform/governor" target="_blank" rel="noopener noreferrer">Governor</a>
+ and what I learned in the process. Here are links
 to all sections:</p>
 <ul>
-<li><a href="/blog/2019/05/auth-in-a-nutshell-cryptography/">Part 1</a> Auth in a Nutshell: Cryptography</li>
+<li><a href="/blog/2019/05/auth-in-a-nutshell-cryptography/">Part 1</a>
+ Auth in a Nutshell: Cryptography</li>
 <li>Part 2 Auth in a Nutshell: Passwords</li>
 </ul>
 <p>Now that we have covered the cryptographic primitives, it is time to begin
@@ -112,7 +114,8 @@ web designers a big headache.)</li>
 passwords which allow attackers to use dictionary attacks or rainbow tables,
 password strength is almost entirely dependent on its length and the size of
 its alphabet<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. The longer the password the better. (You can try
-generating your own <a href="https://www.rempe.us/diceware/#eff">here</a>.)</li>
+generating your own <a href="https://www.rempe.us/diceware/#eff" target="_blank" rel="noopener noreferrer">here</a>
+.)</li>
 <li>The username and email are unique. (For obvious reasons.)</li>
 <li>The email is valid.</li>
 </ol>
@@ -152,15 +155,15 @@ the industry standard AES. AES depends on a key and a random initialization
 vector which is at most 16 bytes, but more often 12 bytes for modes such as
 GCM. As mentioned in Part 1, any reuse of an initialization vector with the
 same key on a symmetric cipher immediately breaks the cipher. Thus it is
-guaranteed that every 2<sup>96</sup> password encryptions there will be a
-collision. However, this does not take into account the birthday problem, which
-predicts that there more than likely be a collision in initialization vectors
-after only 2<sup>48</sup> encryptions<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>. Thus it is
-recommended not to use a key for more than 2<sup>32</sup>
-encryptions<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>. This is enough to give everyone on the planet just
-1 password reset.</p>
+guaranteed that every 2^96 password encryptions there will be a collision.
+However, this does not take into account the birthday problem, which predicts
+that there more than likely be a collision in initialization vectors after only
+2^48 encryptions<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>. Thus it is recommended not to use a key
+for more than 2^32 encryptions<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>. This is enough to give everyone
+on the planet just 1 password reset.</p>
 <p>Finally, any attacker who manages to guess the master key, or more likely
-<a href="https://www.youtube.com/watch?v=PWVN3Rq4gzw">phish it from vulnerable sources</a>, now has access to all the
+<a href="https://www.youtube.com/watch?v=PWVN3Rq4gzw" target="_blank" rel="noopener noreferrer">phish it from vulnerable sources</a>
+, now has access to all the
 passwords.</p>
 <p>Currently, the safest method of storing passwords is with cryptographic
 password hashes, of which the details and motivations behind each step are
@@ -174,23 +177,27 @@ reasonable amount of time. If the hash is cryptographically secure, the output
 will be highly random and the only way to find the original password is to try
 every possible password. Assume that some attackers would like to break a 256
 bit hash before the sun explodes<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup>, they would need a hash rate of
-2*10<sup>59</sup> Hashes/second. A hash requires at least 100ms to compute,
-thus the attackers would need 2*10<sup>52</sup> Summit
-supercomputers<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> working around the clock to meet the deadline.</p>
+2*10^59 Hashes/second. A hash requires at least 100ms to compute, thus the
+attackers would need 2*10^52 Summit supercomputers<sup id="fnref:6"><a href="#fn:6" class="footnote-ref" role="doc-noteref">6</a></sup> working
+around the clock to meet the deadline.</p>
 <p>Checking whether a password is correct is simple: hash the password, and
 compare the hash to the corresponding stored password hash in the database. If
 they match, the password matches, otherwise they do not. This process takes at
 most several hundred milliseconds.</p>
 <p>Unfortunately, humans are lazy users, and not all of them use
-<a href="https://www.rempe.us/diceware/#eff">diceware</a> to generate passwords like &ldquo;correct horse battery
-staple&rdquo;<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. It is likely that 10% of your users will have one of <a href="https://en.wikipedia.org/wiki/List_of_the_most_common_passwords">these
-passwords</a>. This means that naively hashing passwords will
+<a href="https://www.rempe.us/diceware/#eff" target="_blank" rel="noopener noreferrer">diceware</a>
+ to generate passwords like &ldquo;correct horse battery
+staple&rdquo;<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. It is likely that 10% of your users will have one of <a href="https://en.wikipedia.org/wiki/List_of_the_most_common_passwords" target="_blank" rel="noopener noreferrer">these
+passwords</a>
+. This means that naively hashing passwords will
 lead to the same 25 password hashes in your database, which if ever obtained by
 an attacker, would be extremely easy to identify. Attackers will also use
-<a href="https://en.wikipedia.org/wiki/Rainbow_table">rainbow tables</a> full of passwords and their precomputed hashes.
+<a href="https://en.wikipedia.org/wiki/Rainbow_table" target="_blank" rel="noopener noreferrer">rainbow tables</a>
+ full of passwords and their precomputed hashes.
 This reduces the problem of breaking a simple password's hash into a lookup in
-the table. If a rainbow table is not available, <a href="https://en.wikipedia.org/wiki/Dictionary_attack">dictionary
-attacks</a> are also common. Naively storing hashes means that
+the table. If a rainbow table is not available, <a href="https://en.wikipedia.org/wiki/Dictionary_attack" target="_blank" rel="noopener noreferrer">dictionary
+attacks</a>
+ are also common. Naively storing hashes means that
 any users with the same password have their passwords all broken at the same
 time. In order to address these issues, one should salt passwords before
 storage.</p>
@@ -242,7 +249,7 @@ large amount of iterations. In fact, this is a popular choice of hash function
 for use in PBKDF2, and the resulting algorithm is called PBKDF2-HMAC-SHA-256.
 However, one can replace HMAC-SHA-256 with any other cryptographic hashing
 algorithm, such as BLAKE2b to form PBKDF2-BLAKE2b. The number of iterations you
-will need to use for PBKDF2 will be at least on the order of 10<sup>6</sup>.</p>
+will need to use for PBKDF2 will be at least on the order of 10^6.</p>
 <p>Unfortunately, the base hash of PBKDF2 is not guaranteed to be resistant to
 more modern attacks. SHA-2 and BLAKE2 can be efficiently implemented in ASIC's
 and GPU's, giving attackers a speed advantage if you are using a CPU to perform
@@ -251,22 +258,22 @@ the hashes, e.g. what may take you 100ms to hash might take an attacker only
 <p>TL;DR: Not recommended</p>
 <h4 id="bcrypt">bcrypt</h4>
 <p>bcrypt is based on top of the Blowfish algorithm. It attempts to address the
-ASIC and GPU issue by using more memory than PBKDF2. It does 2<sup>N</sup>
-blowfish key expansions which are memory intensive. Currently recommended is a
-cost of at least N=13. bcrypt is a strong password algorithm, though there are
-stronger options that are more future proof. Most notably, bcrypt, while using
-more memory, still has a constant upper bound on memory. Thus it will
-eventually be outdated as GPU's and ASIC's are improved with more memory.</p>
+ASIC and GPU issue by using more memory than PBKDF2. It does 2^N blowfish key
+expansions which are memory intensive. Currently recommended is a cost of at
+least N=13. bcrypt is a strong password algorithm, though there are stronger
+options that are more future proof. Most notably, bcrypt, while using more
+memory, still has a constant upper bound on memory. Thus it will eventually be
+outdated as GPU's and ASIC's are improved with more memory.</p>
 <p>TL;DR: Okay to use if you are currently using it, but plan an upgrade path.</p>
 <h4 id="scrypt">scrypt</h4>
 <p>scrypt was built to address the constant bound memory issue of bcrypt by making
-the memory usage configurable. It performs 2<sup>N</sup> block mixing
-operations, where the block size is configurable. scrypt also has a
-parallelization factor to use more threads, however in practice this is not
-used, opting instead to increase the work factor, N. Currently, a work factor
-of N=16, block size b=8, and parallelization factor p=1 are recommended at the
-minimum. scrypt can be used for the foreseeable future, at least until the next
-algorithm, Argon2 has had enough time to be deemed thoroughly secure.</p>
+the memory usage configurable. It performs 2^N block mixing operations, where
+the block size is configurable. scrypt also has a parallelization factor to use
+more threads, however in practice this is not used, opting instead to increase
+the work factor, N. Currently, a work factor of N=16, block size b=8, and
+parallelization factor p=1 are recommended at the minimum. scrypt can be used
+for the foreseeable future, at least until the next algorithm, Argon2 has had
+enough time to be deemed thoroughly secure.</p>
 <p>TL;DR: Recommended to use, but have an upgrade path available.</p>
 <h4 id="argon2">Argon2</h4>
 <p>Argon2 has several variants, Argon2i, Argon2d, and Argon2id. Like scrypt, it
@@ -306,7 +313,8 @@ password configuration version as a column in the database, which corresponds
 to the correct configuration of the password hash. I think this adds too much
 complexity, however.</p>
 <p>To solve this configuration issue, I developed a library for Governor,
-<a href="https://github.com/hackform/hunter2">hunter2</a>, but its actual implementation is quite simple. Hunter2
+<a href="https://github.com/hackform/hunter2" target="_blank" rel="noopener noreferrer">hunter2</a>
+, but its actual implementation is quite simple. Hunter2
 exports a <code>Hasher</code> interface as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hunter2</span>
 
@@ -434,28 +442,36 @@ has helped me simplify much of Governor's auth code.</p>
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>password length and diceware <a href="http://world.std.com/%7Ereinhold/dicewarefaq.html">http://world.std.com/%7Ereinhold/dicewarefaq.html</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>password length and diceware <a href="http://world.std.com/%7Ereinhold/dicewarefaq.html" target="_blank" rel="noopener noreferrer">http://world.std.com/%7Ereinhold/dicewarefaq.html</a>
+ <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>Facebook plaintext passwords <a href="https://www.wired.com/story/facebook-passwords-plaintext-change-yours/">https://www.wired.com/story/facebook-passwords-plaintext-change-yours/</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Facebook plaintext passwords <a href="https://www.wired.com/story/facebook-passwords-plaintext-change-yours/" target="_blank" rel="noopener noreferrer">https://www.wired.com/story/facebook-passwords-plaintext-change-yours/</a>
+ <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>Birthday problem <a href="https://en.wikipedia.org/wiki/Birthday_problem">https://en.wikipedia.org/wiki/Birthday_problem</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Birthday problem <a href="https://en.wikipedia.org/wiki/Birthday_problem" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Birthday_problem</a>
+ <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
-<p>NIST AES recommendations <a href="https://csrc.nist.gov/publications/detail/sp/800-38d/final">https://csrc.nist.gov/publications/detail/sp/800-38d/final</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>NIST AES recommendations <a href="https://csrc.nist.gov/publications/detail/sp/800-38d/final" target="_blank" rel="noopener noreferrer">https://csrc.nist.gov/publications/detail/sp/800-38d/final</a>
+ <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:5" role="doc-endnote">
-<p>Sun lifetime <a href="https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system">https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system</a> <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Sun lifetime <a href="https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system" target="_blank" rel="noopener noreferrer">https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system</a>
+ <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:6" role="doc-endnote">
-<p>Summit press release <a href="https://www.olcf.ornl.gov/summit/">https://www.olcf.ornl.gov/summit/</a> <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>Summit press release <a href="https://www.olcf.ornl.gov/summit/" target="_blank" rel="noopener noreferrer">https://www.olcf.ornl.gov/summit/</a>
+ <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:7" role="doc-endnote">
-<p>XKCD: password strength <a href="https://xkcd.com/936/">https://xkcd.com/936/</a> <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>XKCD: password strength <a href="https://xkcd.com/936/" target="_blank" rel="noopener noreferrer">https://xkcd.com/936/</a>
+ <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:8" role="doc-endnote">
-<p>bcrypt paper <a href="https://www.openbsd.org/papers/bcrypt-paper.pdf">https://www.openbsd.org/papers/bcrypt-paper.pdf</a> <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+<p>bcrypt paper <a href="https://www.openbsd.org/papers/bcrypt-paper.pdf" target="_blank" rel="noopener noreferrer">https://www.openbsd.org/papers/bcrypt-paper.pdf</a>
+ <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
