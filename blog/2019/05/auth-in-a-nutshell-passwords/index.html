@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>xorkevin  | Auth in a Nutshell: Passwords</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.62.2">
+    <meta name="generator" content="xorkevin/core; Hugo v0.66.0">
     
     <link rel="stylesheet" href="/scss/main.min.f85edb5b545d35985ef25c1aeded2ced2e503d6c4a6aef1ec81660f9f414faaa.css" integrity="sha256-&#43;F7bW1RdNZhe8lwa7e0s7S5QPWxKau8eyBZg&#43;fQU&#43;qo=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
@@ -124,7 +124,7 @@ the address with a unique random key. Assuming that the request passed checks 1
 through 4, the information is put into a cache (Governor currently uses Redis
 by default), with a randomly generated key and a configurable time limit before
 it is erased from memory. At the same time, an email with the key is sent via
-Governor's SMTP email service to the user's email address. If the user has
+Governor&rsquo;s SMTP email service to the user&rsquo;s email address. If the user has
 entered a valid email address, he or she should receive the email and complete
 their sign up with the key which posts a request to:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;POST /api/u/user/confirm&#34;</span>
@@ -139,7 +139,7 @@ emails that fail validation prevent the account from being created.</p>
 <p>Once the user has confirmed that their email is valid, the account creation
 process moves into its next phase.</p>
 <h2 id="passwords">Passwords</h2>
-<p>One might be tempted to just put all the user's information verbatim into the
+<p>One might be tempted to just put all the user&rsquo;s information verbatim into the
 <code>users</code> table in the database. Unfortunately, storing passwords in plaintext is
 a security issue that we are all too well aware of by now<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. Users
 place their trust in the website to safely store their information, and that
@@ -194,7 +194,7 @@ lead to the same 25 password hashes in your database, which if ever obtained by
 an attacker, would be extremely easy to identify. Attackers will also use
 <a href="https://en.wikipedia.org/wiki/Rainbow_table" target="_blank" rel="noopener noreferrer">rainbow tables</a>
  full of passwords and their precomputed hashes.
-This reduces the problem of breaking a simple password's hash into a lookup in
+This reduces the problem of breaking a simple password&rsquo;s hash into a lookup in
 the table. If a rainbow table is not available, <a href="https://en.wikipedia.org/wiki/Dictionary_attack" target="_blank" rel="noopener noreferrer">dictionary
 attacks</a>
  are also common. Naively storing hashes means that
@@ -220,7 +220,7 @@ the event that the user uses the same password again.</li>
 <li>Salts should be <em>truly</em> random and unique. The more predictable the salt, the
 more likely it will exist in a rainbow table.</li>
 <li>Salts should be as long as necessary to guarantee that every single user is
-assigned a unique salt. Uuid's are typically 128 bits in size, thus it makes
+assigned a unique salt. Uuid&rsquo;s are typically 128 bits in size, thus it makes
 sense to make salts at least the same length.</li>
 </ul>
 <h3 id="choosing-a-hash">Choosing a hash</h3>
@@ -251,10 +251,10 @@ However, one can replace HMAC-SHA-256 with any other cryptographic hashing
 algorithm, such as BLAKE2b to form PBKDF2-BLAKE2b. The number of iterations you
 will need to use for PBKDF2 will be at least on the order of 10^6.</p>
 <p>Unfortunately, the base hash of PBKDF2 is not guaranteed to be resistant to
-more modern attacks. SHA-2 and BLAKE2 can be efficiently implemented in ASIC's
-and GPU's, giving attackers a speed advantage if you are using a CPU to perform
+more modern attacks. SHA-2 and BLAKE2 can be efficiently implemented in ASIC&rsquo;s
+and GPU&rsquo;s, giving attackers a speed advantage if you are using a CPU to perform
 the hashes, e.g. what may take you 100ms to hash might take an attacker only
-1ms. PBKDF2 is reaching EOL, if it isn't already.</p>
+1ms. PBKDF2 is reaching EOL, if it isn&rsquo;t already.</p>
 <p>TL;DR: Not recommended</p>
 <h4 id="bcrypt">bcrypt</h4>
 <p>bcrypt is based on top of the Blowfish algorithm. It attempts to address the
@@ -263,7 +263,7 @@ expansions which are memory intensive. Currently recommended is a cost of at
 least N=13. bcrypt is a strong password algorithm, though there are stronger
 options that are more future proof. Most notably, bcrypt, while using more
 memory, still has a constant upper bound on memory. Thus it will eventually be
-outdated as GPU's and ASIC's are improved with more memory.</p>
+outdated as GPU&rsquo;s and ASIC&rsquo;s are improved with more memory.</p>
 <p>TL;DR: Okay to use if you are currently using it, but plan an upgrade path.</p>
 <h4 id="scrypt">scrypt</h4>
 <p>scrypt was built to address the constant bound memory issue of bcrypt by making
@@ -300,9 +300,9 @@ amounts of configuration as seen in:</p>
 </code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">bcrypt</span>
 <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">GenerateFromPassword</span>(<span style="color:#a6e22e">password</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">cost</span> <span style="color:#66d9ef">int</span>) ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>)
 </code></pre></div><p>It may be tempting to store this configuration in some configuration file,
-which can be read whenever a new user is created or authenticating a user's
+which can be read whenever a new user is created or authenticating a user&rsquo;s
 password. However, this becomes increasingly more difficult to maintain over
-the course of an auth system's lifetime. Computing hardware will improve,
+the course of an auth system&rsquo;s lifetime. Computing hardware will improve,
 forcing you to increase the computation cost of the password hash for newly
 created passwords. A password hash may, itself, be compromised because a new
 ASIC has been developed, forcing you to use an entirely different password
@@ -436,7 +436,7 @@ compared against the hash, as seen below.</p>
 </code></pre></div><p>This strategy of storing password hash configuration in the output of the hash
 came from the well written bcrypt paper<sup id="fnref:8"><a href="#fn:8" class="footnote-ref" role="doc-noteref">8</a></sup>. This greatly reduces
 complexity in updating configuration as password hash standards increase, and
-has helped me simplify much of Governor's auth code.</p>
+has helped me simplify much of Governor&rsquo;s auth code.</p>
 <p>And thus ends Part 2.</p>
 <section class="footnotes" role="doc-endnotes">
 <hr>
@@ -523,6 +523,18 @@ has helped me simplify much of Governor's auth code.</p>
           
         </div>
         <div class="col xs-22 sm-10 md-7 lg-5">
+          
+            <div>
+              <a href="/blog/2020/03/why-ecs/" class="no-style text-right">
+                <h6>Next <i class="fa fa-fw fa-chevron-right"></i></h6>
+                <h4>
+                  Why ECS
+                </h4>
+                <p>
+                  What is entity component system for
+                </p>
+              </a>
+            </div>
           
         </div>
       </div>

@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2018</copyright>
-    <lastBuildDate>Mon, 27 May 2019 15:34:21 -0700</lastBuildDate>
+    <lastBuildDate>Mon, 02 Mar 2020 14:01:18 -0800</lastBuildDate>
     
 	<atom:link href="https://xorkevin.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Why ECS</title>
+      <link>https://xorkevin.com/blog/2020/03/why-ecs/</link>
+      <pubDate>Mon, 02 Mar 2020 14:01:18 -0800</pubDate>
+      
+      <guid>https://xorkevin.com/blog/2020/03/why-ecs/</guid>
+      <description>I, like many programmers often do, first began experimenting with programming through games.</description>
+    </item>
     
     <item>
       <title>Auth in a Nutshell: Passwords</title>

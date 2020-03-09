@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>xorkevin  | Why ECS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="xorkevin/core; Hugo v0.66.0">
+    
+    <link rel="stylesheet" href="/scss/main.min.f85edb5b545d35985ef25c1aeded2ced2e503d6c4a6aef1ec81660f9f414faaa.css" integrity="sha256-&#43;F7bW1RdNZhe8lwa7e0s7S5QPWxKau8eyBZg&#43;fQU&#43;qo=" media="screen">
+    <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
+    <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
+    <link href="/vendor/merriweather/index.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    
+  </head>
+
+  <body>
+    <nav>
+  <div class="nav-container">
+    <div class="container">
+      <div class="element">
+        <div class="item">
+          <a href='/'>Home</a>
+        </div>
+        <div class="item">
+          <a href='/blog'>Blog</a>
+        </div>
+      </div>
+      <div class="element">
+        <div class="item">
+          <i id="dark-mode-button" class="fa fa-lg fa-moon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+    <main class="main" role="main">
+      
+  <section>
+  </section>
+  <article>
+    <h1 class="title">Why ECS</h1>
+    <h3 class="subtitle">What is entity component system for</h3>
+    
+      
+      <h5>Kevin Wang</h5>
+    
+    <span class="info">
+      <span class="tooltip-parent">
+        
+          <span class="tooltip top">
+            Last modified 2020-03-08
+          </span>
+        
+        Mon, Mar 2, 2020
+      </span>
+      &middot;
+      <span class="tooltip-parent">
+        
+          <span class="tooltip top">
+            1722 Words
+          </span>
+        
+        9 min read
+      </span>
+    </span>
+    <span class="info small">
+      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2020/03/why-ecs/"><i class="fa fa-fw fa-link"></i> Permalink</a>
+      
+    </span>
+    <p>I, like many programmers often do, first began experimenting with programming
+through games. They can be quite simple to write, and provide a self contained,
+easily testable, tangible, and fun way to learn programming. To this day, the
+first thing I will try to build when learning a new UI framework or platform is
+to build a simple clicker &ldquo;game&rdquo;. Though highly contrived, it exercises
+maintaining and updating state, programmatically updating the view, and
+interfacing with the event system&mdash;all common requirements for building a UI
+program.</p>
+<p>My early experimentation with game programming quickly reached an impasse,
+however. I discovered, in attempting to write more complex games, that my game
+logic always became tangled, difficult to understand, and difficult to debug.
+It wasn&rsquo;t until recently, in having to design and implement a game for a class
+project, that I learned the reason why. Now, with many more additional years of
+experience, I understand that game architecture is an entirely different beast
+compared with the &ldquo;traditional&rdquo; object oriented approach to program design.</p>
+<p>Game architecture has a wildly different philosophy than more conventional
+programs, driven by the unique way data is organized and accessed within them.
+Currently, the most widely accepted solution is to use the entity component
+system pattern, or some variant of it. Learning about how the current best
+architectural patterns solve these problems that uniquely appear in game
+programming has been useful for me to compare against architectural patterns in
+other domains. These comparisons give insight into the key aspects of a
+particular problem that motivate a certain type of solution.</p>
+<h2 id="the-problem">The Problem</h2>
+<p>To reiterate, using &ldquo;traditional&rdquo; object oriented designs for game development
+is not recommended, because it quickly leads to tangled logic and difficult to
+debug code. To better visualize this, let us consider a contrived example.</p>
+<p>Say there is a roguelike<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> dungeon crawler game with the following
+types of objects and their corresponding behaviors:</p>
+<ul>
+<li>player: is collidable, has position, has velocity, has health, is
+controllable, and is renderable</li>
+<li>enemy: is collidable, has position, has velocity, has health, and is
+renderable</li>
+<li>trap: has position, has health, and is renderable</li>
+<li>wall: is collidable, has position, and is renderable</li>
+</ul>
+<p>The objective here is to write maintainable implementations for these behaviors
+that allows us to easily share those implementations amongst the multiple types
+of objects that require them, and allow behaviors to be easily added and
+modified.</p>
+<h3 id="inheritance">Inheritance</h3>
+<p>A traditional object oriented approach here would dictate that we should
+abstract over the behaviors for each object type. Inheritance is one such
+solution to share implementation across multiple types of objects, though it
+would be difficult to implement in practice here, because certain object types
+share some behaviors in a nonhierarchical manner. For example, player, enemy,
+and wall share collision, position, and renderable; and player and enemy share
+velocity and health. However, player, enemy, and trap share position, health,
+and renderable as well. There is no object type hierarchy here where supertypes
+may have behavior that is shared only by subtypes. Thus inheritance is a poor
+solution for this problem.</p>
+<h3 id="interfaces">Interfaces</h3>
+<p>Alternately, interfaces are another traditional objected oriented solution.
+Addressing the previously stated issues, object types only have to implement
+the behavior that they require. For example, the player type could implement
+the collidable interface by delegating it to a common, shared collidable
+implementation, and likewise for the rest of the player&rsquo;s behaviors. Other
+object types could similarly implement only the interfaces that they require.
+However, the issue with this approach is that business logic for games often
+concerns not just one entire object at a time, but only parts of all objects at
+a time. For example, in order to calculate collision, one needs to consider the
+collision and position properties of all objects, but may not care about
+whether an object has health or is renderable.</p>
+<p>Furthermore, both of these approaches fail at a more fundamental level.
+Abstracting over behaviors on a per object basis is less useful for this
+problem, because the &ldquo;behaviors&rdquo; in question are mostly direct data access and
+mutation. For example, the position interface would most likely just consist of
+<code>get_pos() -&gt; Vec</code> and <code>set_pos(pos: Vec)</code>, because it needs to be queried and
+updated in unique ways by velocity and collision. Similarly, the health
+interface would most likely only consist of <code>get_health() -&gt; int</code> and
+<code>change_health(delta: int)</code> to support taking damage in various ways such as
+being attacked by an enemy, or receiving damage over time from a trap.</p>
+<p>Abstracting over behaviors is most powerful when the behaviors are complex and
+higher level, so that the complexity of lower level implementation details is
+hidden from those who depend on the interface. Interfaces that directly expose
+low level implementation are inherently weaker.</p>
+<h2 id="enter-entity-component-system">Enter Entity Component System</h2>
+<p>Entity component system (ECS) attempts to address the issues that we have seen
+above, i.e. a heavy emphasis on data access and mutation, and objects that are
+composed of many subcomponents. It has, as its name suggests, three main parts:</p>
+<ul>
+<li>Entity: An entity is conceptually an object that exists in the game world.
+Most importantly, an entity does not contain any data or behavior itself. It
+is represented only by a global identifier (not unlike the primary key of a
+database table). Usually, there exists an &ldquo;entity manager&rdquo; which keeps a
+record of all the entities that currently exist.</li>
+<li>Component: A component is a property of an entity, and only stores a
+particular facet of data about an entity, such as a velocity component or
+position component. Importantly, components do not contain any behavior. Like
+entities themselves, components of the same type are usually all stored
+together in a single data structure (typically an array for performance
+reasons) and managed by a &ldquo;component manager&rdquo;. This is in stark contrast with
+traditional the OOP mindset, where a player object might own its velocity,
+position, etc. In ECS, component managers each own all the components of a
+particular type. For example, a velocity component manager owns and manages
+all the velocity components of all entities in the game world.</li>
+<li>System: Grouping like components together through component managers paves
+the way for the final part of ECS, system. A system contains an aspect of the
+business logic of a game. An ECS instance (known as a world) may have many
+systems running every tick. Systems operate on specific subsets of
+components, read their state, and act upon it, which may include updating the
+component, updating other components, or dispatching events. For example, a
+physics system may iterate through all entities with velocity and position
+components, and update position based on velocity for the time step. Another
+may be a movement sytem which checks for input, and updates the velocity
+component of a player.</li>
+</ul>
+<h3 id="example">Example</h3>
+<p>Here is a brief code example of what the physics system in the game that I
+wrote looks like. Some things of note about this example are:</p>
+<ul>
+<li>The <code>run</code> function is called on every tick of the game loop.</li>
+<li>The physics implementation is quite simple, and just involves iterating
+through each entity with a <code>PHYSICS</code> and <code>TRANSFORM</code> component, and updating
+their positions and velocities for the next time step.</li>
+<li>ECS encourages writing systems, i.e. game logic, that are concise, single
+responsibility, and composable.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">TRANSFORM</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;TRANSFORM&#39;</span>;
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">TransformComponent</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">px</span>, <span style="color:#a6e22e">py</span>, <span style="color:#a6e22e">pz</span>, <span style="color:#a6e22e">orientation</span>) =&gt; {
+  <span style="color:#66d9ef">return</span> [<span style="color:#a6e22e">TRANSFORM</span>, {<span style="color:#a6e22e">px</span>, <span style="color:#a6e22e">py</span>, <span style="color:#a6e22e">pz</span>, <span style="color:#a6e22e">orientation</span>}];
+};
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">PHYSICS</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;PHYSICS&#39;</span>;
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">PhysicsComponent</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">vx</span>, <span style="color:#a6e22e">vy</span>, <span style="color:#a6e22e">friction</span>) =&gt; {
+  <span style="color:#66d9ef">return</span> [<span style="color:#a6e22e">PHYSICS</span>, {<span style="color:#a6e22e">vx</span>, <span style="color:#a6e22e">vy</span>, <span style="color:#a6e22e">basevx</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">basevy</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">friction</span>}];
+};
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">PhysicsSystem</span> <span style="color:#f92672">=</span> () =&gt; {
+  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">applyFriction</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">f</span>, <span style="color:#a6e22e">v</span>) =&gt; {
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">f</span> <span style="color:#f92672">&gt;</span> Math.<span style="color:#a6e22e">abs</span>(<span style="color:#a6e22e">v</span>)) {
+      <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    }
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">v</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+      <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">f</span>;
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">f</span>;
+  };
+
+  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">run</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">dt</span>) =&gt; {
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">physics</span>, <span style="color:#a6e22e">transform</span>] <span style="color:#66d9ef">of</span> <span style="color:#a6e22e">ctx</span>.<span style="color:#a6e22e">getEntities</span>(
+      <span style="color:#a6e22e">PHYSICS</span>,
+      <span style="color:#a6e22e">TRANSFORM</span>,
+    )) {
+      <span style="color:#a6e22e">transform</span>.<span style="color:#a6e22e">px</span> <span style="color:#f92672">+=</span> (<span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">basevx</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vx</span>) <span style="color:#f92672">*</span> <span style="color:#a6e22e">dt</span>;
+      <span style="color:#a6e22e">transform</span>.<span style="color:#a6e22e">py</span> <span style="color:#f92672">+=</span> (<span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">basevy</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vy</span>) <span style="color:#f92672">*</span> <span style="color:#a6e22e">dt</span>;
+      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vx</span> <span style="color:#f92672">!==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vy</span> <span style="color:#f92672">!==</span> <span style="color:#ae81ff">0</span>) {
+        <span style="color:#a6e22e">transform</span>.<span style="color:#a6e22e">orientation</span> <span style="color:#f92672">=</span>
+          Math.<span style="color:#a6e22e">atan2</span>(<span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vy</span>, <span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vx</span>) <span style="color:#f92672">-</span> Math.<span style="color:#a6e22e">PI</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;
+      }
+      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">friction</span> <span style="color:#f92672">!==</span> <span style="color:#ae81ff">0</span>) {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">f</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">friction</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">dt</span>;
+        <span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vx</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">applyFriction</span>(<span style="color:#a6e22e">f</span>, <span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vx</span>);
+        <span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vy</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">applyFriction</span>(<span style="color:#a6e22e">f</span>, <span style="color:#a6e22e">physics</span>.<span style="color:#a6e22e">vy</span>);
+      }
+    }
+  };
+
+  <span style="color:#66d9ef">return</span> {
+    <span style="color:#a6e22e">run</span>,
+  };
+};
+
+</code></pre></div><h3 id="philosophy">Philosophy</h3>
+<p>The ECS pattern is highly data driven compared to other architectural patterns.
+With ECS, one defines a large, segmented pool of state (components), and
+separately defines business logic which operates on those components (systems).
+Systems only care about and operate on the components that they are responsible
+for, and entities only need to compose over the relevant components in order to
+obtain behavior from systems. For example, creating a new enemy would involve
+creating a new entity with collidable, position, velocity, health, and
+renderable components, knowing that the physics, collision, health, and
+rendering systems will ensure that its state is updated correctly each tick.
+Creating new enemy types that are mechanically different also become &ldquo;easy&rdquo;, as
+a direct result of the composability of components. For example, creating a
+ghost enemy that may fly through walls would only need position, velocity,
+health, and renderable components, knowing that the collision system would not
+operate on this new ghost entity.</p>
+<p>ECS embraces the fact that game logic has inherently cross-cutting concerns
+that involve different entities and components. This is apparent in position,
+which needs to be updated both by velocity and by collision, and as such cannot
+be directly &ldquo;owned&rdquo; by either. Collision also involves all entities with a
+collidable component. This would be difficult to implement if collision data
+was not managed by a single data structure.</p>
+<p>ECS is well suited for problems where data needs to be accessed and modified
+constantly by a multitude of actors, because of its focus on a separation of
+data and its associated behavior. It does this, however, by giving up some
+degree of encapsulation and information hiding. A more traditional object
+oriented architecture is designed to hide implementation details so that other
+services may depend upon a constant API contract/interface while the underlying
+implementation evolves and improves. With games, the aspect of the code that
+changes the most is not implementation, but instead new features and systems
+that integrate tightly with the existing systems, i.e. new ways to play the
+game. This unique problem is why entity component system is so prevalent in
+game programming, and why it is crucial to learn for game developers.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>Roguelike game <a href="https://en.wikipedia.org/wiki/Roguelike" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Roguelike</a>
+ <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+    <span class="info">
+      <i class="fa fa-fw fa-tags"></i>
+      
+        <a href='/tags/gamedev' class="no-style">
+          <span class="chip">gamedev</span>
+        </a>
+      
+        <a href='/tags/notes' class="no-style">
+          <span class="chip">notes</span>
+        </a>
+      
+    </span>
+    <hr />
+    
+      
+      <div>
+        <div class="author">
+          <div class="image round">
+            <img src='/img/authors/xorkevin.jpg' />
+          </div>
+          <div class="description">
+            <h4 class="name">Kevin Wang</h4>
+            <div class="bio">Web dev and tech evangelist. Experiences decision fatigue daily.</div>
+          </div>
+        </div>
+      </div>
+    
+  </article>
+  <section>
+    <div class="container">
+      <div class="grid horizontal-center">
+        <div class="col xs-22 sm-10 md-7 lg-5">
+          
+            <div>
+              <a href="/blog/2019/05/auth-in-a-nutshell-passwords/" class="no-style">
+                <h6><i class="fa fa-fw fa-chevron-left"></i> Prev</h6>
+                <h4>
+                  Auth in a Nutshell: Passwords
+                </h4>
+                <p>
+                  on the subject of passwords
+                </p>
+              </a>
+            </div>
+          
+        </div>
+        <div class="col xs-22 sm-10 md-7 lg-5">
+          
+        </div>
+      </div>
+    </div>
+  </section>
+
+    </main>
+    <footer>
+  <div class="container padded narrow">
+    
+      
+      <div class="grid horizontal-center">
+        <div class="col sm-8">
+          <div class="text-center">
+            <h4 class="title">Kevin Wang</h4>
+            web dev | tech evangelist | powered by coffee <i class="fa fa-fw fa-coffee"></i>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <h5 class="title">contact me</h5>
+            <ul>
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
+                    <i class="fa fa-fw fa-file-text"></i> Resume
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
+                    <i class="fa fa-fw fa-github"></i> xorkevin@github
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
+                    <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
+                  </a>
+                </li>
+              
+              
+                <li>
+                  <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
+                    <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+        <div class="col sm-8">
+          <div class="text-center">
+            <ul>
+              
+                <li>
+                  <span>
+                    <i class="fa fa-fw fa-code"></i> with <i class="fa fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fa fa-fw fa-github"></i> xorkevin</a>
+                  </span>
+                </li>
+              
+              <li>
+                <span>
+                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/xorkevin">xorkevin/core</a>
+                </span>
+              </li>
+              
+                <li>
+                  <span>
+                    &copy; Kevin Wang
+                    
+                    
+                      2018-2020
+                    
+                  </span>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</footer>
+
+    <script>
+(() => {
+  const darkModeClassname = 'dark';
+  const darkModeButtonId = 'dark-mode-button';
+  const darkModeStorageId = 'dark-mode';
+  const darkModeStorageEnable = 'enabled';
+  const darkModeStorageDisable = 'disabled';
+
+  const setDarkMode = (dark) => {
+    if (dark) {
+      document.body.classList.add(darkModeClassname);
+    } else {
+      document.body.classList.remove(darkModeClassname);
+    }
+    window.localStorage.setItem(darkModeStorageId, dark ? darkModeStorageEnable : darkModeStorageDisable);
+  };
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    let darkModeState = false;
+    if (window.localStorage.getItem(darkModeStorageId) === darkModeStorageEnable) {
+      darkModeState = true;
+    }
+    setDarkMode(darkModeState);
+
+    const darkModeButton = document.getElementById(darkModeButtonId);
+    if (!darkModeButton) {
+      return;
+    }
+
+    const darkModeToggle = (event) => {
+      darkModeState = !darkModeState;
+      setDarkMode(darkModeState);
+    };
+    darkModeButton.addEventListener('click', darkModeToggle);
+  });
+})();
+</script>
+
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-140853026-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-140853026-1');
+</script>
+
+  </body>
+</html>

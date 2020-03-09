@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>xorkevin  | Forge</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.62.2">
+    <meta name="generator" content="xorkevin/core; Hugo v0.66.0">
     
     <link rel="stylesheet" href="/scss/main.min.f85edb5b545d35985ef25c1aeded2ced2e503d6c4a6aef1ec81660f9f414faaa.css" integrity="sha256-&#43;F7bW1RdNZhe8lwa7e0s7S5QPWxKau8eyBZg&#43;fQU&#43;qo=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
@@ -70,7 +70,7 @@
       &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/forge"><i class="fa fa-fw fa-code-fork"></i> Repo</a>
     </span>
     <p>Forge is a CLI utility I originally wrote to manage the complexity of my
-database models in my Governor project. I dislike using ORM's, since they place
+database models in my Governor project. I dislike using ORM&rsquo;s, since they place
 many constraints on the types of queries that can be written, or they make
 those queries unnecessarily difficult to write with a complex API due to
 language limitations. SQL itself, however, is a clear and purpose built
@@ -101,19 +101,19 @@ written in the JS ORM library, Sequelize, with the following code:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">User</span>.<span style="color:#a6e22e">hasMany</span>(<span style="color:#a6e22e">Post</span>, {<span style="color:#a6e22e">foreignKey</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;user_id&#39;</span>});
 <span style="color:#a6e22e">Post</span>.<span style="color:#a6e22e">belongsTo</span>(<span style="color:#a6e22e">User</span>, {<span style="color:#a6e22e">foreignKey</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;user_id&#39;</span>});
 <span style="color:#a6e22e">Post</span>.<span style="color:#a6e22e">findAll</span>({ <span style="color:#a6e22e">where</span><span style="color:#f92672">:</span> { ...}, <span style="color:#a6e22e">include</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">User</span>]});
-</code></pre></div><p>These types of API's become harder to write when using compiled and statically
+</code></pre></div><p>These types of API&rsquo;s become harder to write when using compiled and statically
 typed languages. While generics can solve some issues, they cannot solve all of
 them, such as serialization of a struct. The typical way to solve these
 problems is to use a form of code generation known as macros. A macro adds an
 additional preprocessing step to the compiler pipeline prior to the actual
 parsing of the source code. The macro system itself can be as simple as the one
 in C/C++, or fully type safe macro system like the one in Rust. For example,
-Rust's serde package uses a <code>derive</code> macro to generate a serialization function
+Rust&rsquo;s serde package uses a <code>derive</code> macro to generate a serialization function
 for a struct:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rs" data-lang="rs"><span style="color:#75715e">//main.rs
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">use</span> serde::{Serialize, Deserialize};
 
-<span style="color:#75715e">#[</span><span style="color:#75715e">derive(Serialize, Deserialize, Debug)</span><span style="color:#75715e">]</span>
+<span style="color:#75715e">#[derive(Serialize, Deserialize, Debug)]</span>
 <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Point</span> {
     x: <span style="color:#66d9ef">i32</span>,
     y: <span style="color:#66d9ef">i32</span>,
@@ -121,13 +121,13 @@ for a struct:</p>
 </code></pre></div><h2 id="go-generate">Go generate</h2>
 <p>For languages like Go (which Governor is written in) with less powerful
 metaprogramming, code generation becomes the next best solution. While Go does
-have <code>reflect</code>, an extremely powerful tool which makes these API's possible to
+have <code>reflect</code>, an extremely powerful tool which makes these API&rsquo;s possible to
 write, it still is not ergonomic to use since the functions often take
 <code>interface{}</code> arguments. One does know until runtime whether there is a
 potential type error. Thus one loses out on the benefits of having the Go
 compiler statically check whether you have called these functions with the
 correct types, placing the burden of type checking on the programmer.
-Fortunately, Go's code generation is easily invoked. It uses a special comment
+Fortunately, Go&rsquo;s code generation is easily invoked. It uses a special comment
 directive <code>go:generate</code> to specify a command to call when <code>$ go generate ./...</code>
 is run from the terminal. For example, in the following code, &ldquo;Hello, World&rdquo;
 will be printed to the shell on running <code>go generate</code>.</p>
@@ -139,10 +139,10 @@ $ go generate ./...
 Hello, World
 </code></pre></div><p>Go uses its <code>go generate</code> system to provide a method to generate code. It
 provides the command to be run with the <code>$GOPACKAGE</code> and <code>$GOFILE</code> environment
-variables set to the file's package name and filename respectively, in addition
+variables set to the file&rsquo;s package name and filename respectively, in addition
 to some other information. Forge uses this information along with the struct
 definition in the file itself to generate database model functions. Take the
-following code from Governor's user model:</p>
+following code from Governor&rsquo;s user model:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model.go
 </span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">usermodel</span>
 
@@ -154,21 +154,21 @@ following code from Governor's user model:</p>
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">type</span> (
   <span style="color:#a6e22e">Model</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">Userid</span>       <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;userid,VARCHAR(31) PRIMARY KEY&#34; query:&#34;userid&#34;</span><span style="color:#e6db74">`</span>
-    <span style="color:#a6e22e">Username</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;username,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;username,get&#34;</span><span style="color:#e6db74">`</span>
+    <span style="color:#a6e22e">Userid</span>       <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;userid,VARCHAR(31) PRIMARY KEY&#34; query:&#34;userid&#34;`</span>
+    <span style="color:#a6e22e">Username</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;username,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;username,get&#34;`</span>
     <span style="color:#a6e22e">AuthTags</span>     <span style="color:#66d9ef">string</span>
-    <span style="color:#a6e22e">PassHash</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;pass_hash,VARCHAR(255) NOT NULL&#34; query:&#34;pass_hash&#34;</span><span style="color:#e6db74">`</span>
-    <span style="color:#a6e22e">Email</span>        <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;email,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;email,get&#34;</span><span style="color:#e6db74">`</span>
-    <span style="color:#a6e22e">FirstName</span>    <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;first_name,VARCHAR(255) NOT NULL&#34; query:&#34;first_name&#34;</span><span style="color:#e6db74">`</span>
-    <span style="color:#a6e22e">LastName</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;last_name,VARCHAR(255) NOT NULL&#34; query:&#34;last_name&#34;</span><span style="color:#e6db74">`</span>
-    <span style="color:#a6e22e">CreationTime</span> <span style="color:#66d9ef">int64</span>  <span style="color:#e6db74">`</span><span style="color:#e6db74">model:&#34;creation_time,BIGINT NOT NULL&#34; query:&#34;creation_time&#34;</span><span style="color:#e6db74">`</span>
+    <span style="color:#a6e22e">PassHash</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;pass_hash,VARCHAR(255) NOT NULL&#34; query:&#34;pass_hash&#34;`</span>
+    <span style="color:#a6e22e">Email</span>        <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;email,VARCHAR(255) NOT NULL UNIQUE&#34; query:&#34;email,get&#34;`</span>
+    <span style="color:#a6e22e">FirstName</span>    <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;first_name,VARCHAR(255) NOT NULL&#34; query:&#34;first_name&#34;`</span>
+    <span style="color:#a6e22e">LastName</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`model:&#34;last_name,VARCHAR(255) NOT NULL&#34; query:&#34;last_name&#34;`</span>
+    <span style="color:#a6e22e">CreationTime</span> <span style="color:#66d9ef">int64</span>  <span style="color:#e6db74">`model:&#34;creation_time,BIGINT NOT NULL&#34; query:&#34;creation_time&#34;`</span>
   }
 )
 </code></pre></div><p>Forge uses the <code>go/ast</code> package to parse the file <code>$GOFILE</code> and look for the
 <code>-m &lt;Model&gt;</code> struct. It then uses the struct tags to generate the appropriate
 model functions as seen below:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model_gen.go
-</span><span style="color:#75715e"></span><span style="color:#75715e">// Code generated by go generate. DO NOT EDIT.
+</span><span style="color:#75715e">// Code generated by go generate. DO NOT EDIT.
 </span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">usermodel</span>
 
 <span style="color:#f92672">import</span> (
@@ -198,7 +198,7 @@ model functions as seen below:</p>
   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">m</span>, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">nil</span>
 }
 <span style="color:#f92672">...</span>
-</code></pre></div><p>Forge has been immensely beneficial in making maintaining Governor's models
+</code></pre></div><p>Forge has been immensely beneficial in making maintaining Governor&rsquo;s models
 more bug free. Having Forge allows the model <code>struct</code> to be the single source
 of truth. I plan to add to Forge the ability to code generate route JSON body
 validation, in addition to other repetitive code, in the future.</p>
