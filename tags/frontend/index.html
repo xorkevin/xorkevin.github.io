@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title>xorkevin  | frontend</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.66.0">
+    <meta name="generator" content="xorkevin/core; Hugo v0.67.0">
     
-    <link rel="stylesheet" href="/scss/main.min.f85edb5b545d35985ef25c1aeded2ced2e503d6c4a6aef1ec81660f9f414faaa.css" integrity="sha256-&#43;F7bW1RdNZhe8lwa7e0s7S5QPWxKau8eyBZg&#43;fQU&#43;qo=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.67e05bede7bd8e78c089556707f54987f0085b18c8847e6108366475e6d2fa03.css" integrity="sha256-Z&#43;Bb7ee9jnjAiVVnB/VJh/AIWxjIhH5hCDZkdebS&#43;gM=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
     <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
     <link href="/vendor/merriweather/index.css" rel="stylesheet">
@@ -15,6 +15,33 @@
   </head>
 
   <body>
+    <script>
+  const darkModeClassname = 'dark';
+  const darkModeStorageId = 'dark-mode';
+  const darkModeStorageEnable = 'enabled';
+  const darkModeStorageDisable = 'disabled';
+
+  const setDarkMode = (dark) => {
+    if (dark) {
+      document.body.classList.add(darkModeClassname);
+    } else {
+      document.body.classList.remove(darkModeClassname);
+    }
+    window.localStorage.setItem(darkModeStorageId, dark ? darkModeStorageEnable : darkModeStorageDisable);
+  };
+
+  let darkModeState = false;
+  if (window.localStorage.getItem(darkModeStorageId) === darkModeStorageEnable) {
+    darkModeState = true;
+  }
+  setDarkMode(darkModeState);
+
+  const darkModeToggle = (event) => {
+    darkModeState = !darkModeState;
+    setDarkMode(darkModeState);
+  };
+</script>
+
     <nav>
   <div class="nav-container">
     <div class="container">
@@ -28,7 +55,7 @@
       </div>
       <div class="element">
         <div class="item">
-          <i id="dark-mode-button" class="fa fa-lg fa-moon"></i>
+          <i class="fa fa-lg fa-moon" onclick="darkModeToggle()"></i>
         </div>
       </div>
     </div>
@@ -162,44 +189,6 @@
     
   </div>
 </footer>
-
-    <script>
-(() => {
-  const darkModeClassname = 'dark';
-  const darkModeButtonId = 'dark-mode-button';
-  const darkModeStorageId = 'dark-mode';
-  const darkModeStorageEnable = 'enabled';
-  const darkModeStorageDisable = 'disabled';
-
-  const setDarkMode = (dark) => {
-    if (dark) {
-      document.body.classList.add(darkModeClassname);
-    } else {
-      document.body.classList.remove(darkModeClassname);
-    }
-    window.localStorage.setItem(darkModeStorageId, dark ? darkModeStorageEnable : darkModeStorageDisable);
-  };
-
-  window.addEventListener('DOMContentLoaded', (event) => {
-    let darkModeState = false;
-    if (window.localStorage.getItem(darkModeStorageId) === darkModeStorageEnable) {
-      darkModeState = true;
-    }
-    setDarkMode(darkModeState);
-
-    const darkModeButton = document.getElementById(darkModeButtonId);
-    if (!darkModeButton) {
-      return;
-    }
-
-    const darkModeToggle = (event) => {
-      darkModeState = !darkModeState;
-      setDarkMode(darkModeState);
-    };
-    darkModeButton.addEventListener('click', darkModeToggle);
-  });
-})();
-</script>
 
     
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140853026-1"></script>
