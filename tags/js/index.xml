@@ -7,18 +7,14 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2018</copyright>
-    <lastBuildDate>Tue, 10 Apr 2018 23:58:40 -0700</lastBuildDate>
-    
-	<atom:link href="https://xorkevin.com/tags/js/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 10 Apr 2018 23:58:40 -0700</lastBuildDate><atom:link href="https://xorkevin.com/tags/js/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Nuke</title>
       <link>https://xorkevin.com/blog/2018/04/nuke/</link>
       <pubDate>Tue, 10 Apr 2018 23:58:40 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2018/04/nuke/</guid>
-      <description>Nuke was designed as a frontend for the Governor web framework project.</description>
+      <description>Nuke was designed as a frontend for the Governor web framework project. I wanted to build a UI that could facilitate testing the numerous services that compose Governor. However, as the project grew, I wanted to also componentize various UI elements for future reuse. Thus, Nuke became its own UI library, which I have since used in many other projects, including the LAHacks application system, UCLA DevX internal tooling dashboard, and this blog itself.</description>
     </item>
     
   </channel>

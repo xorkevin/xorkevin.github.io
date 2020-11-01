@@ -7,18 +7,14 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2018</copyright>
-    <lastBuildDate>Mon, 02 Mar 2020 14:01:18 -0800</lastBuildDate>
-    
-	<atom:link href="https://xorkevin.com/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 02 Mar 2020 14:01:18 -0800</lastBuildDate><atom:link href="https://xorkevin.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Why ECS</title>
       <link>https://xorkevin.com/blog/2020/03/why-ecs/</link>
       <pubDate>Mon, 02 Mar 2020 14:01:18 -0800</pubDate>
       
       <guid>https://xorkevin.com/blog/2020/03/why-ecs/</guid>
-      <description>I, like many programmers often do, first began experimenting with programming through games.</description>
+      <description>I, like many programmers often do, first began experimenting with programming through games. They can be quite simple to write, and provide a self contained, easily testable, tangible, and fun way to learn programming. To this day, the first thing I will try to build when learning a new UI framework or platform is to build a simple clicker &amp;ldquo;game&amp;rdquo;. Though highly contrived, it exercises maintaining and updating state, programmatically updating the view, and interfacing with the event system&amp;mdash;all common requirements for building a UI program.</description>
     </item>
     
     <item>
@@ -27,7 +23,9 @@
       <pubDate>Mon, 27 May 2019 15:34:21 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-passwords/</guid>
-      <description>This is Part 2 of my series on how I built the authentication system in Governor and what I learned in the process.</description>
+      <description>This is Part 2 of my series on how I built the authentication system in Governor and what I learned in the process. Here are links to all sections:
+ Part 1 Auth in a Nutshell: Cryptography Part 2 Auth in a Nutshell: Passwords  Now that we have covered the cryptographic primitives, it is time to begin assembling them into the useful components of an authentication system.
+Creating an account Creating a new account is the first time a user interacts with the Governor auth engine, and that is most likely the component that you as a developer will be creating first as well.</description>
     </item>
     
     <item>
@@ -36,7 +34,7 @@
       <pubDate>Thu, 23 May 2019 18:03:31 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/</guid>
-      <description>Authentication is often one of the most complicated portions of an application to design and write, simply due to the breadth of services that depend on it, and the depth of features that it as a service must provide.</description>
+      <description>Authentication is often one of the most complicated portions of an application to design and write, simply due to the breadth of services that depend on it, and the depth of features that it as a service must provide. Dependent services often have unique requirements from the authentication service such as resource ownership, permissions, and access control. It is important to note, that despite this perceived importance, authentication is not inherently more important compared to the other services that compose an application.</description>
     </item>
     
     <item>
@@ -45,7 +43,7 @@
       <pubDate>Sun, 19 May 2019 16:01:01 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2019/05/forge/</guid>
-      <description>Forge is a CLI utility I originally wrote to manage the complexity of my database models in my Governor project.</description>
+      <description>Forge is a CLI utility I originally wrote to manage the complexity of my database models in my Governor project. I dislike using ORM&amp;rsquo;s, since they place many constraints on the types of queries that can be written, or they make those queries unnecessarily difficult to write with a complex API due to language limitations. SQL itself, however, is a clear and purpose built language for querying relational data. Thus, I chose to write all my database queries with templated SQL strings (with sanitized input, of course).</description>
     </item>
     
     <item>
@@ -54,7 +52,7 @@
       <pubDate>Mon, 25 Jun 2018 17:08:18 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2018/06/governor/</guid>
-      <description>As the amount of projects I have worked on grew, I noticed that many requirements were similar if not identical across them.</description>
+      <description>As the amount of projects I have worked on grew, I noticed that many requirements were similar if not identical across them. Not only was rewriting code tedious every time I needed a similar feature, but also remembering how to back-port new implementations for existing features as I learned more about the corresponding subjects was tedious. This often involved (and for my older projects this is still the case) viewing diffs among various commits for the new feature to determine how the implementation changed.</description>
     </item>
     
     <item>
@@ -63,7 +61,7 @@
       <pubDate>Tue, 10 Apr 2018 23:58:40 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2018/04/nuke/</guid>
-      <description>Nuke was designed as a frontend for the Governor web framework project.</description>
+      <description>Nuke was designed as a frontend for the Governor web framework project. I wanted to build a UI that could facilitate testing the numerous services that compose Governor. However, as the project grew, I wanted to also componentize various UI elements for future reuse. Thus, Nuke became its own UI library, which I have since used in many other projects, including the LAHacks application system, UCLA DevX internal tooling dashboard, and this blog itself.</description>
     </item>
     
   </channel>

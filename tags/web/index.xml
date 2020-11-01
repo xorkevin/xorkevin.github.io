@@ -7,18 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2018</copyright>
-    <lastBuildDate>Mon, 27 May 2019 15:34:21 -0700</lastBuildDate>
-    
-	<atom:link href="https://xorkevin.com/tags/web/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 27 May 2019 15:34:21 -0700</lastBuildDate><atom:link href="https://xorkevin.com/tags/web/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Auth in a Nutshell: Passwords</title>
       <link>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-passwords/</link>
       <pubDate>Mon, 27 May 2019 15:34:21 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-passwords/</guid>
-      <description>This is Part 2 of my series on how I built the authentication system in Governor and what I learned in the process.</description>
+      <description>This is Part 2 of my series on how I built the authentication system in Governor and what I learned in the process. Here are links to all sections:
+ Part 1 Auth in a Nutshell: Cryptography Part 2 Auth in a Nutshell: Passwords  Now that we have covered the cryptographic primitives, it is time to begin assembling them into the useful components of an authentication system.
+Creating an account Creating a new account is the first time a user interacts with the Governor auth engine, and that is most likely the component that you as a developer will be creating first as well.</description>
     </item>
     
     <item>
@@ -27,7 +25,7 @@
       <pubDate>Thu, 23 May 2019 18:03:31 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/</guid>
-      <description>Authentication is often one of the most complicated portions of an application to design and write, simply due to the breadth of services that depend on it, and the depth of features that it as a service must provide.</description>
+      <description>Authentication is often one of the most complicated portions of an application to design and write, simply due to the breadth of services that depend on it, and the depth of features that it as a service must provide. Dependent services often have unique requirements from the authentication service such as resource ownership, permissions, and access control. It is important to note, that despite this perceived importance, authentication is not inherently more important compared to the other services that compose an application.</description>
     </item>
     
     <item>
@@ -36,7 +34,7 @@
       <pubDate>Mon, 25 Jun 2018 17:08:18 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2018/06/governor/</guid>
-      <description>As the amount of projects I have worked on grew, I noticed that many requirements were similar if not identical across them.</description>
+      <description>As the amount of projects I have worked on grew, I noticed that many requirements were similar if not identical across them. Not only was rewriting code tedious every time I needed a similar feature, but also remembering how to back-port new implementations for existing features as I learned more about the corresponding subjects was tedious. This often involved (and for my older projects this is still the case) viewing diffs among various commits for the new feature to determine how the implementation changed.</description>
     </item>
     
     <item>
@@ -45,7 +43,7 @@
       <pubDate>Tue, 10 Apr 2018 23:58:40 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2018/04/nuke/</guid>
-      <description>Nuke was designed as a frontend for the Governor web framework project.</description>
+      <description>Nuke was designed as a frontend for the Governor web framework project. I wanted to build a UI that could facilitate testing the numerous services that compose Governor. However, as the project grew, I wanted to also componentize various UI elements for future reuse. Thus, Nuke became its own UI library, which I have since used in many other projects, including the LAHacks application system, UCLA DevX internal tooling dashboard, and this blog itself.</description>
     </item>
     
   </channel>

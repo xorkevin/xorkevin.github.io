@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title>xorkevin  | Auth in a Nutshell: Cryptography</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.67.1">
+    <meta name="generator" content="xorkevin/core; Hugo v0.76.5">
     
-    <link rel="stylesheet" href="/scss/main.min.c0591dbdfdcb1be9c2ba9d0fcf9f7278cf59457bf8b911d5b80812e9a5f8995a.css" integrity="sha256-wFkdvf3LG&#43;nCup0Pz59yeM9ZRXv4uRHVuAgS6aX4mVo=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.365232727614720f2bec31a6c5cf3885173741c3cd720cf176d2f917cea3d2ca.css" integrity="sha256-NlIycnYUcg8r7DGmxc84hRc3QcPNcgzxdtL5F86j0so=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
     <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
     <link href="/vendor/merriweather/index.css" rel="stylesheet">
@@ -43,19 +43,19 @@
 </script>
 
     <nav>
-  <div class="nav-container">
-    <div class="container">
-      <div class="element">
-        <div class="item">
-          <a href='/'>Home</a>
-        </div>
-        <div class="item">
-          <a href='/blog'>Blog</a>
+  <div class="container fill nav-container">
+    <div class="grid fill justify-space-between nav-elements">
+      <div class="col element">
+        <div class="grid strict fill nav-items">
+          <a class="nav-item" href='/'>Home</a>
+          <a class="nav-item" href='/blog'>Blog</a>
         </div>
       </div>
-      <div class="element">
-        <div class="item">
-          <i class="fa fa-lg fa-moon" onclick="darkModeToggle()"></i>
+      <div class="col element">
+        <div class="grid strict fill nav-items">
+          <div class="col nav-item" onclick="darkModeToggle()">
+            <i class="fa fa-lg fa-moon"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -65,38 +65,37 @@
     <main class="main" role="main">
       
   <section>
-  </section>
-  <article>
-    <h1 class="title">Auth in a Nutshell: Cryptography</h1>
-    <h3 class="subtitle">a brief look at cryptographic algorithms</h3>
-    
-      
-      <h5>Kevin Wang</h5>
-    
-    <span class="info">
-      <span class="tooltip-parent">
+    <article>
+      <h1 class="title">Auth in a Nutshell: Cryptography</h1>
+      <h3 class="subtitle">a brief look at cryptographic algorithms</h3>
+      <span class="info">
         
-          <span class="tooltip top">
-            Last modified 2019-05-26
+        
+        Kevin Wang &middot;
+        
+        <span class="tooltip">
+          Thu, May 23, 2019
+          
+          <span class="text top">
+            Last modified 2020-11-01
           </span>
-        
-        Thu, May 23, 2019
-      </span>
-      &middot;
-      <span class="tooltip-parent">
-        
-          <span class="tooltip top">
+          
+        </span>
+        &middot;
+        <span class="tooltip">
+          18 min read
+          
+          <span class="text top">
             3789 Words
           </span>
-        
-        18 min read
+          
+        </span>
       </span>
-    </span>
-    <span class="info small">
-      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/"><i class="fa fa-fw fa-link"></i> Permalink</a>
-      
-    </span>
-    <p>Authentication is often one of the most complicated portions of an application
+      <span class="info">
+        <a class="text" target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/"><i class="fa fa-fw fa-link"></i> Permalink</a>
+        
+      </span>
+      <p>Authentication is often one of the most complicated portions of an application
 to design and write, simply due to the breadth of services that depend on it,
 and the depth of features that it as a service must provide. Dependent services
 often have unique requirements from the authentication service such as resource
@@ -118,13 +117,13 @@ on external web services, improving application reliability. Unfortunately,
 authentication has a large amount of moving parts, and they can be overwhelming
 to understand and design and use correctly. While I am by no means a security
 expert, I want to share my experiences designing the authentication system for
-my <a href="https://github.com/hackform/governor" target="_blank" rel="noopener noreferrer">Governor microservice project</a>
+my <a class="text" href="https://github.com/xorkevin/governor" target="_blank" rel="noopener noreferrer">Governor microservice project</a>
 , and how it all works.</p>
 <p>This topic will cover a short series of blog posts, of which this post is Part
 1. Here are links to all sections:</p>
 <ul>
 <li>Part 1 Auth in a Nutshell: Cryptography</li>
-<li><a href="/blog/2019/05/auth-in-a-nutshell-passwords/">Part 2</a>
+<li><a class="text" href="/blog/2019/05/auth-in-a-nutshell-passwords/">Part 2</a>
  Auth in a Nutshell: Passwords</li>
 </ul>
 <h2 id="cryptography-a-primer">Cryptography: a primer</h2>
@@ -187,7 +186,7 @@ block within the same message, since they encrypt blocks of data independently.
 Using the following images as an example, one can see that regions of the image
 with the same color encrypt to the same ciphertext in a naively applied block
 cipher. This is, by definition, weak to frequency analysis.</p>
-<div class="contentrow inset">
+<div class="grid nowrap inset">
   
 <img  src="assets/tux.jpg"/>
 
@@ -206,7 +205,7 @@ AES repeatedly while incrementing the counter, therefore producing a
 pseudorandom stream of bits similar to a one-time pad. These bits are then
 XOR&rsquo;d with each plaintext block to produce the cipher text. The ciphertext then
 goes through a system to allow the receiver to verify the integrity of the
-message, which is covered in more detail in the MAC section of <a href="#hash-functions">hash
+message, which is covered in more detail in the MAC section of <a class="text" href="#hash-functions">hash
 functions</a>
 , later.</p>
 <img class="inset" src="assets/gcm.png"/>
@@ -238,7 +237,7 @@ size.</p>
 parties must know the key. When it is impossible for these parties to
 physically meet, this can lead to a chicken and egg problem, i.e. there is no
 secure means to send the secret key to the other party since no shared secret
-key has been shared. The two main approaches to deal with this issue are <a href="#key-exchange-algorithms">key
+key has been shared. The two main approaches to deal with this issue are <a class="text" href="#key-exchange-algorithms">key
 exchange</a>
 , discussed in its own later section, and asymmetric
 encryption.</p>
@@ -302,7 +301,7 @@ weaker of the two keys (most likely RSA), this allows the sending of data
 without having to physically meet and share a secret key.</p>
 <p>Public key cryptography has other interesting applications such as signing
 content with the private key that can be verified with the public key, and this
-is discussed in the later section of <a href="#signing-algorithms">signing algorithms</a>
+is discussed in the later section of <a class="text" href="#signing-algorithms">signing algorithms</a>
 .</p>
 <h2 id="key-exchange-algorithms">Key Exchange Algorithms</h2>
 <p>Key exchange algorithms are a mechanism by which two parties can communicate
@@ -350,9 +349,9 @@ input. Second, hash collisions should be rare, and computationally too
 expensive to find. The idea behind a cryptographic hash function is to have a
 function that can, for all intents and purposes, uniquely represent an
 arbitrary amount of data with a few fixed number of bytes.</p>
-<p>Common cryptographic hashes include: <a href="https://en.wikipedia.org/wiki/SHA-2" target="_blank" rel="noopener noreferrer">SHA-2</a>
+<p>Common cryptographic hashes include: <a class="text" href="https://en.wikipedia.org/wiki/SHA-2" target="_blank" rel="noopener noreferrer">SHA-2</a>
 , SHA-3, and
-<a href="https://en.wikipedia.org/wiki/BLAKE_%28hash_function%29" target="_blank" rel="noopener noreferrer">BLAKE2</a>
+<a class="text" href="https://en.wikipedia.org/wiki/BLAKE_%28hash_function%29" target="_blank" rel="noopener noreferrer">BLAKE2</a>
 . SHA-1 has had a hash collision, and should not be used going
 forward<sup id="fnref:18"><a href="#fn:18" class="footnote-ref" role="doc-noteref">18</a></sup>. The SHA-3 algorithm, Keccak, was chosen in a competition
 by NIST, over BLAKE, for its differences from SHA-2 in the event SHA-2 were
@@ -364,7 +363,7 @@ to check whether data has been changed or tampered with. This application of a
 hash, known as a hash-based message authentication code (HMAC) allows one to
 verify the integrity of the data<sup id="fnref:19"><a href="#fn:19" class="footnote-ref" role="doc-noteref">19</a></sup>. An HMAC works in general by hashing a
 concatenation of the original plaintext and the encryption key, to produce a
-<a href="https://en.wikipedia.org/wiki/Message_authentication_code" target="_blank" rel="noopener noreferrer">MAC</a>
+<a class="text" href="https://en.wikipedia.org/wiki/Message_authentication_code" target="_blank" rel="noopener noreferrer">MAC</a>
  which is sent along with the cipher text to the receiver. If the
 ciphertext were tampered with in any way, then the MAC will not match the hash
 of the decrypted data. The MAC also cannot be easily faked since it depends on
@@ -372,9 +371,9 @@ the secret encryption key itself. Many common libraries are now beginning to
 support an &ldquo;authenticated encryption with associated data&rdquo; (AEAD) mode for
 their encryption, which uses MACs by default and reduces the chance that the
 encryption algorithm will be misused<sup id="fnref:20"><a href="#fn:20" class="footnote-ref" role="doc-noteref">20</a></sup>. Common MAC hashes include SHA-2
-and <a href="https://en.wikipedia.org/wiki/Poly1305" target="_blank" rel="noopener noreferrer">Poly1305</a>
+and <a class="text" href="https://en.wikipedia.org/wiki/Poly1305" target="_blank" rel="noopener noreferrer">Poly1305</a>
 . Similarly, cryptographic hashes are also used in
-<a href="#signing-algorithms">signing algorithms</a>
+<a class="text" href="#signing-algorithms">signing algorithms</a>
  (covered later) to
 represent the contents of the entire data.</p>
 <p>More recently, cryptographic hashes have found an application in proof of work
@@ -416,7 +415,7 @@ to make their hashes difficult to execute on GPUs<sup id="fnref:24"><a href="#fn
 <p>Encryption algorithms, key exchanges, and hashes allow their users to safely
 and securely transmit data and verify their integrity. However, they alone do
 not verify who the sender or receiver are. Without some other mechanism, they
-are prone to <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack" target="_blank" rel="noopener noreferrer">man-in-the-middle (MITM) attacks</a>
+are prone to <a class="text" href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack" target="_blank" rel="noopener noreferrer">man-in-the-middle (MITM) attacks</a>
 . For example, say Alice
 and Bob are attempting to communicate over a network controlled by Eve. Alice
 wants to send an asymmetrically encrypted message to Bob, and thus needs Bob&rsquo;s
@@ -452,143 +451,147 @@ not some spoofed website.</p>
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Linus Torvalds&rsquo;s response <a href="https://lkml.org/lkml/2017/11/17/767" target="_blank" rel="noopener noreferrer">https://lkml.org/lkml/2017/11/17/767</a>
+<p>Linus Torvalds&rsquo;s response <a href="https://lkml.org/lkml/2017/11/17/767" class="text" target="_blank" rel="noopener noreferrer">https://lkml.org/lkml/2017/11/17/767</a>
  <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>one-time pad <a href="https://en.wikipedia.org/wiki/One-time_pad" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/One-time_pad</a>
+<p>one-time pad <a href="https://en.wikipedia.org/wiki/One-time_pad" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/One-time_pad</a>
  <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>Lorenz cipher <a href="https://en.wikipedia.org/wiki/Lorenz_cipher" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Lorenz_cipher</a>
+<p>Lorenz cipher <a href="https://en.wikipedia.org/wiki/Lorenz_cipher" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Lorenz_cipher</a>
  <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
-<p>AES <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
+<p>AES <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
  <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:5" role="doc-endnote">
-<p>Colossus <a href="https://en.wikipedia.org/wiki/Colossus_computer" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Colossus_computer</a>
+<p>Colossus <a href="https://en.wikipedia.org/wiki/Colossus_computer" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Colossus_computer</a>
  <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:6" role="doc-endnote">
-<p>AES-GCM <a href="https://en.wikipedia.org/wiki/Galois/Counter_Mode" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Galois/Counter_Mode</a>
+<p>AES-GCM <a href="https://en.wikipedia.org/wiki/Galois/Counter_Mode" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Galois/Counter_Mode</a>
  <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:7" role="doc-endnote">
-<p>AES-NI <a href="https://en.wikipedia.org/wiki/AES_instruction_set" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/AES_instruction_set</a>
+<p>AES-NI <a href="https://en.wikipedia.org/wiki/AES_instruction_set" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/AES_instruction_set</a>
  <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:8" role="doc-endnote">
-<p>timing attack <a href="https://en.wikipedia.org/wiki/Timing_attack" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Timing_attack</a>
+<p>timing attack <a href="https://en.wikipedia.org/wiki/Timing_attack" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Timing_attack</a>
  <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:9" role="doc-endnote">
-<p>ChaCha20 <a href="https://tools.ietf.org/html/rfc7539" target="_blank" rel="noopener noreferrer">https://tools.ietf.org/html/rfc7539</a>
+<p>ChaCha20 <a href="https://tools.ietf.org/html/rfc7539" class="text" target="_blank" rel="noopener noreferrer">https://tools.ietf.org/html/rfc7539</a>
  <a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:10" role="doc-endnote">
-<p>ChaCha20 speed <a href="https://en.wikipedia.org/wiki/Salsa20" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Salsa20</a>
+<p>ChaCha20 speed <a href="https://en.wikipedia.org/wiki/Salsa20" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Salsa20</a>
  <a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:11" role="doc-endnote">
-<p>Grover&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Grover%27s_algorithm" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Grover%27s_algorithm</a>
+<p>Grover&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Grover%27s_algorithm" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Grover%27s_algorithm</a>
  <a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:12" role="doc-endnote">
-<p>RSA <a href="https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/RSA_(cryptosystem)</a>
+<p>RSA <a href="https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/RSA_(cryptosystem)</a>
  <a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:13" role="doc-endnote">
-<p>Shor&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Shor%27s_algorithm</a>
+<p>Shor&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Shor%27s_algorithm</a>
  <a href="#fnref:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:14" role="doc-endnote">
-<p>lattice-based crypto <a href="https://en.wikipedia.org/wiki/Lattice-based_cryptography" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Lattice-based_cryptography</a>
+<p>lattice-based crypto <a href="https://en.wikipedia.org/wiki/Lattice-based_cryptography" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Lattice-based_cryptography</a>
  <a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:15" role="doc-endnote">
-<p>Diffie-Hellman <a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange</a>
+<p>Diffie-Hellman <a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange</a>
  <a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:16" role="doc-endnote">
-<p>Diffie-Hellman in TLS <a href="https://wiki.openssl.org/index.php/Diffie_Hellman#Diffie-Hellman_in_SSL.2FTLS" target="_blank" rel="noopener noreferrer">https://wiki.openssl.org/index.php/Diffie_Hellman#Diffie-Hellman_in_SSL.2FTLS</a>
+<p>Diffie-Hellman in TLS <a href="https://wiki.openssl.org/index.php/Diffie_Hellman#Diffie-Hellman_in_SSL.2FTLS" class="text" target="_blank" rel="noopener noreferrer">https://wiki.openssl.org/index.php/Diffie_Hellman#Diffie-Hellman_in_SSL.2FTLS</a>
  <a href="#fnref:16" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:17" role="doc-endnote">
-<p>double ratchet <a href="https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm</a>
+<p>double ratchet <a href="https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm</a>
  <a href="#fnref:17" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:18" role="doc-endnote">
-<p>SHA-1 collision <a href="https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/" target="_blank" rel="noopener noreferrer">https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/</a>
+<p>SHA-1 collision <a href="https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/" class="text" target="_blank" rel="noopener noreferrer">https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/</a>
  <a href="#fnref:18" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:19" role="doc-endnote">
-<p>HMAC <a href="https://en.wikipedia.org/wiki/HMAC" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/HMAC</a>
+<p>HMAC <a href="https://en.wikipedia.org/wiki/HMAC" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/HMAC</a>
  <a href="#fnref:19" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:20" role="doc-endnote">
-<p>AEAD <a href="https://en.wikipedia.org/wiki/Authenticated_encryption" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Authenticated_encryption</a>
+<p>AEAD <a href="https://en.wikipedia.org/wiki/Authenticated_encryption" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Authenticated_encryption</a>
  <a href="#fnref:20" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:21" role="doc-endnote">
-<p>BLAKE2 hashrate <a href="https://blake2.net/" target="_blank" rel="noopener noreferrer">https://blake2.net/</a>
+<p>BLAKE2 hashrate <a href="https://blake2.net/" class="text" target="_blank" rel="noopener noreferrer">https://blake2.net/</a>
  <a href="#fnref:21" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:22" role="doc-endnote">
-<p>hunter2 origins <a href="http://bash.org/?244321" target="_blank" rel="noopener noreferrer">http://bash.org/?244321</a>
+<p>hunter2 origins <a href="http://bash.org/?244321" class="text" target="_blank" rel="noopener noreferrer">http://bash.org/?244321</a>
  <a href="#fnref:22" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:23" role="doc-endnote">
-<p>bcrypt <a href="https://en.wikipedia.org/wiki/Bcrypt" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Bcrypt</a>
+<p>bcrypt <a href="https://en.wikipedia.org/wiki/Bcrypt" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Bcrypt</a>
  <a href="#fnref:23" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:24" role="doc-endnote">
-<p>scrypt <a href="https://en.wikipedia.org/wiki/Scrypt" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Scrypt</a>
+<p>scrypt <a href="https://en.wikipedia.org/wiki/Scrypt" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Scrypt</a>
  <a href="#fnref:24" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:25" role="doc-endnote">
-<p>argon2 <a href="https://en.wikipedia.org/wiki/Argon2" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Argon2</a>
+<p>argon2 <a href="https://en.wikipedia.org/wiki/Argon2" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Argon2</a>
  <a href="#fnref:25" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
 
-    <span class="info">
-      <i class="fa fa-fw fa-tags"></i>
-      
-        <a href='/tags/auth' class="no-style">
+      <span class="info">
+        <i class="fa fa-fw fa-tags"></i>
+        
+        <a href='/tags/auth'>
           <span class="chip">auth</span>
         </a>
-      
-        <a href='/tags/web' class="no-style">
+        
+        <a href='/tags/web'>
           <span class="chip">web</span>
         </a>
+        
+      </span>
+      <hr />
       
-    </span>
-    <hr />
-    
       
       <div>
-        <div class="author">
-          <div class="image round">
-            <img src='/img/authors/xorkevin.jpg' />
+        <div class="grid strict nowrap align-center author">
+          
+          <div class="col image" style="flex-shrink: 0;">
+            <div class="img sized fill circle loaded">
+              <div class="inner">
+                <img class="image" src='/img/authors/xorkevin.jpg' />
+              </div>
+            </div>
           </div>
-          <div class="description">
+          
+          <div class="col description">
             <h4 class="name">Kevin Wang</h4>
-            <div class="bio">Web dev and tech evangelist. Experiences decision fatigue daily.</div>
+            <div class="bio">Web dev and engineer. Experiences decision fatigue daily.</div>
           </div>
         </div>
       </div>
-    
-  </article>
-  <section>
-    <div class="container">
-      <div class="grid horizontal-center">
-        <div class="col xs-22 sm-10 md-7 lg-5">
-          
+      
+      <section class="other-articles">
+        <div class="grid">
+          <div class="col xs-12">
+            
             <div>
-              <a href="/blog/2019/05/forge/" class="no-style">
+              <a href="/blog/2019/05/forge/">
                 <h6><i class="fa fa-fw fa-chevron-left"></i> Prev</h6>
                 <h4>
                   Forge
@@ -598,12 +601,12 @@ not some spoofed website.</p>
                 </p>
               </a>
             </div>
-          
-        </div>
-        <div class="col xs-22 sm-10 md-7 lg-5">
-          
+            
+          </div>
+          <div class="col xs-12">
+            
             <div>
-              <a href="/blog/2019/05/auth-in-a-nutshell-passwords/" class="no-style text-right">
+              <a href="/blog/2019/05/auth-in-a-nutshell-passwords/" class="text-right">
                 <h6>Next <i class="fa fa-fw fa-chevron-right"></i></h6>
                 <h4>
                   Auth in a Nutshell: Passwords
@@ -613,10 +616,11 @@ not some spoofed website.</p>
                 </p>
               </a>
             </div>
-          
+            
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </article>
   </section>
 
     </main>
@@ -624,61 +628,45 @@ not some spoofed website.</p>
   <div class="container padded narrow">
     
       
-      <div class="grid horizontal-center">
+      <div class="grid justify-center align-center dark">
         <div class="col sm-8">
           <div class="text-center">
-            <h4 class="title">Kevin Wang</h4>
-            web dev | tech evangelist | powered by coffee <i class="fa fa-fw fa-coffee"></i>
-          </div>
-        </div>
-        <div class="col sm-8">
-          <div class="text-center">
+            <h4 class="footer-header">Kevin Wang</h4>
+            web dev | engineer | powered by coffee <i class="fa fa-fw fa-coffee"></i>
             <h5 class="title">contact me</h5>
             <ul>
               
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
-                    <i class="fa fa-fw fa-file-text"></i> Resume
-                  </a>
-                </li>
+              <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
+                  <i class="fa fa-fw fa-file-text"></i> Resume
+                </a>
+              </li>
               
-              
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
-                    <i class="fa fa-fw fa-github"></i> xorkevin@github
-                  </a>
-                </li>
-              
-              
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
-                    <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
-                  </a>
-                </li>
-              
-              
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
-                    <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
-                  </a>
-                </li>
-              
-            </ul>
-          </div>
-        </div>
-        <div class="col sm-8">
-          <div class="text-center">
-            <ul>
-              
-                <li>
-                  <span>
-                    <i class="fa fa-fw fa-code"></i> with <i class="fa fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fa fa-fw fa-github"></i> xorkevin</a>
-                  </span>
-                </li>
               
               <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
+                  <i class="fa fa-fw fa-github"></i> xorkevin@github
+                </a>
+              </li>
+              
+              
+              <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
+                  <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
+                </a>
+              </li>
+              
+              
+              <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
+                  <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
+                </a>
+              </li>
+              
+              <br/>
+              <li>
                 <span>
-                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/xorkevin">xorkevin/core</a>
+                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/core">xorkevin/core</a>
                 </span>
               </li>
               

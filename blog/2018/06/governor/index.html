@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title>xorkevin  | Governor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.67.1">
+    <meta name="generator" content="xorkevin/core; Hugo v0.76.5">
     
-    <link rel="stylesheet" href="/scss/main.min.c0591dbdfdcb1be9c2ba9d0fcf9f7278cf59457bf8b911d5b80812e9a5f8995a.css" integrity="sha256-wFkdvf3LG&#43;nCup0Pz59yeM9ZRXv4uRHVuAgS6aX4mVo=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.365232727614720f2bec31a6c5cf3885173741c3cd720cf176d2f917cea3d2ca.css" integrity="sha256-NlIycnYUcg8r7DGmxc84hRc3QcPNcgzxdtL5F86j0so=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
     <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
     <link href="/vendor/merriweather/index.css" rel="stylesheet">
@@ -43,19 +43,19 @@
 </script>
 
     <nav>
-  <div class="nav-container">
-    <div class="container">
-      <div class="element">
-        <div class="item">
-          <a href='/'>Home</a>
-        </div>
-        <div class="item">
-          <a href='/blog'>Blog</a>
+  <div class="container fill nav-container">
+    <div class="grid fill justify-space-between nav-elements">
+      <div class="col element">
+        <div class="grid strict fill nav-items">
+          <a class="nav-item" href='/'>Home</a>
+          <a class="nav-item" href='/blog'>Blog</a>
         </div>
       </div>
-      <div class="element">
-        <div class="item">
-          <i class="fa fa-lg fa-moon" onclick="darkModeToggle()"></i>
+      <div class="col element">
+        <div class="grid strict fill nav-items">
+          <div class="col nav-item" onclick="darkModeToggle()">
+            <i class="fa fa-lg fa-moon"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -65,38 +65,37 @@
     <main class="main" role="main">
       
   <section>
-  </section>
-  <article>
-    <h1 class="title">Governor</h1>
-    <h3 class="subtitle">microservice framework</h3>
-    
-      
-      <h5>Kevin Wang</h5>
-    
-    <span class="info">
-      <span class="tooltip-parent">
+    <article>
+      <h1 class="title">Governor</h1>
+      <h3 class="subtitle">microservice framework</h3>
+      <span class="info">
         
-          <span class="tooltip top">
-            Last modified 2019-05-22
+        
+        Kevin Wang &middot;
+        
+        <span class="tooltip">
+          Mon, Jun 25, 2018
+          
+          <span class="text top">
+            Last modified 2020-11-01
           </span>
-        
-        Mon, Jun 25, 2018
-      </span>
-      &middot;
-      <span class="tooltip-parent">
-        
-          <span class="tooltip top">
+          
+        </span>
+        &middot;
+        <span class="tooltip">
+          5 min read
+          
+          <span class="text top">
             870 Words
           </span>
-        
-        5 min read
+          
+        </span>
       </span>
-    </span>
-    <span class="info small">
-      <a target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2018/06/governor/"><i class="fa fa-fw fa-link"></i> Permalink</a>
-      &middot; <a target="_blank" rel="noopener noreferrer" href="https://github.com/hackform/governor"><i class="fa fa-fw fa-code-fork"></i> Repo</a>
-    </span>
-    <p>As the amount of projects I have worked on grew, I noticed that many
+      <span class="info">
+        <a class="text" target="_blank" rel="noopener noreferrer" href="https://xorkevin.com/blog/2018/06/governor/"><i class="fa fa-fw fa-link"></i> Permalink</a>
+        &middot; <a class="text" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/governor"><i class="fa fa-fw fa-code-fork"></i> Repo</a>
+      </span>
+      <p>As the amount of projects I have worked on grew, I noticed that many
 requirements were similar if not identical across them. Not only was rewriting
 code tedious every time I needed a similar feature, but also remembering how to
 back-port new implementations for existing features as I learned more about the
@@ -178,49 +177,53 @@ currently powers the LA Hacks Tech platform, and some of UCLA DevX&rsquo;s inter
 tooling. I have many more plans for it as I continue to learn and improve my
 web development skills.</p>
 
-    <span class="info">
-      <i class="fa fa-fw fa-tags"></i>
-      
-        <a href='/tags/microservice' class="no-style">
+      <span class="info">
+        <i class="fa fa-fw fa-tags"></i>
+        
+        <a href='/tags/microservice'>
           <span class="chip">microservice</span>
         </a>
-      
-        <a href='/tags/go' class="no-style">
+        
+        <a href='/tags/go'>
           <span class="chip">go</span>
         </a>
-      
-        <a href='/tags/web' class="no-style">
+        
+        <a href='/tags/web'>
           <span class="chip">web</span>
         </a>
-      
-        <a href='/tags/backend' class="no-style">
+        
+        <a href='/tags/backend'>
           <span class="chip">backend</span>
         </a>
+        
+      </span>
+      <hr />
       
-    </span>
-    <hr />
-    
       
       <div>
-        <div class="author">
-          <div class="image round">
-            <img src='/img/authors/xorkevin.jpg' />
+        <div class="grid strict nowrap align-center author">
+          
+          <div class="col image" style="flex-shrink: 0;">
+            <div class="img sized fill circle loaded">
+              <div class="inner">
+                <img class="image" src='/img/authors/xorkevin.jpg' />
+              </div>
+            </div>
           </div>
-          <div class="description">
+          
+          <div class="col description">
             <h4 class="name">Kevin Wang</h4>
-            <div class="bio">Web dev and tech evangelist. Experiences decision fatigue daily.</div>
+            <div class="bio">Web dev and engineer. Experiences decision fatigue daily.</div>
           </div>
         </div>
       </div>
-    
-  </article>
-  <section>
-    <div class="container">
-      <div class="grid horizontal-center">
-        <div class="col xs-22 sm-10 md-7 lg-5">
-          
+      
+      <section class="other-articles">
+        <div class="grid">
+          <div class="col xs-12">
+            
             <div>
-              <a href="/blog/2018/04/nuke/" class="no-style">
+              <a href="/blog/2018/04/nuke/">
                 <h6><i class="fa fa-fw fa-chevron-left"></i> Prev</h6>
                 <h4>
                   Nuke
@@ -230,12 +233,12 @@ web development skills.</p>
                 </p>
               </a>
             </div>
-          
-        </div>
-        <div class="col xs-22 sm-10 md-7 lg-5">
-          
+            
+          </div>
+          <div class="col xs-12">
+            
             <div>
-              <a href="/blog/2019/05/forge/" class="no-style text-right">
+              <a href="/blog/2019/05/forge/" class="text-right">
                 <h6>Next <i class="fa fa-fw fa-chevron-right"></i></h6>
                 <h4>
                   Forge
@@ -245,10 +248,11 @@ web development skills.</p>
                 </p>
               </a>
             </div>
-          
+            
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </article>
   </section>
 
     </main>
@@ -256,61 +260,45 @@ web development skills.</p>
   <div class="container padded narrow">
     
       
-      <div class="grid horizontal-center">
+      <div class="grid justify-center align-center dark">
         <div class="col sm-8">
           <div class="text-center">
-            <h4 class="title">Kevin Wang</h4>
-            web dev | tech evangelist | powered by coffee <i class="fa fa-fw fa-coffee"></i>
-          </div>
-        </div>
-        <div class="col sm-8">
-          <div class="text-center">
+            <h4 class="footer-header">Kevin Wang</h4>
+            web dev | engineer | powered by coffee <i class="fa fa-fw fa-coffee"></i>
             <h5 class="title">contact me</h5>
             <ul>
               
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
-                    <i class="fa fa-fw fa-file-text"></i> Resume
-                  </a>
-                </li>
+              <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
+                  <i class="fa fa-fw fa-file-text"></i> Resume
+                </a>
+              </li>
               
-              
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
-                    <i class="fa fa-fw fa-github"></i> xorkevin@github
-                  </a>
-                </li>
-              
-              
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
-                    <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
-                  </a>
-                </li>
-              
-              
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
-                    <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
-                  </a>
-                </li>
-              
-            </ul>
-          </div>
-        </div>
-        <div class="col sm-8">
-          <div class="text-center">
-            <ul>
-              
-                <li>
-                  <span>
-                    <i class="fa fa-fw fa-code"></i> with <i class="fa fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fa fa-fw fa-github"></i> xorkevin</a>
-                  </span>
-                </li>
               
               <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
+                  <i class="fa fa-fw fa-github"></i> xorkevin@github
+                </a>
+              </li>
+              
+              
+              <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
+                  <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
+                </a>
+              </li>
+              
+              
+              <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
+                  <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
+                </a>
+              </li>
+              
+              <br/>
+              <li>
                 <span>
-                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/xorkevin">xorkevin/core</a>
+                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/core">xorkevin/core</a>
                 </span>
               </li>
               

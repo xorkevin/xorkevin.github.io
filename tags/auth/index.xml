@@ -7,18 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2018</copyright>
-    <lastBuildDate>Mon, 27 May 2019 15:34:21 -0700</lastBuildDate>
-    
-	<atom:link href="https://xorkevin.com/tags/auth/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 27 May 2019 15:34:21 -0700</lastBuildDate><atom:link href="https://xorkevin.com/tags/auth/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Auth in a Nutshell: Passwords</title>
       <link>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-passwords/</link>
       <pubDate>Mon, 27 May 2019 15:34:21 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-passwords/</guid>
-      <description>This is Part 2 of my series on how I built the authentication system in Governor and what I learned in the process.</description>
+      <description>This is Part 2 of my series on how I built the authentication system in Governor and what I learned in the process. Here are links to all sections:
+ Part 1 Auth in a Nutshell: Cryptography Part 2 Auth in a Nutshell: Passwords  Now that we have covered the cryptographic primitives, it is time to begin assembling them into the useful components of an authentication system.
+Creating an account Creating a new account is the first time a user interacts with the Governor auth engine, and that is most likely the component that you as a developer will be creating first as well.</description>
     </item>
     
     <item>
@@ -27,7 +25,7 @@
       <pubDate>Thu, 23 May 2019 18:03:31 -0700</pubDate>
       
       <guid>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/</guid>
-      <description>Authentication is often one of the most complicated portions of an application to design and write, simply due to the breadth of services that depend on it, and the depth of features that it as a service must provide.</description>
+      <description>Authentication is often one of the most complicated portions of an application to design and write, simply due to the breadth of services that depend on it, and the depth of features that it as a service must provide. Dependent services often have unique requirements from the authentication service such as resource ownership, permissions, and access control. It is important to note, that despite this perceived importance, authentication is not inherently more important compared to the other services that compose an application.</description>
     </item>
     
   </channel>

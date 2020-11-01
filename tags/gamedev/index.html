@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title>xorkevin  | gamedev</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.67.1">
+    <meta name="generator" content="xorkevin/core; Hugo v0.76.5">
     
-    <link rel="stylesheet" href="/scss/main.min.c0591dbdfdcb1be9c2ba9d0fcf9f7278cf59457bf8b911d5b80812e9a5f8995a.css" integrity="sha256-wFkdvf3LG&#43;nCup0Pz59yeM9ZRXv4uRHVuAgS6aX4mVo=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.365232727614720f2bec31a6c5cf3885173741c3cd720cf176d2f917cea3d2ca.css" integrity="sha256-NlIycnYUcg8r7DGmxc84hRc3QcPNcgzxdtL5F86j0so=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
     <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
     <link href="/vendor/merriweather/index.css" rel="stylesheet">
@@ -43,19 +43,19 @@
 </script>
 
     <nav>
-  <div class="nav-container">
-    <div class="container">
-      <div class="element">
-        <div class="item">
-          <a href='/'>Home</a>
-        </div>
-        <div class="item">
-          <a href='/blog'>Blog</a>
+  <div class="container fill nav-container">
+    <div class="grid fill justify-space-between nav-elements">
+      <div class="col element">
+        <div class="grid strict fill nav-items">
+          <a class="nav-item" href='/'>Home</a>
+          <a class="nav-item" href='/blog'>Blog</a>
         </div>
       </div>
-      <div class="element">
-        <div class="item">
-          <i class="fa fa-lg fa-moon" onclick="darkModeToggle()"></i>
+      <div class="col element">
+        <div class="grid strict fill nav-items">
+          <div class="col nav-item" onclick="darkModeToggle()">
+            <i class="fa fa-lg fa-moon"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -64,19 +64,18 @@
 
     <main class="main" role="main">
       
-  <section>
-    <div class="container narrow padded">
-      <div class="section-header">
-        <h1>Blog</h1>
-        <h3><small><i class="fa fa-fw fa-tag"></i></small> gamedev</h3>
-      </div>
-      <div class="grid">
+  <div class="container padded narrow">
+    <section>
+      <h2>Blog</h2>
+      <h3><small><i class="fa fa-fw fa-tag"></i></small> gamedev</h3>
+      <hr/>
+      <div class="grid col md-12">
         
         <div class="col md-12">
-          <a class="no-style" href="/blog/2020/03/why-ecs/">
+          <a href="/blog/2020/03/why-ecs/">
   <h3>Why ECS</h3>
 </a>
-<a class="no-style" href="/blog/2020/03/why-ecs/">
+<a href="/blog/2020/03/why-ecs/">
   <div>
     <p>
       What is entity component system for
@@ -84,91 +83,75 @@
   </div>
 </a>
 <div>
-  <span class="tooltip-parent">
-    
-      <span class="tooltip top">
-        Last modified 2020-03-08
-      </span>
-    
+  <span class="tooltip">
     Mon, Mar 2, 2020
+    
+    <span class="text top">
+      Last modified 2020-03-08
+    </span>
+    
   </span>
   &middot;
-  <span class="tooltip-parent">
-    
-      <span class="tooltip top">
-        1722 Words
-      </span>
-    
+  <span class="tooltip">
     9 min read
+    
+    <span class="text top">
+      1722 Words
+    </span>
+    
   </span>
 </div>
 
         </div>
         
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
     </main>
     <footer>
   <div class="container padded narrow">
     
       
-      <div class="grid horizontal-center">
+      <div class="grid justify-center align-center dark">
         <div class="col sm-8">
           <div class="text-center">
-            <h4 class="title">Kevin Wang</h4>
-            web dev | tech evangelist | powered by coffee <i class="fa fa-fw fa-coffee"></i>
-          </div>
-        </div>
-        <div class="col sm-8">
-          <div class="text-center">
+            <h4 class="footer-header">Kevin Wang</h4>
+            web dev | engineer | powered by coffee <i class="fa fa-fw fa-coffee"></i>
             <h5 class="title">contact me</h5>
             <ul>
               
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
-                    <i class="fa fa-fw fa-file-text"></i> Resume
-                  </a>
-                </li>
+              <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href='/KevinWangResume.pdf'>
+                  <i class="fa fa-fw fa-file-text"></i> Resume
+                </a>
+              </li>
               
-              
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
-                    <i class="fa fa-fw fa-github"></i> xorkevin@github
-                  </a>
-                </li>
-              
-              
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
-                    <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
-                  </a>
-                </li>
-              
-              
-                <li>
-                  <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
-                    <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
-                  </a>
-                </li>
-              
-            </ul>
-          </div>
-        </div>
-        <div class="col sm-8">
-          <div class="text-center">
-            <ul>
-              
-                <li>
-                  <span>
-                    <i class="fa fa-fw fa-code"></i> with <i class="fa fa-fw fa-heart"></i> by <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin"><i class="fa fa-fw fa-github"></i> xorkevin</a>
-                  </span>
-                </li>
               
               <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://github.com/xorkevin'>
+                  <i class="fa fa-fw fa-github"></i> xorkevin@github
+                </a>
+              </li>
+              
+              
+              <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href='https://twitter.com/xorkevin'>
+                  <i class="fa fa-fw fa-twitter"></i> xorkevin@twitter
+                </a>
+              </li>
+              
+              
+              <li>
+                <a class="no-color" target="_blank" rel="noopener noreferrer" href="mailto:kevin@xorkevin.com">
+                  <i class="fa fa-fw fa-envelope"></i> kevin@xorkevin.com
+                </a>
+              </li>
+              
+              <br/>
+              <li>
                 <span>
-                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/xorkevin">xorkevin/core</a>
+                  themed with <a class="no-color" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/core">xorkevin/core</a>
                 </span>
               </li>
               

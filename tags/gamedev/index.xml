@@ -7,18 +7,14 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>2018</copyright>
-    <lastBuildDate>Mon, 02 Mar 2020 14:01:18 -0800</lastBuildDate>
-    
-	<atom:link href="https://xorkevin.com/tags/gamedev/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 02 Mar 2020 14:01:18 -0800</lastBuildDate><atom:link href="https://xorkevin.com/tags/gamedev/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Why ECS</title>
       <link>https://xorkevin.com/blog/2020/03/why-ecs/</link>
       <pubDate>Mon, 02 Mar 2020 14:01:18 -0800</pubDate>
       
       <guid>https://xorkevin.com/blog/2020/03/why-ecs/</guid>
-      <description>I, like many programmers often do, first began experimenting with programming through games.</description>
+      <description>I, like many programmers often do, first began experimenting with programming through games. They can be quite simple to write, and provide a self contained, easily testable, tangible, and fun way to learn programming. To this day, the first thing I will try to build when learning a new UI framework or platform is to build a simple clicker &amp;ldquo;game&amp;rdquo;. Though highly contrived, it exercises maintaining and updating state, programmatically updating the view, and interfacing with the event system&amp;mdash;all common requirements for building a UI program.</description>
     </item>
     
   </channel>
