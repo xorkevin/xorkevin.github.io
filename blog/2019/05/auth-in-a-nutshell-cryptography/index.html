@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title>xorkevin | Auth in a Nutshell: Cryptography</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.76.5">
+    <meta name="generator" content="xorkevin/core; Hugo v0.80.0">
     
-    <link rel="stylesheet" href="/scss/main.min.365232727614720f2bec31a6c5cf3885173741c3cd720cf176d2f917cea3d2ca.css" integrity="sha256-NlIycnYUcg8r7DGmxc84hRc3QcPNcgzxdtL5F86j0so=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.3258baaa56ee5223bd83c053afa8fd081e3abaa94c452a37518ad097e29cc8e4.css" integrity="sha256-Mli6qlbuUiO9g8BTr6j9CB46uqlMRSo3UYrQl&#43;KcyOQ=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
     <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
     <link href="/vendor/merriweather/index.css" rel="stylesheet">
@@ -86,7 +86,7 @@
           18 min read
           
           <span class="text top">
-            3789 Words
+            3797 Words
           </span>
           
         </span>
@@ -126,11 +126,11 @@ my <a class="text" href="https://github.com/xorkevin/governor" target="_blank" r
 <li><a class="text" href="/blog/2019/05/auth-in-a-nutshell-passwords/">Part 2</a>
  Auth in a Nutshell: Passwords</li>
 </ul>
-<h2 id="cryptography-a-primer">Cryptography: a primer</h2>
+<h2 id="cryptography-a-primer" class="article-heading">Cryptography: a primer <a class="article-heading-anchor" href="#cryptography-a-primer"><small>#</small></a></h2>
 <p>First, it is important to understand the differences among cryptographic
 algorithms and the wide array of terminology used, so that it is clear what to
 use in certain situations.</p>
-<h2 id="encryption">Encryption</h2>
+<h2 id="encryption" class="article-heading">Encryption <a class="article-heading-anchor" href="#encryption"><small>#</small></a></h2>
 <p>Encryption algorithms take a key and some plaintext data, to produce ciphertext
 data. The plaintext data is encoded in the ciphertext, but only those with
 knowledge of the key are able to decrypt the ciphertext and reproduce the
@@ -143,7 +143,7 @@ immense size of their key space. With most keys at about 256 bits in size
 (known as 256 bit security), breaking a secure encryption algorithm would, on
 average, require attempting 2^255 key guesses, which would take most state
 level actors years, even with optimizations, to brute force.</p>
-<h3 id="symmetric-encryption">Symmetric Encryption</h3>
+<h3 id="symmetric-encryption" class="article-heading">Symmetric Encryption <a class="article-heading-anchor" href="#symmetric-encryption"><small>#</small></a></h3>
 <p>Symmetric encryption, as its name implies, uses the same key for encryption as
 it does for decryption. The most secure encryption algorithm, symmetric or
 otherwise, is a one-time pad cipher<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. It is also extremely simple
@@ -241,7 +241,7 @@ key has been shared. The two main approaches to deal with this issue are <a clas
 exchange</a>
 , discussed in its own later section, and asymmetric
 encryption.</p>
-<h3 id="asymmetric-encryption">Asymmetric Encryption</h3>
+<h3 id="asymmetric-encryption" class="article-heading">Asymmetric Encryption <a class="article-heading-anchor" href="#asymmetric-encryption"><small>#</small></a></h3>
 <p>Also known as public key cryptography, asymmetric encryption relies on two
 separate keys in order to send and receive data. One of these is called the
 &ldquo;public&rdquo; key, and the other, the &ldquo;private&rdquo; key. These two keys form what is
@@ -303,7 +303,7 @@ without having to physically meet and share a secret key.</p>
 content with the private key that can be verified with the public key, and this
 is discussed in the later section of <a class="text" href="#signing-algorithms">signing algorithms</a>
 .</p>
-<h2 id="key-exchange-algorithms">Key Exchange Algorithms</h2>
+<h2 id="key-exchange-algorithms" class="article-heading">Key Exchange Algorithms <a class="article-heading-anchor" href="#key-exchange-algorithms"><small>#</small></a></h2>
 <p>Key exchange algorithms are a mechanism by which two parties can communicate
 over an untrusted communication channel to arrive at a single shared secret
 key, while any potential listeners to that conversation will be unable to
@@ -338,7 +338,7 @@ TLS for the HTTPS protocol for websites<sup id="fnref:16"><a href="#fn:16" class
 variant of Diffie-Hellman, known as Double Ratchet Diffie-Hellman has been used
 by Whatsapp, Signal, and others to create protocols that enable perfect forward
 secrecy within the same session of communication<sup id="fnref:17"><a href="#fn:17" class="footnote-ref" role="doc-noteref">17</a></sup>.</p>
-<h2 id="hash-functions">Hash Functions</h2>
+<h2 id="hash-functions" class="article-heading">Hash Functions <a class="article-heading-anchor" href="#hash-functions"><small>#</small></a></h2>
 <p>A hash is a function that maps an input string to a fixed length output. Hash
 functions are used whenever an arbitrary amount of data needs to be represented
 by a relatively small, fixed amount of bytes. Cryptographic hash functions,
@@ -381,7 +381,7 @@ systems such as blockchain. Proof of work relies on the fact that a
 cryptographic hash is difficult to reverse, thus the entire security of the
 system is dependent on the fact that a single entity does not have more than
 50% of the computational power.</p>
-<h3 id="password-hash-functions">Password Hash Functions</h3>
+<h3 id="password-hash-functions" class="article-heading">Password Hash Functions <a class="article-heading-anchor" href="#password-hash-functions"><small>#</small></a></h3>
 <p>Normal cryptographic hash functions are designed to be fast to compute. BLAKE2b
 hashes at a rate of 947 MBps<sup id="fnref:21"><a href="#fn:21" class="footnote-ref" role="doc-noteref">21</a></sup>. A password hashing function on
 the other hand is designed to be slow to compute, and difficult to parallelize
@@ -411,7 +411,7 @@ be preferred. Other password hashing algorithms have similar designs. While
 bcrypt is still recommended, more modern password hashes have better defenses
 against other attacks. Scrypt and Argon2 have configurable memory work factors,
 to make their hashes difficult to execute on GPUs<sup id="fnref:24"><a href="#fn:24" class="footnote-ref" role="doc-noteref">24</a></sup><sup id="fnref:25"><a href="#fn:25" class="footnote-ref" role="doc-noteref">25</a></sup>.</p>
-<h2 id="signing-algorithms">Signing Algorithms</h2>
+<h2 id="signing-algorithms" class="article-heading">Signing Algorithms <a class="article-heading-anchor" href="#signing-algorithms"><small>#</small></a></h2>
 <p>Encryption algorithms, key exchanges, and hashes allow their users to safely
 and securely transmit data and verify their integrity. However, they alone do
 not verify who the sender or receiver are. Without some other mechanism, they
@@ -675,7 +675,7 @@ not some spoofed website.</p>
                     &copy; Kevin Wang
                     
                     
-                      2018-2020
+                      2018-2021
                     
                   </span>
                 </li>

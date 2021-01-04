@@ -25,7 +25,7 @@
       <guid>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-passwords/</guid>
       <description>This is Part 2 of my series on how I built the authentication system in Governor and what I learned in the process. Here are links to all sections:
  Part 1 Auth in a Nutshell: Cryptography Part 2 Auth in a Nutshell: Passwords  Now that we have covered the cryptographic primitives, it is time to begin assembling them into the useful components of an authentication system.
-Creating an account Creating a new account is the first time a user interacts with the Governor auth engine, and that is most likely the component that you as a developer will be creating first as well.</description>
+Creating an account # Creating a new account is the first time a user interacts with the Governor auth engine, and that is most likely the component that you as a developer will be creating first as well.</description>
     </item>
     
     <item>
