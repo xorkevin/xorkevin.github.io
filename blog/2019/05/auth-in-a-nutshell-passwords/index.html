@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="xorkevin/core; Hugo v0.80.0">
     
-    <link rel="stylesheet" href="/scss/main.min.9e80ea038dbfe41770ca68dc145ba0da0a5dc83b039542917b4d32dfd5f14b46.css" integrity="sha256-noDqA42/5BdwymjcFFug2gpdyDsDlUKRe00y39XxS0Y=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.9088f5103f0fa2acee5b36e7fda529d582d6a4e6e28aa1e2a635fbbcee57f41e.css" integrity="sha256-kIj1ED8PoqzuWzbn/aUp1YLWpObiiqHipjX7vO5X9B4=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
     <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
     <link href="/vendor/merriweather/index.css" rel="stylesheet">
@@ -96,7 +96,7 @@
         &middot; <a class="text" target="_blank" rel="noopener noreferrer" href="https://github.com/xorkevin/hunter2"><i class="fa fa-fw fa-code-fork"></i> Repo</a>
       </span>
       <p>This is Part 2 of my series on how I built the authentication system in
-<a class="text" href="https://github.com/xorkevin/governor" target="_blank" rel="noopener noreferrer">Governor</a>
+<a class="text ext" href="https://github.com/xorkevin/governor" target="_blank" rel="noopener noreferrer">Governor</a>
  and what I learned in the process. Here are links
 to all sections:</p>
 <ul>
@@ -140,7 +140,7 @@ web designers a big headache.)</li>
 passwords which allow attackers to use dictionary attacks or rainbow tables,
 password strength is almost entirely dependent on its length and the size of
 its alphabet<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>. The longer the password the better. (You can try
-generating your own <a class="text" href="https://www.rempe.us/diceware/#eff" target="_blank" rel="noopener noreferrer">here</a>
+generating your own <a class="text ext" href="https://www.rempe.us/diceware/#eff" target="_blank" rel="noopener noreferrer">here</a>
 .)</li>
 <li>The username and email are unique. (For obvious reasons.)</li>
 <li>The email is valid.</li>
@@ -188,7 +188,7 @@ that there more than likely be a collision in initialization vectors after only
 for more than 2^32 encryptions<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>. This is enough to give everyone
 on the planet just 1 password reset.</p>
 <p>Finally, any attacker who manages to guess the master key, or more likely
-<a class="text" href="https://www.youtube.com/watch?v=PWVN3Rq4gzw" target="_blank" rel="noopener noreferrer">phish it from vulnerable sources</a>
+<a class="text ext" href="https://www.youtube.com/watch?v=PWVN3Rq4gzw" target="_blank" rel="noopener noreferrer">phish it from vulnerable sources</a>
 , now has access to all the
 passwords.</p>
 <p>Currently, the safest method of storing passwords is with cryptographic
@@ -211,17 +211,17 @@ compare the hash to the corresponding stored password hash in the database. If
 they match, the password matches, otherwise they do not. This process takes at
 most several hundred milliseconds.</p>
 <p>Unfortunately, humans are lazy users, and not all of them use
-<a class="text" href="https://www.rempe.us/diceware/#eff" target="_blank" rel="noopener noreferrer">diceware</a>
+<a class="text ext" href="https://www.rempe.us/diceware/#eff" target="_blank" rel="noopener noreferrer">diceware</a>
  to generate passwords like &ldquo;correct horse battery
-staple&rdquo;<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. It is likely that 10% of your users will have one of <a class="text" href="https://en.wikipedia.org/wiki/List_of_the_most_common_passwords" target="_blank" rel="noopener noreferrer">these
+staple&rdquo;<sup id="fnref:7"><a href="#fn:7" class="footnote-ref" role="doc-noteref">7</a></sup>. It is likely that 10% of your users will have one of <a class="text ext" href="https://en.wikipedia.org/wiki/List_of_the_most_common_passwords" target="_blank" rel="noopener noreferrer">these
 passwords</a>
 . This means that naively hashing passwords will
 lead to the same 25 password hashes in your database, which if ever obtained by
 an attacker, would be extremely easy to identify. Attackers will also use
-<a class="text" href="https://en.wikipedia.org/wiki/Rainbow_table" target="_blank" rel="noopener noreferrer">rainbow tables</a>
+<a class="text ext" href="https://en.wikipedia.org/wiki/Rainbow_table" target="_blank" rel="noopener noreferrer">rainbow tables</a>
  full of passwords and their precomputed hashes.
 This reduces the problem of breaking a simple password&rsquo;s hash into a lookup in
-the table. If a rainbow table is not available, <a class="text" href="https://en.wikipedia.org/wiki/Dictionary_attack" target="_blank" rel="noopener noreferrer">dictionary
+the table. If a rainbow table is not available, <a class="text ext" href="https://en.wikipedia.org/wiki/Dictionary_attack" target="_blank" rel="noopener noreferrer">dictionary
 attacks</a>
  are also common. Naively storing hashes means that
 any users with the same password have their passwords all broken at the same
@@ -339,7 +339,7 @@ password configuration version as a column in the database, which corresponds
 to the correct configuration of the password hash. I think this adds too much
 complexity, however.</p>
 <p>To solve this configuration issue, I developed a library for Governor,
-<a class="text" href="https://github.com/xorkevin/hunter2" target="_blank" rel="noopener noreferrer">hunter2</a>
+<a class="text ext" href="https://github.com/xorkevin/hunter2" target="_blank" rel="noopener noreferrer">hunter2</a>
 , but its actual implementation is quite simple. Hunter2
 exports a <code>Hasher</code> interface as follows:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hunter2</span>
@@ -468,35 +468,35 @@ has helped me simplify much of Governor&rsquo;s auth code.</p>
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>password length and diceware <a href="http://world.std.com/%7Ereinhold/dicewarefaq.html" class="text" target="_blank" rel="noopener noreferrer">http://world.std.com/%7Ereinhold/dicewarefaq.html</a>
+<p>password length and diceware <a href="http://world.std.com/%7Ereinhold/dicewarefaq.html" class="text ext" target="_blank" rel="noopener noreferrer">http://world.std.com/%7Ereinhold/dicewarefaq.html</a>
  <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>Facebook plaintext passwords <a href="https://www.wired.com/story/facebook-passwords-plaintext-change-yours/" class="text" target="_blank" rel="noopener noreferrer">https://www.wired.com/story/facebook-passwords-plaintext-change-yours/</a>
+<p>Facebook plaintext passwords <a href="https://www.wired.com/story/facebook-passwords-plaintext-change-yours/" class="text ext" target="_blank" rel="noopener noreferrer">https://www.wired.com/story/facebook-passwords-plaintext-change-yours/</a>
  <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>Birthday problem <a href="https://en.wikipedia.org/wiki/Birthday_problem" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Birthday_problem</a>
+<p>Birthday problem <a href="https://en.wikipedia.org/wiki/Birthday_problem" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Birthday_problem</a>
  <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
-<p>NIST AES recommendations <a href="https://csrc.nist.gov/publications/detail/sp/800-38d/final" class="text" target="_blank" rel="noopener noreferrer">https://csrc.nist.gov/publications/detail/sp/800-38d/final</a>
+<p>NIST AES recommendations <a href="https://csrc.nist.gov/publications/detail/sp/800-38d/final" class="text ext" target="_blank" rel="noopener noreferrer">https://csrc.nist.gov/publications/detail/sp/800-38d/final</a>
  <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:5" role="doc-endnote">
-<p>Sun lifetime <a href="https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system" class="text" target="_blank" rel="noopener noreferrer">https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system</a>
+<p>Sun lifetime <a href="https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system" class="text ext" target="_blank" rel="noopener noreferrer">https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system</a>
  <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:6" role="doc-endnote">
-<p>Summit press release <a href="https://www.olcf.ornl.gov/summit/" class="text" target="_blank" rel="noopener noreferrer">https://www.olcf.ornl.gov/summit/</a>
+<p>Summit press release <a href="https://www.olcf.ornl.gov/summit/" class="text ext" target="_blank" rel="noopener noreferrer">https://www.olcf.ornl.gov/summit/</a>
  <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:7" role="doc-endnote">
-<p>XKCD: password strength <a href="https://xkcd.com/936/" class="text" target="_blank" rel="noopener noreferrer">https://xkcd.com/936/</a>
+<p>XKCD: password strength <a href="https://xkcd.com/936/" class="text ext" target="_blank" rel="noopener noreferrer">https://xkcd.com/936/</a>
  <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:8" role="doc-endnote">
-<p>bcrypt paper <a href="https://www.openbsd.org/papers/bcrypt-paper.pdf" class="text" target="_blank" rel="noopener noreferrer">https://www.openbsd.org/papers/bcrypt-paper.pdf</a>
+<p>bcrypt paper <a href="https://www.openbsd.org/papers/bcrypt-paper.pdf" class="text ext" target="_blank" rel="noopener noreferrer">https://www.openbsd.org/papers/bcrypt-paper.pdf</a>
  <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>

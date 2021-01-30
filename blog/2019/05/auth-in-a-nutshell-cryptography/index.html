@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="xorkevin/core; Hugo v0.80.0">
     
-    <link rel="stylesheet" href="/scss/main.min.9e80ea038dbfe41770ca68dc145ba0da0a5dc83b039542917b4d32dfd5f14b46.css" integrity="sha256-noDqA42/5BdwymjcFFug2gpdyDsDlUKRe00y39XxS0Y=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.9088f5103f0fa2acee5b36e7fda529d582d6a4e6e28aa1e2a635fbbcee57f41e.css" integrity="sha256-kIj1ED8PoqzuWzbn/aUp1YLWpObiiqHipjX7vO5X9B4=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
     <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
     <link href="/vendor/merriweather/index.css" rel="stylesheet">
@@ -117,7 +117,7 @@ on external web services, improving application reliability. Unfortunately,
 authentication has a large amount of moving parts, and they can be overwhelming
 to understand and design and use correctly. While I am by no means a security
 expert, I want to share my experiences designing the authentication system for
-my <a class="text" href="https://github.com/xorkevin/governor" target="_blank" rel="noopener noreferrer">Governor microservice project</a>
+my <a class="text ext" href="https://github.com/xorkevin/governor" target="_blank" rel="noopener noreferrer">Governor microservice project</a>
 , and how it all works.</p>
 <p>This topic will cover a short series of blog posts, of which this post is Part
 1. Here are links to all sections:</p>
@@ -349,9 +349,9 @@ input. Second, hash collisions should be rare, and computationally too
 expensive to find. The idea behind a cryptographic hash function is to have a
 function that can, for all intents and purposes, uniquely represent an
 arbitrary amount of data with a few fixed number of bytes.</p>
-<p>Common cryptographic hashes include: <a class="text" href="https://en.wikipedia.org/wiki/SHA-2" target="_blank" rel="noopener noreferrer">SHA-2</a>
+<p>Common cryptographic hashes include: <a class="text ext" href="https://en.wikipedia.org/wiki/SHA-2" target="_blank" rel="noopener noreferrer">SHA-2</a>
 , SHA-3, and
-<a class="text" href="https://en.wikipedia.org/wiki/BLAKE_%28hash_function%29" target="_blank" rel="noopener noreferrer">BLAKE2</a>
+<a class="text ext" href="https://en.wikipedia.org/wiki/BLAKE_%28hash_function%29" target="_blank" rel="noopener noreferrer">BLAKE2</a>
 . SHA-1 has had a hash collision, and should not be used going
 forward<sup id="fnref:18"><a href="#fn:18" class="footnote-ref" role="doc-noteref">18</a></sup>. The SHA-3 algorithm, Keccak, was chosen in a competition
 by NIST, over BLAKE, for its differences from SHA-2 in the event SHA-2 were
@@ -363,7 +363,7 @@ to check whether data has been changed or tampered with. This application of a
 hash, known as a hash-based message authentication code (HMAC) allows one to
 verify the integrity of the data<sup id="fnref:19"><a href="#fn:19" class="footnote-ref" role="doc-noteref">19</a></sup>. An HMAC works in general by hashing a
 concatenation of the original plaintext and the encryption key, to produce a
-<a class="text" href="https://en.wikipedia.org/wiki/Message_authentication_code" target="_blank" rel="noopener noreferrer">MAC</a>
+<a class="text ext" href="https://en.wikipedia.org/wiki/Message_authentication_code" target="_blank" rel="noopener noreferrer">MAC</a>
  which is sent along with the cipher text to the receiver. If the
 ciphertext were tampered with in any way, then the MAC will not match the hash
 of the decrypted data. The MAC also cannot be easily faked since it depends on
@@ -371,7 +371,7 @@ the secret encryption key itself. Many common libraries are now beginning to
 support an &ldquo;authenticated encryption with associated data&rdquo; (AEAD) mode for
 their encryption, which uses MACs by default and reduces the chance that the
 encryption algorithm will be misused<sup id="fnref:20"><a href="#fn:20" class="footnote-ref" role="doc-noteref">20</a></sup>. Common MAC hashes include SHA-2
-and <a class="text" href="https://en.wikipedia.org/wiki/Poly1305" target="_blank" rel="noopener noreferrer">Poly1305</a>
+and <a class="text ext" href="https://en.wikipedia.org/wiki/Poly1305" target="_blank" rel="noopener noreferrer">Poly1305</a>
 . Similarly, cryptographic hashes are also used in
 <a class="text" href="#signing-algorithms">signing algorithms</a>
  (covered later) to
@@ -415,7 +415,7 @@ to make their hashes difficult to execute on GPUs<sup id="fnref:24"><a href="#fn
 <p>Encryption algorithms, key exchanges, and hashes allow their users to safely
 and securely transmit data and verify their integrity. However, they alone do
 not verify who the sender or receiver are. Without some other mechanism, they
-are prone to <a class="text" href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack" target="_blank" rel="noopener noreferrer">man-in-the-middle (MITM) attacks</a>
+are prone to <a class="text ext" href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack" target="_blank" rel="noopener noreferrer">man-in-the-middle (MITM) attacks</a>
 . For example, say Alice
 and Bob are attempting to communicate over a network controlled by Eve. Alice
 wants to send an asymmetrically encrypted message to Bob, and thus needs Bob&rsquo;s
@@ -451,103 +451,103 @@ not some spoofed website.</p>
 <hr>
 <ol>
 <li id="fn:1" role="doc-endnote">
-<p>Linus Torvalds&rsquo;s response <a href="https://lkml.org/lkml/2017/11/17/767" class="text" target="_blank" rel="noopener noreferrer">https://lkml.org/lkml/2017/11/17/767</a>
+<p>Linus Torvalds&rsquo;s response <a href="https://lkml.org/lkml/2017/11/17/767" class="text ext" target="_blank" rel="noopener noreferrer">https://lkml.org/lkml/2017/11/17/767</a>
  <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
-<p>one-time pad <a href="https://en.wikipedia.org/wiki/One-time_pad" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/One-time_pad</a>
+<p>one-time pad <a href="https://en.wikipedia.org/wiki/One-time_pad" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/One-time_pad</a>
  <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
-<p>Lorenz cipher <a href="https://en.wikipedia.org/wiki/Lorenz_cipher" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Lorenz_cipher</a>
+<p>Lorenz cipher <a href="https://en.wikipedia.org/wiki/Lorenz_cipher" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Lorenz_cipher</a>
  <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
-<p>AES <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
+<p>AES <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Advanced_Encryption_Standard</a>
  <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:5" role="doc-endnote">
-<p>Colossus <a href="https://en.wikipedia.org/wiki/Colossus_computer" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Colossus_computer</a>
+<p>Colossus <a href="https://en.wikipedia.org/wiki/Colossus_computer" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Colossus_computer</a>
  <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:6" role="doc-endnote">
-<p>AES-GCM <a href="https://en.wikipedia.org/wiki/Galois/Counter_Mode" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Galois/Counter_Mode</a>
+<p>AES-GCM <a href="https://en.wikipedia.org/wiki/Galois/Counter_Mode" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Galois/Counter_Mode</a>
  <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:7" role="doc-endnote">
-<p>AES-NI <a href="https://en.wikipedia.org/wiki/AES_instruction_set" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/AES_instruction_set</a>
+<p>AES-NI <a href="https://en.wikipedia.org/wiki/AES_instruction_set" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/AES_instruction_set</a>
  <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:8" role="doc-endnote">
-<p>timing attack <a href="https://en.wikipedia.org/wiki/Timing_attack" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Timing_attack</a>
+<p>timing attack <a href="https://en.wikipedia.org/wiki/Timing_attack" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Timing_attack</a>
  <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:9" role="doc-endnote">
-<p>ChaCha20 <a href="https://tools.ietf.org/html/rfc7539" class="text" target="_blank" rel="noopener noreferrer">https://tools.ietf.org/html/rfc7539</a>
+<p>ChaCha20 <a href="https://tools.ietf.org/html/rfc7539" class="text ext" target="_blank" rel="noopener noreferrer">https://tools.ietf.org/html/rfc7539</a>
  <a href="#fnref:9" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:10" role="doc-endnote">
-<p>ChaCha20 speed <a href="https://en.wikipedia.org/wiki/Salsa20" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Salsa20</a>
+<p>ChaCha20 speed <a href="https://en.wikipedia.org/wiki/Salsa20" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Salsa20</a>
  <a href="#fnref:10" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:11" role="doc-endnote">
-<p>Grover&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Grover%27s_algorithm" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Grover%27s_algorithm</a>
+<p>Grover&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Grover%27s_algorithm" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Grover%27s_algorithm</a>
  <a href="#fnref:11" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:12" role="doc-endnote">
-<p>RSA <a href="https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/RSA_(cryptosystem)</a>
+<p>RSA <a href="https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/RSA_(cryptosystem)</a>
  <a href="#fnref:12" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:13" role="doc-endnote">
-<p>Shor&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Shor%27s_algorithm</a>
+<p>Shor&rsquo;s algorithm <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Shor%27s_algorithm</a>
  <a href="#fnref:13" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:14" role="doc-endnote">
-<p>lattice-based crypto <a href="https://en.wikipedia.org/wiki/Lattice-based_cryptography" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Lattice-based_cryptography</a>
+<p>lattice-based crypto <a href="https://en.wikipedia.org/wiki/Lattice-based_cryptography" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Lattice-based_cryptography</a>
  <a href="#fnref:14" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:15" role="doc-endnote">
-<p>Diffie-Hellman <a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange</a>
+<p>Diffie-Hellman <a href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange</a>
  <a href="#fnref:15" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:16" role="doc-endnote">
-<p>Diffie-Hellman in TLS <a href="https://wiki.openssl.org/index.php/Diffie_Hellman#Diffie-Hellman_in_SSL.2FTLS" class="text" target="_blank" rel="noopener noreferrer">https://wiki.openssl.org/index.php/Diffie_Hellman#Diffie-Hellman_in_SSL.2FTLS</a>
+<p>Diffie-Hellman in TLS <a href="https://wiki.openssl.org/index.php/Diffie_Hellman#Diffie-Hellman_in_SSL.2FTLS" class="text ext" target="_blank" rel="noopener noreferrer">https://wiki.openssl.org/index.php/Diffie_Hellman#Diffie-Hellman_in_SSL.2FTLS</a>
  <a href="#fnref:16" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:17" role="doc-endnote">
-<p>double ratchet <a href="https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm</a>
+<p>double ratchet <a href="https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Double_Ratchet_Algorithm</a>
  <a href="#fnref:17" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:18" role="doc-endnote">
-<p>SHA-1 collision <a href="https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/" class="text" target="_blank" rel="noopener noreferrer">https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/</a>
+<p>SHA-1 collision <a href="https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/" class="text ext" target="_blank" rel="noopener noreferrer">https://www.zdnet.com/article/sha-1-collision-attacks-are-now-actually-practical-and-a-looming-danger/</a>
  <a href="#fnref:18" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:19" role="doc-endnote">
-<p>HMAC <a href="https://en.wikipedia.org/wiki/HMAC" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/HMAC</a>
+<p>HMAC <a href="https://en.wikipedia.org/wiki/HMAC" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/HMAC</a>
  <a href="#fnref:19" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:20" role="doc-endnote">
-<p>AEAD <a href="https://en.wikipedia.org/wiki/Authenticated_encryption" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Authenticated_encryption</a>
+<p>AEAD <a href="https://en.wikipedia.org/wiki/Authenticated_encryption" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Authenticated_encryption</a>
  <a href="#fnref:20" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:21" role="doc-endnote">
-<p>BLAKE2 hashrate <a href="https://blake2.net/" class="text" target="_blank" rel="noopener noreferrer">https://blake2.net/</a>
+<p>BLAKE2 hashrate <a href="https://blake2.net/" class="text ext" target="_blank" rel="noopener noreferrer">https://blake2.net/</a>
  <a href="#fnref:21" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:22" role="doc-endnote">
-<p>hunter2 origins <a href="http://bash.org/?244321" class="text" target="_blank" rel="noopener noreferrer">http://bash.org/?244321</a>
+<p>hunter2 origins <a href="http://bash.org/?244321" class="text ext" target="_blank" rel="noopener noreferrer">http://bash.org/?244321</a>
  <a href="#fnref:22" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:23" role="doc-endnote">
-<p>bcrypt <a href="https://en.wikipedia.org/wiki/Bcrypt" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Bcrypt</a>
+<p>bcrypt <a href="https://en.wikipedia.org/wiki/Bcrypt" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Bcrypt</a>
  <a href="#fnref:23" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:24" role="doc-endnote">
-<p>scrypt <a href="https://en.wikipedia.org/wiki/Scrypt" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Scrypt</a>
+<p>scrypt <a href="https://en.wikipedia.org/wiki/Scrypt" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Scrypt</a>
  <a href="#fnref:24" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:25" role="doc-endnote">
-<p>argon2 <a href="https://en.wikipedia.org/wiki/Argon2" class="text" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Argon2</a>
+<p>argon2 <a href="https://en.wikipedia.org/wiki/Argon2" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Argon2</a>
  <a href="#fnref:25" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
