@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title>xorkevin | Auth in a Nutshell: Passwords</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.80.0">
+    <meta name="generator" content="xorkevin/core; Hugo v0.92.0">
     
-    <link rel="stylesheet" href="/scss/main.min.9088f5103f0fa2acee5b36e7fda529d582d6a4e6e28aa1e2a635fbbcee57f41e.css" integrity="sha256-kIj1ED8PoqzuWzbn/aUp1YLWpObiiqHipjX7vO5X9B4=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.4f2c3bcb6c98275bc7aa11cf314d973e8cdfa80bb6998fb0868ce37c6e35b625.css" integrity="sha256-Tyw7y2yYJ1vHqhHPMU2XPozfqAu2mY&#43;whozjfG41tiU=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
     <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
     <link href="/vendor/merriweather/index.css" rel="stylesheet">
@@ -113,7 +113,7 @@ be creating first as well. While the creation of an account may seem to have no
 impact on authentication, it is a crucial part of the auth security model.
 First, the user enters their information on the frontend, and it is posted to
 the following endpoint:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;POST /api/u/user&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;POST /api/u/user&#34;</span>
 {
   <span style="color:#f92672">&#34;username&#34;</span>: <span style="color:#e6db74">&#34;&lt;username&gt;&#34;</span>,
   <span style="color:#f92672">&#34;password&#34;</span>: <span style="color:#e6db74">&#34;&lt;password&gt;&#34;</span>,
@@ -153,7 +153,7 @@ it is erased from memory. At the same time, an email with the key is sent via
 Governor&rsquo;s SMTP email service to the user&rsquo;s email address. If the user has
 entered a valid email address, he or she should receive the email and complete
 their sign up with the key which posts a request to:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;POST /api/u/user/confirm&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json"><span style="color:#e6db74">&#34;POST /api/u/user/confirm&#34;</span>
 {
   <span style="color:#f92672">&#34;key&#34;</span>: <span style="color:#e6db74">&#34;&lt;confirmation key&gt;&#34;</span>,
 }
@@ -321,9 +321,9 @@ matures a bit more.</p>
 important to the authentication system as a whole because it affects how easy
 it is to maintain its implementation. Password hashes normally have varying
 amounts of configuration as seen in:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">scrypt</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">scrypt</span>
 <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Key</span>(<span style="color:#a6e22e">password</span>, <span style="color:#a6e22e">salt</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">N</span>, <span style="color:#a6e22e">r</span>, <span style="color:#a6e22e">p</span>, <span style="color:#a6e22e">keyLen</span> <span style="color:#66d9ef">int</span>) ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>)
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">bcrypt</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">bcrypt</span>
 <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">GenerateFromPassword</span>(<span style="color:#a6e22e">password</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">cost</span> <span style="color:#66d9ef">int</span>) ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>)
 </code></pre></div><p>It may be tempting to store this configuration in some configuration file,
 which can be read whenever a new user is created or authenticating a user&rsquo;s
@@ -342,7 +342,7 @@ complexity, however.</p>
 <a class="text ext" href="https://github.com/xorkevin/hunter2" target="_blank" rel="noopener noreferrer">hunter2</a>
 , but its actual implementation is quite simple. Hunter2
 exports a <code>Hasher</code> interface as follows:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hunter2</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hunter2</span>
 
 <span style="color:#66d9ef">type</span> (
   <span style="color:#a6e22e">Hasher</span> <span style="color:#66d9ef">interface</span> {
@@ -353,7 +353,7 @@ exports a <code>Hasher</code> interface as follows:</p>
 )
 </code></pre></div><p>Any hash may fulfill this simplified interface, which just takes in simple
 strings as input and outputs hashes as strings. One of these implemented hashes is scrypt:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">h</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ScryptHasher</span>) <span style="color:#a6e22e">exec</span>(<span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">salt</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">hashLength</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">c</span> <span style="color:#a6e22e">ScryptConfig</span>) ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">h</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ScryptHasher</span>) <span style="color:#a6e22e">exec</span>(<span style="color:#a6e22e">key</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">salt</span> []<span style="color:#66d9ef">byte</span>, <span style="color:#a6e22e">hashLength</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">c</span> <span style="color:#a6e22e">ScryptConfig</span>) ([]<span style="color:#66d9ef">byte</span>, <span style="color:#66d9ef">error</span>) {
   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">scrypt</span>.<span style="color:#a6e22e">Key</span>([]byte(<span style="color:#a6e22e">key</span>), <span style="color:#a6e22e">salt</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">workFactor</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">memBlocksize</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">parallelFactor</span>, <span style="color:#a6e22e">hashLength</span>)
 }
 
@@ -387,7 +387,7 @@ hash output itself, reading which hasher produced the hash, using its
 configuration options and salt, and checking to see if the hashes are
 equivalent. No external configuration is necessary. Here is the implementation
 of <code>hunter2.Verifier</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hunter2</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">hunter2</span>
 
 <span style="color:#66d9ef">type</span> (
   <span style="color:#a6e22e">Verifier</span> <span style="color:#66d9ef">struct</span> {
@@ -412,7 +412,7 @@ hash id matches any hasher that it knows about. Then it calls on the hasher to
 verify the hash. In the case of scrypt, the hash parameters, salt, and hash are
 extracted. Then the key is hashed with the hash parameters and salt and
 compared against the hash, as seen below.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ScryptConfig</span>) <span style="color:#a6e22e">decodeParams</span>(<span style="color:#a6e22e">params</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ScryptConfig</span>) <span style="color:#a6e22e">decodeParams</span>(<span style="color:#a6e22e">params</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">error</span> {
   <span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">Split</span>(<span style="color:#a6e22e">params</span>, <span style="color:#e6db74">&#34;,&#34;</span>)
   <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">p</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">3</span> {
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;Invalid number of params&#34;</span>)
@@ -469,35 +469,35 @@ has helped me simplify much of Governor&rsquo;s auth code.</p>
 <ol>
 <li id="fn:1" role="doc-endnote">
 <p>password length and diceware <a href="http://world.std.com/%7Ereinhold/dicewarefaq.html" class="text ext" target="_blank" rel="noopener noreferrer">http://world.std.com/%7Ereinhold/dicewarefaq.html</a>
- <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:2" role="doc-endnote">
 <p>Facebook plaintext passwords <a href="https://www.wired.com/story/facebook-passwords-plaintext-change-yours/" class="text ext" target="_blank" rel="noopener noreferrer">https://www.wired.com/story/facebook-passwords-plaintext-change-yours/</a>
- <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:3" role="doc-endnote">
 <p>Birthday problem <a href="https://en.wikipedia.org/wiki/Birthday_problem" class="text ext" target="_blank" rel="noopener noreferrer">https://en.wikipedia.org/wiki/Birthday_problem</a>
- <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:4" role="doc-endnote">
 <p>NIST AES recommendations <a href="https://csrc.nist.gov/publications/detail/sp/800-38d/final" class="text ext" target="_blank" rel="noopener noreferrer">https://csrc.nist.gov/publications/detail/sp/800-38d/final</a>
- <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:5" role="doc-endnote">
 <p>Sun lifetime <a href="https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system" class="text ext" target="_blank" rel="noopener noreferrer">https://www.sciencealert.com/what-will-happen-after-the-sun-dies-planetary-nebula-solar-system</a>
- <a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:6" role="doc-endnote">
 <p>Summit press release <a href="https://www.olcf.ornl.gov/summit/" class="text ext" target="_blank" rel="noopener noreferrer">https://www.olcf.ornl.gov/summit/</a>
- <a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+&#160;<a href="#fnref:6" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:7" role="doc-endnote">
 <p>XKCD: password strength <a href="https://xkcd.com/936/" class="text ext" target="_blank" rel="noopener noreferrer">https://xkcd.com/936/</a>
- <a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+&#160;<a href="#fnref:7" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 <li id="fn:8" role="doc-endnote">
 <p>bcrypt paper <a href="https://www.openbsd.org/papers/bcrypt-paper.pdf" class="text ext" target="_blank" rel="noopener noreferrer">https://www.openbsd.org/papers/bcrypt-paper.pdf</a>
- <a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+&#160;<a href="#fnref:8" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
 </li>
 </ol>
 </section>
@@ -624,7 +624,7 @@ has helped me simplify much of Governor&rsquo;s auth code.</p>
                     &copy; Kevin Wang
                     
                     
-                      2018-2021
+                      2018-2022
                     
                   </span>
                 </li>
@@ -638,14 +638,5 @@ has helped me simplify much of Governor&rsquo;s auth code.</p>
 </footer>
 
     
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-140853026-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-140853026-1');
-</script>
-
   </body>
 </html>

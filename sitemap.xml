@@ -1,114 +1,70 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>https://xorkevin.com/blog/</loc>
     <lastmod>2020-11-01T13:03:45-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/gamedev/</loc>
     <lastmod>2020-03-08T23:08:48-07:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/notes/</loc>
     <lastmod>2020-03-08T23:08:48-07:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/</loc>
     <lastmod>2020-11-01T13:03:45-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/blog/2020/03/why-ecs/</loc>
     <lastmod>2020-03-08T23:08:48-07:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/</loc>
     <lastmod>2020-11-01T13:03:45-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/auth/</loc>
     <lastmod>2020-11-01T13:03:45-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-passwords/</loc>
     <lastmod>2020-11-01T13:02:33-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/web/</loc>
     <lastmod>2020-11-01T13:03:45-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/blog/2019/05/auth-in-a-nutshell-cryptography/</loc>
     <lastmod>2020-11-01T13:03:45-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/cli/</loc>
     <lastmod>2020-11-01T13:01:19-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/codegen/</loc>
     <lastmod>2020-11-01T13:01:19-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/blog/2019/05/forge/</loc>
     <lastmod>2020-11-01T13:01:19-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/go/</loc>
     <lastmod>2020-11-01T13:01:19-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/backend/</loc>
     <lastmod>2020-11-01T13:00:25-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/blog/2018/06/governor/</loc>
     <lastmod>2020-11-01T13:00:25-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/microservice/</loc>
     <lastmod>2020-11-01T13:00:25-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/frontend/</loc>
     <lastmod>2020-11-01T12:59:19-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/js/</loc>
     <lastmod>2020-11-01T12:59:19-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/blog/2018/04/nuke/</loc>
     <lastmod>2020-11-01T12:59:19-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/tags/react/</loc>
     <lastmod>2020-11-01T12:59:19-08:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://xorkevin.com/categories/</loc>
   </url>
-  
 </urlset>

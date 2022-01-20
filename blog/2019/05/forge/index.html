@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title>xorkevin | Forge</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="xorkevin/core; Hugo v0.80.0">
+    <meta name="generator" content="xorkevin/core; Hugo v0.92.0">
     
-    <link rel="stylesheet" href="/scss/main.min.9088f5103f0fa2acee5b36e7fda529d582d6a4e6e28aa1e2a635fbbcee57f41e.css" integrity="sha256-kIj1ED8PoqzuWzbn/aUp1YLWpObiiqHipjX7vO5X9B4=" media="screen">
+    <link rel="stylesheet" href="/scss/main.min.4f2c3bcb6c98275bc7aa11cf314d973e8cdfa80bb6998fb0868ce37c6e35b625.css" integrity="sha256-Tyw7y2yYJ1vHqhHPMU2XPozfqAu2mY&#43;whozjfG41tiU=" media="screen">
     <link href="/vendor/fork-awesome/css/fork-awesome.min.css" rel="stylesheet">
     <link href="/vendor/inter-ui/inter.css" rel="stylesheet">
     <link href="/vendor/merriweather/index.css" rel="stylesheet">
@@ -124,7 +124,7 @@ then reflectively made available to other Javascript code, allowing one to
 iterate over all fields of an object. As a result, libraries that take in
 arbitrary data are easy to write in these languages. For example, a Join can be
 written in the JS ORM library, Sequelize, with the following code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">User</span>.<span style="color:#a6e22e">hasMany</span>(<span style="color:#a6e22e">Post</span>, {<span style="color:#a6e22e">foreignKey</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;user_id&#39;</span>});
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">User</span>.<span style="color:#a6e22e">hasMany</span>(<span style="color:#a6e22e">Post</span>, {<span style="color:#a6e22e">foreignKey</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;user_id&#39;</span>});
 <span style="color:#a6e22e">Post</span>.<span style="color:#a6e22e">belongsTo</span>(<span style="color:#a6e22e">User</span>, {<span style="color:#a6e22e">foreignKey</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;user_id&#39;</span>});
 <span style="color:#a6e22e">Post</span>.<span style="color:#a6e22e">findAll</span>({ <span style="color:#a6e22e">where</span><span style="color:#f92672">:</span> { ...}, <span style="color:#a6e22e">include</span><span style="color:#f92672">:</span> [<span style="color:#a6e22e">User</span>]});
 </code></pre></div><p>These types of API&rsquo;s become harder to write when using compiled and statically
@@ -136,7 +136,7 @@ parsing of the source code. The macro system itself can be as simple as the one
 in C/C++, or fully type safe macro system like the one in Rust. For example,
 Rust&rsquo;s serde package uses a <code>derive</code> macro to generate a serialization function
 for a struct:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rs" data-lang="rs"><span style="color:#75715e">//main.rs
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rs" data-lang="rs"><span style="color:#75715e">//main.rs
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">use</span> serde::{Serialize, Deserialize};
 
 <span style="color:#75715e">#[derive(Serialize, Deserialize, Debug)]</span>
@@ -157,10 +157,10 @@ Fortunately, Go&rsquo;s code generation is easily invoked. It uses a special com
 directive <code>go:generate</code> to specify a command to call when <code>$ go generate ./...</code>
 is run from the terminal. For example, in the following code, &ldquo;Hello, World&rdquo;
 will be printed to the shell on running <code>go generate</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//main.go
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//main.go
 </span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">main</span>
 <span style="color:#75715e">//go:generate echo &#34;Hello, World&#34;
-</span></code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#bash</span>
+</span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#bash</span>
 $ go generate ./...
 Hello, World
 </code></pre></div><p>Go uses its <code>go generate</code> system to provide a method to generate code. It
@@ -169,7 +169,7 @@ variables set to the file&rsquo;s package name and filename respectively, in add
 to some other information. Forge uses this information along with the struct
 definition in the file itself to generate database model functions. Take the
 following code from Governor&rsquo;s user model:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model.go
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model.go
 </span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">usermodel</span>
 
 <span style="color:#f92672">import</span> (
@@ -193,7 +193,7 @@ following code from Governor&rsquo;s user model:</p>
 </code></pre></div><p>Forge uses the <code>go/ast</code> package to parse the file <code>$GOFILE</code> and look for the
 <code>-m &lt;Model&gt;</code> struct. It then uses the struct tags to generate the appropriate
 model functions as seen below:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model_gen.go
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//model_gen.go
 </span><span style="color:#75715e">// Code generated by go generate. DO NOT EDIT.
 </span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">usermodel</span>
 
@@ -355,7 +355,7 @@ validation, in addition to other repetitive code, in the future.</p>
                     &copy; Kevin Wang
                     
                     
-                      2018-2021
+                      2018-2022
                     
                   </span>
                 </li>
@@ -369,14 +369,5 @@ validation, in addition to other repetitive code, in the future.</p>
 </footer>
 
     
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-140853026-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-140853026-1');
-</script>
-
   </body>
 </html>
